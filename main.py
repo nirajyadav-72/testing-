@@ -1002,13 +1002,12 @@ def send_welcome(message):
             db_time = res[0] if res is not None else "22:00"
             
         welcome_text = (
-            f"👑 **प्रणाम मालिक ({message.from_user.first_name})!**\n\n"
-            f"📊 वर्तमान लीडरबोर्ड टाइम: **{db_time}**\n"
-            "⚙️ आप सीधे यहीं पर `/settime HH:MM` लिखकर टाइम बदल सकते हैं।\n"
-            "🏆 तुरंत रिज़ल्ट भेजने and स्कोर रीसेट करने के लिए `/sendresult` लिखें।\n"
-            "📢 किसी भी मैसेज पर रिप्लाई करके `/broadcast` लिखने से वह सभी ग्रुप्स और यूज़र्स के पर्सनल इनबॉक्स में चला जाएगा।\n"
-            "📊 बॉट का लाइव स्टैट्स देखने के लिए `/status` का उपयोग करें।\n\n"
-            "बॉट को group में जोड़ने के लिए नीचे दिए बटन का उपयोग करें।"
+            f"👑 **Greetings, Chief ({message.from_user.first_name})!**\n\n"
+            f"⏳ Current leaderboard time: **{db_time}**\n"
+            "⚙️ You can change the time directly here by typing `/settime HH:MM`\n"
+            "🏆 To send the result immediately and reset the score, type `/sendresult`\n"
+            "📢 Replying to any message with `/broadcast` will send it to all groups and users' personal inboxes.\n"
+            "📊 Use `/status` to see the bot's live stats."
         )
     else:
         welcome_text = (
