@@ -636,10 +636,10 @@ def manual_leaderboard_sender(message):
                     medal = medals.get(idx, f"{idx}.")
                     display_score = f"{final_score:.1f}" if final_score % 0.5 != 0 else f"{int(final_score)}"
                     
-                    lb_text += f"{medal} **{name}**\n"
-                    lb_text += f"🔥 Final Score: **{display_score}** Mark's\n"
+                    lb_text += f"{medal} **{name}**\n\n"
                     lb_text += f"✅ Right: **{correct}**\n"
                     lb_text += f"❌ Wrong: **{wrong}**\n"
+                    lb_text += f"🔥 Final Score: **{display_score}** Mark's\n"
                     lb_text += f"---------------------------------------\n" 
             else:
                 lb_text += "⚠️ No users participated in the quiz today.\n"
