@@ -48,6 +48,8 @@ if SUPPORT_GROUP_ID:
 def init_db():
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA auto_vacuum = FULL;")
+        
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS groups (
                 chat_id INTEGER PRIMARY KEY,
