@@ -251,11 +251,11 @@ def get_settings_markup(chat_id):
     del_status = "ON ✅" if auto_delete == 1 else "OFF 📴"
     
     text = (
-        "⚙️ **Settings Panel (Quiz Settings)**\n\n"
-        f"🌐 **Current Language:** {lang.upper()}\n"
-        f"⏱️ **Quiz Interval:** {interval_mins} min\n"
-        f"🗑️ **Auto Delete Poll:** {del_status}\n\n"
-        "Click on the buttons below to change configurations:"
+        "⚙️ *Settings Panel (Quiz Settings)*\n\n"
+        f"🌐 *Current Language:* {lang.upper()}\n"
+        f"⏱️ *Quiz Interval:* {interval_mins} min\n"
+        f"🗑️ *Auto Delete Poll:* {del_status}\n\n"
+        "*Click on the buttons below to change configurations:*"
     )
     markup = InlineKeyboardMarkup()
     lang_text = "🌐 भाषा: HINDI 🇮🇳" if lang == 'hindi' else "🌐 Lang: ENGLISH 🇬🇧"
@@ -285,13 +285,13 @@ def get_autodelete_markup(chat_id):
     auto_delete = res[0] if res else 1
     status_text = "ON" if auto_delete == 1 else "OFF"
     text = (
-        "🗑️ **Auto-Delete Settings**\n\n"
-        "⚠️ **Click on the control buttons**\n\n"
-        f"📊 **Status:** \" {status_text} \"\n\n"
-        "ℹ️ **What does this do?**\n"
+        "🗑️ *Auto-Delete Settings*\n\n"
+        "⚠️ *Click on the control buttons*\n\n"
+        f"📊 *Status:* \" {status_text} \"\n\n"
+        "ℹ️ *What does this do?*\n"
         "• When ON: Previous quiz poll will be deleted automatically.\n"
         "• When OFF: Old quizzes will stay in chat history.\n\n"
-        "👇 Toggle auto-delete setting:"
+        "👇 *Toggle auto-delete setting:*"
     )
     markup = InlineKeyboardMarkup()
     
@@ -466,9 +466,9 @@ def handle_owner_broadcast(message):
     if not message.reply_to_message:
         bot.send_message(
             message.chat.id, 
-            "⚠️ **उपयोग कैसे करें?**\n"
+            "⚠️ *उपयोग कैसे करें?*\n"
             "1. वह टेक्स्ट, फोटो, वीडियो या स्टिकर भेजें जिसे ब्रॉडकास्ट करना है।\n"
-            "2. उस मैसेज पर **Reply** करके लिखें: `/broadcast`", 
+            "2. उस मैसेज पर *Reply* करके लिखें: `/broadcast`", 
             parse_mode="Markdown"
         )
         return
@@ -490,7 +490,7 @@ def handle_owner_broadcast(message):
 
     bot.send_message(
         chat_id=message.chat.id,
-        text="🏵️ **क्या आप इस ब्रॉडकास्ट मैसेज को सभी ग्रुप्स में PIN करना चाहते हैं?**",
+        text="🏵️ *क्या आप इस ब्रॉडकास्ट मैसेज को सभी ग्रुप्स में PIN करना चाहते हैं?*",
         reply_markup=markup,
         parse_mode="Markdown"
     )
@@ -570,13 +570,13 @@ def execute_broadcast_callback(call):
     bot.edit_message_text(
         chat_id=call.message.chat.id, 
         message_id=call.message.message_id, 
-        text=f"📊 **Global Broadcast Report:**\n\n"
-             f"📌 **Group Pin Status:** {'✅ Pinned' if should_pin else '❌ Not Pinned'}\n\n"
-             f"👥 **group's:**\n"
+        text=f"📊 *Global Broadcast Report:*\n\n"
+             f"📌 *Group Pin Status:* {'✅ Pinned' if should_pin else '❌ Not Pinned'}\n\n"
+             f"👥 *group's:*\n"
              f"✅ **done: {g_success}** | ❌ **Undone: {g_fail}**\n\n"
-             f"👤 **Private User's:**\n"
+             f"👤 *Private User's:*\n"
              f"✅ **done: {u_success}** | ❌ **Undone: {u_fail}**\n\n"
-             f"🎯 **Broadcast completed successfully!**", 
+             f"🎯 *Broadcast completed successfully!*", 
         parse_mode="Markdown"
     )
 
@@ -637,9 +637,9 @@ def manual_leaderboard_sender(message):
                     display_score = f"{final_score:.1f}" if final_score % 0.5 != 0 else f"{int(final_score)}"
                     
                     lb_text += f"{medal} *{name}*\n"
-                    lb_text += f"*Right:* **{correct}** ✅\n"
-                    lb_text += f"*Wrong:* **{wrong}** ❌\n"
-                    lb_text += f"*Final Score:* **{display_score}** Mark's\n"
+                    lb_text += f"Right: **{correct}** ✅\n"
+                    lb_text += f"Wrong: **{wrong}** ❌\n"
+                    lb_text += f"Final Score: **{display_score}** Marks\n"
                     lb_text += f"---------------------------------------\n" 
             else:
                 lb_text += "⚠️ No users participated in the quiz today.\n"
@@ -647,7 +647,7 @@ def manual_leaderboard_sender(message):
                 
             lb_text += "\n🎯 *Amazing effort!* Get ready for a new quiz tomorrow! 🚀\n"
             lb_text += "\n⭐ If you don't want to wait for the results, you can\n"
-            lb_text += "\nuse the ☞ `/myscore` command at any time."
+            lb_text += "\nuse the *☞ `/myscore`* command at any time."
             try: 
                 bot.send_message(chat_id=chat_id, text=lb_text, reply_markup=markup, parse_mode="Markdown")
                 success_count += 1
@@ -731,9 +731,9 @@ def daily_leaderboard_scheduler():
                                 display_score = f"{final_score:.1f}" if final_score % 0.5 != 0 else f"{int(final_score)}"
                                 
                                 lb_text += f"{medal} *{name}*\n"
-                                lb_text += f"*Right:* **{correct}** ✅\n"
-                                lb_text += f"*Wrong:* **{wrong}** ❌\n"
-                                lb_text += f"*Final Score:* **{display_score}** Marks\n"
+                                lb_text += f"Right: **{correct}** ✅\n"
+                                lb_text += f"Wrong: **{wrong}** ❌\n"
+                                lb_text += f"Final Score: **{display_score}** Marks\n"
                                 lb_text += f"---------------------------------------\n" 
                         else:
                             lb_text += "⚠️ No users participated in the quiz today.\n"
@@ -741,7 +741,7 @@ def daily_leaderboard_scheduler():
                             
                         lb_text += "\n🎯 *Amazing effort!* Get ready for a new quiz tomorrow! 🚀\n"
                         lb_text += "\n⭐ If you don't want to wait for the results, you can\n" 
-                        lb_text += "\nuse the ☞ `/myscore` command at any time."
+                        lb_text += "\nuse the *☞ `/myscore`* command at any time."
                         try: 
                             bot.send_message(chat_id=chat_id, text=lb_text, reply_markup=markup, parse_mode="Markdown")
                             time.sleep(0.15)
@@ -875,7 +875,7 @@ def check_user_score(message):
 
     # टेलीग्राम सेफ मार्कडाउन स्कोर टेक्स्ट फॉर्मेटिंग
     score_text = (
-        f"🎉 *Congratulations {message.from_user.first_name}, your today's quiz score!*\n"
+        f"🏆 *Congratulations {message.from_user.first_name}, your today's quiz score!*\n"
         f"📊 *Marking: Right (+2) | Wrong (-0.5)*\n"
         f"-------------------------------------\n\n"
         f"*Name: {message.from_user.first_name}*\n"
@@ -885,7 +885,7 @@ def check_user_score(message):
         f"-------------------------------------\n\n"
         f"ℹ️ *Note:* This score will be reset after the leaderboard is published.\n"
         f"⭐ If you don't want to wait for the results, you can "
-        f"use the ☞ `/myscore` command at any time."
+        f"use the *☞ `/myscore`* command at any time."
     )
 
     # Red Colored Close Button (Danger Style)
@@ -985,17 +985,17 @@ def send_welcome(message):
                 pass
 
         group_text = (
-            f"🎉 **Bot activated successfully!**\n"
+            f"🎉 *Bot activated successfully!*\n"
             f"📢 Automated quizzes have been activated for this group.\n\n"
-            f"🇮🇳 **Group Name:** [{message.chat.title}]\n"
+            f"🇮🇳 *Group Name:* [{message.chat.title}]\n"
             f"This bot is the easiest way to keep your groups active and engaged.\n\n"
-            f"📌 **My Features:**\n"
-            f"📊 **Daily Auto Poll:** Automatically sends a new poll every day at your set time interval.\n"
-            f"🏆 **Auto Result:** Generates results daily at your set time showing the Top 20 users' scores with negative marking.\n\n"
-            f"🚀 **How to Get Started:**\n"
-            f"1. Make me a **Group Admin** (so I have permission to send polls).\n"
-            f"2. Use the `/settings` command inside your group to configure everything.\n\n"
-            f"For any help, simply type `/help`."
+            f"📌 *My Features:*\n"
+            f"📊 *Daily Auto Poll:* Automatically sends a new poll every day at your set time interval.\n"
+            f"🏆 *Auto Result:* Generates results daily at your set time showing the Top 20 users' scores with negative marking.\n\n"
+            f"🚀 *How to Get Started:*\n"
+            f"1. Make me a *Group Admin* (so I have permission to send polls).\n"
+            f"2. Use the *`/settings`* command inside your group to configure everything.\n\n"
+            f"For any help, simply type *`/help`*."
         )
         group_markup = InlineKeyboardMarkup()
         add_to_group_url = f"https://t.me/{BOT_USERNAME}?startgroup=true"
@@ -1054,7 +1054,7 @@ def send_welcome(message):
             db_time = res[0] if res is not None else "22:00"
             
         welcome_text = (
-            f"👑 **Greetings, Chief ({message.from_user.first_name})!**\n\n"
+            f"👑 *Greetings, Chief ({message.from_user.first_name})!*\n\n"
             f"⏳ Current leaderboard time: **{db_time}**\n"
             "⚙️ You can change the time directly here by typing `/settime HH:MM`\n"
             "🏆 To send the result immediately and reset the score, type `/sendresult`\n"
@@ -1063,18 +1063,18 @@ def send_welcome(message):
         )
     else:
         welcome_text = (
-            f"👋 **Hello** {message.from_user.first_name}!\n"
-            f"**Welcome!** This bot is the easiest way to keep your groups active and engaged.\n\n"
-            f"**📌 My Features:**\n\n"
-            f"📊 **Daily Auto Poll:**\n"
+            f"👋 *Hello {message.from_user.first_name}!*\n"
+            f"*Welcome!* This bot is the easiest way to keep your groups active and engaged.\n\n"
+            f"*📌 My Features:*\n\n"
+            f"📊 *Daily Auto Poll:*\n"
             "Automatically sends a new poll every day at your set time interval.\n\n"
-            "🏆 **Auto Result:**\n"
+            "🏆 *Auto Result:*\n"
             "Generates results daily at 10 PM showing the Top 20 users' scores with negative marking.\n\n"
-            "🚀 **How to Get Started:**\n\n"
-            "**1. Add me** to your Telegram group.\n"
-            "**2. Make me a **Group Admin** (so I have permission to send polls).\n"
-            "**3. Use the `/settings` command inside your group to configure everything.**\n\n"
-            "For any help, simply type `/help` ."
+            "🚀 *How to Get Started:*\n\n"
+            "1. *Add me* to your Telegram group.\n"
+            "2. Make me a *Group Admin (so I have permission to send polls).*\n"
+            "3. Use the *`/settings`* command inside your group to configure everything.\n\n"
+            "For any help, simply type *`/help`* ."
         )
         
     markup = InlineKeyboardMarkup()
@@ -1129,13 +1129,13 @@ def send_help(message):
                 pass
 
     help_text = (
-        "⚡ **Help & Guide - Daily Poll Bot:**\n\n"
+        "⚡ *Help & Guide - Daily Poll Bot:*\n\n"
         "Here is a quick guide on how to configure and use the bot in your group:\n\n"
-        "🛠 **Setup Instructions:**\n\n"
+        "🛠 *Setup Instructions:*\n\n"
         "**Step 1:** Add this bot to your group.\n"
         "**Step 2:** Grant the bot Admin Permissions.\n"
         "**Step 3:** Type `/settings` inside the group to set up your poll timing and quiz language.\n\n"
-        "🕒 **How the System Works:**\n\n"
+        "🕒 *How the System Works:*\n\n"
         "**Polls:** Sent automatically during your configured daytime intervals.\n"
         "**Leaderboard:** Published automatically every single night at **10:00 PM.**\n"
         "Scoring: Accuracy matters! The leaderboard calculates the Top 20 users with a **negative marking system** applied for wrong answers.\n\n"
@@ -1211,13 +1211,13 @@ def generate_status_page(page=0):
     if total_pages == 0: total_pages = 1
 
     stats_text = (
-        f"📊 **Bot Live Status & Statistics**\n"
+        f"📊 *Bot Live Status & Statistics*\n"
         f"---------------------------------------\n"
         f"🎯 Total Active Groups: **{g_count}**\n"
         f"👤 Total Active Users: **{u_count}**\n"
         f"📖 Page: **{page + 1} / {total_pages}**\n"
         f"---------------------------------------\n\n"
-        f"⚡ **Active Groups List:**\n\n"
+        f"⚡ *Active Groups List:*\n\n"
     )
 
     if current_page_groups:
@@ -1322,18 +1322,18 @@ def handle_left_or_joined(my_chat_member):
                     print(f"इमेज फोल्डर रीड करने में एरर: {e}")
                 
                 group_text = (
-                    f"🎉 **Join Group Successfully!**\n"
+                    f"🎉 *Join Group Successfully!*\n"
                     f"📢 Automated quizzes have been activated for this group.\n\n"
-                    f"🇮🇳 **Group Name:** [{chat_title}]\n"
+                    f"🇮🇳 *Group Name:* [{chat_title}]\n"
                     f"This bot is the easiest way to keep your groups active and engaged.\n\n"
-                    f"📌 **My Features:**\n"
-                    f"📊 **Daily Auto Poll:** Automatically sends a new poll every day at your set time interval.\n"
-                    f"🏆 **Auto Result:** Generates results daily at 10 PM showing the Top 20 users' scores with negative marking.\n"
-                    f"💡 **Results** ka wait nahi karna chahte to `/myscore` command send kare!\n\n"
-                    f"🚀 **How to Get Started:**\n"
-                    f"1. Make me a **Group Admin** (so I have permission to send polls).\n"
-                    f"2. Use the `/settings` command inside your group to configure everything.\n\n"
-                    f"For any help, simply type `/help`."
+                    f"📌 *My Features:*\n"
+                    f"📊 *Daily Auto Poll:* Automatically sends a new poll every day at your set time interval.\n"
+                    f"🏆 *Auto Result:* Generates results daily at 10 PM showing the Top 20 users' scores with negative marking.\n"
+                    f"💡 *Results* ka wait nahi karna chahte to `/myscore` command send kare!\n\n"
+                    f"🚀 *How to Get Started:*\n"
+                    f"1. Make me a *Group Admin (so I have permission to send polls).*\n"
+                    f"2. Use the *`/settings`* command inside your group to configure everything.\n\n"
+                    f"For any help, simply type *`/help`*."
                 )
                 
                 group_markup = InlineKeyboardMarkup()
