@@ -110,6 +110,12 @@ def init_db():
         except sqlite3.OperationalError:
             pass 
             
+        # 🔍 [NEW 10-DAYS TRACKING] Groups table me join_time store karne ke liye column
+        try:
+            cursor.execute("ALTER TABLE groups ADD COLUMN join_time REAL DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass 
+            
         # 🔍 [ANTI-SPAM MYSCORE DB] यूज़र का पिछला स्कोर कार्ड मैसेज आईडी सेव करने के लिए कॉलम
         try:
             cursor.execute("ALTER TABLE daily_scores ADD COLUMN last_score_msg_id INTEGER DEFAULT 0")
