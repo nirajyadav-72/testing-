@@ -624,9 +624,9 @@ def manual_leaderboard_sender(message):
             calculated_leaderboard.sort(key=lambda x: x, reverse=True)
             top_20 = calculated_leaderboard[:20]
             
-            lb_text = "🏆 **Result [Top 20 user's Leaderboard]**\n"
+            lb_text = "🏆 *Result [Top 20 user's Leaderboard]*\n"
             lb_text += f"---------------------------------------\n" 
-            lb_text += f"📅 Date: {now.strftime('%d-%m-%Y')} | ⏰ Time: {now.strftime('%H:%M')} (Manual)\n"
+            lb_text += f"📅 *Date:* {now.strftime('%d-%m-%Y')} | ⏰ *Time:* {now.strftime('%H:%M')} (Manual)\n"
             lb_text += "📊 Marking: Right (+2) | Wrong (-0.5)\n"
             lb_text += f"---------------------------------------\n\n" 
             
@@ -636,16 +636,16 @@ def manual_leaderboard_sender(message):
                     medal = medals.get(idx, f"{idx}.")
                     display_score = f"{final_score:.1f}" if final_score % 0.5 != 0 else f"{int(final_score)}"
                     
-                    lb_text += f"{medal} **{name}**\n"
-                    lb_text += f"Right: **{correct}** ✅\n"
-                    lb_text += f"Wrong: **{wrong}** ❌\n"
-                    lb_text += f"Final Score: **{display_score}** Mark's\n"
+                    lb_text += f"{medal} *{name}*\n"
+                    lb_text += f"*Right:* **{correct}** ✅\n"
+                    lb_text += f"*Wrong:* **{wrong}** ❌\n"
+                    lb_text += f"*Final Score:* **{display_score}** Mark's\n"
                     lb_text += f"---------------------------------------\n" 
             else:
                 lb_text += "⚠️ No users participated in the quiz today.\n"
                 lb_text += f"---------------------------------------\n"
                 
-            lb_text += "\n🎯 Amazing effort! Get ready for a new quiz tomorrow! 🚀\n"
+            lb_text += "\n🎯 *Amazing effort!* Get ready for a new quiz tomorrow! 🚀\n"
             lb_text += "\n⭐ If you don't want to wait for the results, you can\n"
             lb_text += "\nuse the ☞ `/myscore` command at any time."
             try: 
@@ -717,9 +717,9 @@ def daily_leaderboard_scheduler():
                         calculated_leaderboard.sort(key=lambda x: x, reverse=True)
                         top_20 = calculated_leaderboard[:20]
                         
-                        lb_text = "🏆 **Result [Top 20 user's Leaderboard]**\n"
+                        lb_text = "🏆 *Result [Top 20 user's Leaderboard]*\n"
                         lb_text += f"---------------------------------------\n" 
-                        lb_text += f"📅 Date: {now.strftime('%d-%m-%Y')} | ⏰ Time: {db_time}\n"
+                        lb_text += f"📅 *Date:* {now.strftime('%d-%m-%Y')} | ⏰ *Time:* {db_time}\n"
                         lb_text += "🎓 Performance of the Last 24 Hours:\n"
                         lb_text += "📊 Marking: Right (+2) | Wrong (-0.5)\n"
                         lb_text += f"---------------------------------------\n\n" 
@@ -730,16 +730,16 @@ def daily_leaderboard_scheduler():
                                 medal = medals.get(idx, f"{idx}.")
                                 display_score = f"{final_score:.1f}" if final_score % 0.5 != 0 else f"{int(final_score)}"
                                 
-                                lb_text += f"{medal} **{name}**\n"
-                                lb_text += f"Right: **{correct}** ✅\n"
-                                lb_text += f"Wrong: **{wrong}** ❌\n"
-                                lb_text += f"Final Score: **{display_score}** Mark's\n"
+                                lb_text += f"{medal} *{name}*\n"
+                                lb_text += f"*Right:* **{correct}** ✅\n"
+                                lb_text += f"*Wrong:* **{wrong}** ❌\n"
+                                lb_text += f"*Final Score:* **{display_score}** Marks\n"
                                 lb_text += f"---------------------------------------\n" 
                         else:
                             lb_text += "⚠️ No users participated in the quiz today.\n"
                             lb_text += f"---------------------------------------\n"
                             
-                        lb_text += "\n🎯 Amazing effort! Get ready for a new quiz tomorrow! 🚀\n"
+                        lb_text += "\n🎯 *Amazing effort!* Get ready for a new quiz tomorrow! 🚀\n"
                         lb_text += "\n⭐ If you don't want to wait for the results, you can\n" 
                         lb_text += "\nuse the ☞ `/myscore` command at any time."
                         try: 
@@ -875,15 +875,15 @@ def check_user_score(message):
 
     # टेलीग्राम सेफ मार्कडाउन स्कोर टेक्स्ट फॉर्मेटिंग
     score_text = (
-        f"🎉 *Congratulations {message.from_user.first_name}*, your today's quiz score!\n"
+        f"🎉 *Congratulations {message.from_user.first_name}, your today's quiz score!*\n"
         f"📊 *Marking: Right (+2) | Wrong (-0.5)*\n"
         f"-------------------------------------\n\n"
-        f"*Name:* {message.from_user.first_name}\n"
-        f"Right: *{correct}* ✅ (+{correct * 2} Marks)\n"
-        f"Wrong: *{wrong}* ❌ (-{wrong * 0.5} Marks)\n"
+        f"*Name: {message.from_user.first_name}*\n"
+        f"*Right:* {correct} ✅ (+{correct * 2} Marks)\n"
+        f"*Wrong:* {wrong} ❌ (-{wrong * 0.5} Marks)\n"
         f"*Final Score: {display_score} Marks*\n"
         f"-------------------------------------\n\n"
-        f"ℹ️ Note: This score will be reset after the leaderboard is published.\n"
+        f"ℹ️ *Note:* This score will be reset after the leaderboard is published.\n"
         f"⭐ If you don't want to wait for the results, you can "
         f"use the ☞ `/myscore` command at any time."
     )
