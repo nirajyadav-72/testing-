@@ -133,8 +133,11 @@ def init_db():
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN last_warning_time REAL DEFAULT 0")
         except sqlite3.OperationalError:
-            pass 
-            
+            pass
+
+        # ⚡ [SPEED BOOSTER INDEXES] Isse 10-days status query hamesha super-fast rahegi
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_groups_join_time ON groups(join_time);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_join_time ON users(join_time);")   
             
         conn.commit()
 
