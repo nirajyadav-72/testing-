@@ -891,7 +891,7 @@ def check_user_score(message):
     # Red Colored Close Button (Danger Style)
     markup = InlineKeyboardMarkup()
     close_button = InlineKeyboardButton(
-        text="Close Card", 
+        text="ᴄʟᴏꜱᴇ ᴄᴀʀᴅ", 
         callback_data=f"close_score_{user_id}",
         style="primary"  # Isse button Red color ka dikhega
     )
@@ -1056,10 +1056,10 @@ def send_welcome(message):
         welcome_text = (
             f"👑 *Greetings, Chief ({message.from_user.first_name})!*\n\n"
             f"⏳ Current leaderboard time: **{db_time}**\n"
-            "⚙️ You can change the time directly here by typing `/settime HH:MM`\n"
-            "🏆 To send the result immediately and reset the score, type `/sendresult`\n"
-            "📢 Replying to any message with `/broadcast` will send it to all groups and users' personal inboxes.\n"
-            "📊 Use `/status` to see the bot's live stats."
+            "⚙️ You can change the time directly here by typing *`/settime HH:MM`*\n"
+            "🏆 To send the result immediately and reset the score, type *`/sendresult`*\n"
+            "📢 Replying to any message with *`/broadcast`* will send it to all groups and users' personal inboxes.\n"
+            "📊 Use *`/status`* to see the bot's live stats."
         )
     else:
         welcome_text = (
@@ -1134,12 +1134,12 @@ def send_help(message):
         "🛠 *Setup Instructions:*\n\n"
         "**Step 1:** Add this bot to your group.\n"
         "**Step 2:** Grant the bot Admin Permissions.\n"
-        "**Step 3:** Type `/settings` inside the group to set up your poll timing and quiz language.\n\n"
+        "**Step 3:** Type *`/settings`* inside the group to set up your poll timing and quiz language.\n\n"
         "🕒 *How the System Works:*\n\n"
         "**Polls:** Sent automatically during your configured daytime intervals.\n"
         "**Leaderboard:** Published automatically every single night at **10:00 PM.**\n"
         "Scoring: Accuracy matters! The leaderboard calculates the Top 20 users with a **negative marking system** applied for wrong answers.\n\n"
-        "🔐 `/settings` - Open the configuration panel (Group Admins only)."
+        "🔐 *`/settings`* - Open the configuration panel (Group Admins only)."
     )
     markup = InlineKeyboardMarkup()
     
