@@ -859,11 +859,13 @@ def check_user_score(message):
 
     score_text = (
         f"🎉 **Congratulations {message.from_user.first_name}**, your today's quiz score!\n"
-        f"------------------------------\n\n"
+        f"📊 **Marking: Right (+2) | Wrong (-0.5)**\n"
+        f"-------------------------------------\n\n"
+        f"**Name: {message.from_user.first_name}**\n"
         f"Right: **{correct}** (+{correct * 2}) ✅\n"
         f"Wrong: **{wrong}** (-{wrong * 0.5}) ❌\n"
-        f"**Final Score: {display_score} Mark's**\n\n"
-        f"------------------------------\n"
+        f"**Final Score: {display_score} Mark's**\n"
+        f"-------------------------------------\n\n"
         f"ℹ️ Note: This score will be reset after the leaderboard is published.\n"
         f"⭐ If you don't want to wait for the results, you can\n"
         f"use the ☞ `/myscore` command at any time."
