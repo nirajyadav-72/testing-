@@ -948,6 +948,7 @@ def send_welcome(message):
     user_id = message.from_user.id
     chat_type = message.chat.type
     message_text = message.text.strip() if message.text else ""
+    current_timestamp = time.time()  # ⏱️ Naya timestamp variable
     
     # 🚨 Check if the command is for this bot specifically in groups
     if chat_type in ['group', 'supergroup']:
@@ -1030,26 +1031,29 @@ def send_welcome(message):
             try:
                 with sqlite3.connect(DB_FILE, timeout=20) as conn:
                     cursor = conn.cursor()
-                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id) VALUES (?)", (message.chat.id,))
+                    # 🛠️ Naye group data me join_time store karna suru karega
+                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id, join_time) VALUES (?, ?)", (message.chat.id, current_timestamp))
                     cursor.execute("UPDATE groups SET start_msg_id = ? WHERE chat_id = ?", (new_msg.message_id, message.chat.id))
                     conn.commit()
             except Exception: 
                 pass
 
-        # 🗑️ [NEW LOGIC] Group response delivery complete hote hi user ki command mita dein
+        # 🗑️ Group response delivery complete hote hi user ki command mita dein
         try:
             bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
         except Exception:
             pass
 
-        return  # Group chat process yahan complete ho gaya
+        return  # Group chat process complete
 
     # ==========================================
-    # 📌 2. PRIVATE CHAT LOGIC (Indentation Fixed)
+    # 📌 2. PRIVATE CHAT LOGIC
     # ==========================================
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT OR IGNORE INTO users (user_id, user_name, join_time) VALUES (?, ?, ?)", (user_id, full_name, time.time()))
+        cursor.execute("INSERT OR IGNORE INTO users (user_id, user_name, join_time) VALUES (?, ?, ?)", (user_id, full_name, current_timestamp))
+        # 🔄 Purane blank user ka join_time update karne ke liye
+        cursor.execute("UPDATE users SET join_time = ? WHERE user_id = ? AND (join_time IS NULL OR join_time = 0)", (current_timestamp, user_id))
         conn.commit()
 
     if OWNER_ID and user_id == OWNER_ID:
@@ -1104,7 +1108,7 @@ def send_welcome(message):
             bot.send_message(chat_id=message.chat.id, text=welcome_text, reply_markup=markup, parse_mode="Markdown")
         except Exception: 
             pass
-    
+        
         
 # ℹ️ हेल्प कमांड (Strict Username Validation के साथ FIXED)
 @bot.message_handler(commands=['help'])
@@ -1187,10 +1191,8 @@ def send_stats(message):
         except Exception: pass
         return
 
-    # [UPDATED] शुरुआत में ही एक लोडिंग मैसेज भेजेंगे ताकि यूज़र को लगे कि बॉट एक्टिव है
     status_msg = bot.send_message(message.chat.id, "⏳ **Fetching statistics and group data... Please wait...**", parse_mode="Markdown")
     
-    # डेटा लोड करके पुराने मैसेज को एडिट कर देंगे
     text, markup = generate_status_page(page=0)
     try:
         bot.edit_message_text(chat_id=message.chat.id, message_id=status_msg.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
@@ -1199,6 +1201,9 @@ def send_stats(message):
         except Exception: pass
 
 def generate_status_page(page=0):
+    current_time = time.time()
+    ten_days_ago = current_time - 864000  # ⏱️ 10 din pehle ka timestamp (10 * 24 * 60 * 60)
+
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT chat_id FROM groups")
@@ -1207,6 +1212,16 @@ def generate_status_page(page=0):
         cursor.execute("SELECT COUNT(*) FROM users")
         res_u = cursor.fetchone()
         u_count = res_u[0] if res_u else 0
+
+        # 📊 Pichle 10 dino me join huye users count karein
+        cursor.execute("SELECT COUNT(*) FROM users WHERE join_time >= ?", (ten_days_ago,))
+        res_nu = cursor.fetchone()
+        new_users_10_days = res_nu[0] if res_nu else 0
+
+        # 📊 Pichle 10 dino me join huye groups count karein
+        cursor.execute("SELECT COUNT(*) FROM groups WHERE join_time >= ?", (ten_days_ago,))
+        res_ng = cursor.fetchone()
+        new_groups_10_days = res_ng[0] if res_ng else 0
 
     g_count = len(all_chats)
     start_idx = page * GROUPS_PER_PAGE
@@ -1220,7 +1235,11 @@ def generate_status_page(page=0):
         f"📊 *Bot Live Status & Statistics*\n"
         f"---------------------------------------\n"
         f"🎯 Total Active Groups: **{g_count}**\n"
-        f"👤 Total Active Users: **{u_count}**\n"
+        f"👤 Total Active Users: **{u_count}**\n\n"
+        f"📈 *Growth In Last 10 Days:*\n"
+        f"➕ New Groups Added: **{new_groups_10_days}**\n"
+        f"➕ New Users Started: **{new_users_10_days}**\n"
+        f"---------------------------------------\n"
         f"📖 Page: **{page + 1} / {total_pages}**\n"
         f"---------------------------------------\n\n"
         f"⚡ *Active Groups List:*\n\n"
@@ -1262,61 +1281,48 @@ def generate_status_page(page=0):
     markup.row(InlineKeyboardButton(text="Close ❌", callback_data="status_close", style="danger"))
     return stats_text, markup
 
-# 🔄 पेज बदलने और क्लोज करने का बटन हैंडलर
 @bot.callback_query_handler(func=lambda call: call.data.startswith("statpage_") or call.data == "status_close")
 def handle_status_pagination(call):
-    # सिर्फ बॉट ओनर ही बटन दबा सकता है
     if not (OWNER_ID and call.from_user.id == OWNER_ID):
         bot.answer_callback_query(call.id, text="❌ This menu is only for the bot owner.", show_alert=True)
         return
 
     if call.data == "status_close":
-        try:
-            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-        except Exception:
-            pass
+        try: bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+        except Exception: pass
         return
 
-    # 'statpage_1' में से पेज नंबर (1) अलग निकालना
     try:
         target_page = int(call.data.split("_")[1])
-        
-        # टेलीग्राम को बताएं कि लोडिंग हो रही है
         bot.answer_callback_query(call.id, text=f"Loading Page {target_page + 1}...")
-        
-        # नए पेज का डेटा जेनरेट करें
         text, markup = generate_status_page(page=target_page)
-        
-        # पुराने मैसेज को नए पेज के डेटा से एडिट करें
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
     except Exception as e:
         print(f"पेज बदलने में एरर: {e}")
-            
 
-# 🤖 ग्रुप जॉइन/लीव ट्रैकर (सेम वेलकम मैसेज आर्किटेक्चर)
 @bot.my_chat_member_handler()
 def handle_left_or_joined(my_chat_member):
     new_status = my_chat_member.new_chat_member.status
-    old_status = my_chat_member.old_chat_member.status  # 🔍 पुराना स्टेटस ट्रैक करें
+    old_status = my_chat_member.old_chat_member.status
     chat_id = my_chat_member.chat.id
     chat_title = my_chat_member.chat.title
+    current_timestamp = time.time()
     
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
         
         if new_status in ["administrator", "member"]:
-            # Check karein ki kya group pehle se database mein maujood hai?
             cursor.execute("SELECT chat_id FROM groups WHERE chat_id = ?", (chat_id,))
             group_exists = cursor.fetchone()
             
-            # 🎯 अगर ग्रुप पहले से मौजूद नहीं है (यानी बॉट सच में नया जॉइन हुआ है)
-            # या फिर बॉट पहले ग्रुप से पूरी तरह लेफ्ट/किक हो चुका था, सिर्फ तभी वेलकम मैसेज भेजेगा।
             if not group_exists or old_status in ["left", "kicked"]:
                 if not group_exists:
-                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id, interval, last_sent_time) VALUES (?, 1800, 0)", (chat_id,))
+                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id, interval, last_sent_time, join_time) VALUES (?, 1800, 0, ?)", (chat_id, current_timestamp))
+                    conn.commit()
+                else:
+                    cursor.execute("UPDATE groups SET join_time = ? WHERE chat_id = ?", (current_timestamp, chat_id))
                     conn.commit()
                 
-                # 🖼️ 'images' फोल्डर से रैंडम फोटो चुनना
                 image_folder = "images"
                 selected_image_path = None
                 try:
@@ -1343,7 +1349,6 @@ def handle_left_or_joined(my_chat_member):
                 )
                 
                 group_markup = InlineKeyboardMarkup()
-                # 🛠️ [FIXED] t.me के बाद forward slash ( / ) जोड़ दिया गया है
                 add_to_group_url = f"https://t.me/{BOT_USERNAME}?startgroup=true"
                 group_markup.add(InlineKeyboardButton(text="✨ ᴀᴅᴅ ᴍᴇ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ", url=add_to_group_url, style="primary"))
                 
@@ -1354,12 +1359,10 @@ def handle_left_or_joined(my_chat_member):
                     else:
                         bot.send_message(chat_id=chat_id, text=group_text, reply_markup=group_markup, parse_mode="Markdown")
                 except Exception:
-                    try:
-                        bot.send_message(chat_id=chat_id, text=group_text, reply_markup=group_markup, parse_mode="Markdown")
+                    try: bot.send_message(chat_id=chat_id, text=group_text, reply_markup=group_markup, parse_mode="Markdown")
                     except Exception: pass
                 
         elif new_status in ["left", "kicked"]:
-            # Bot ko group se nikalne par data automatically clean ho jayega
             cursor.execute("DELETE FROM groups WHERE chat_id = ?", (chat_id,))
             conn.commit()
                 
@@ -1370,4 +1373,4 @@ threading.Thread(target=daily_leaderboard_scheduler, daemon=True).start()
 print("Successfully 🇮🇳 deployed...🚀")
 
 bot.infinity_polling(timeout=60, long_polling_timeout=60)
-                                         
+        
