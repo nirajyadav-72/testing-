@@ -1286,7 +1286,7 @@ def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
         active_ban_timers.pop(target_id, None)
 
 # =====================================================================
-# 🔨 2. /ban कमान्ड हैंडलर (FULLY FIXED)
+# 🔨 2. /ban कमान्ड हैंडलर (NO SINGLE-LINE SYNTAX)
 # =====================================================================
 @bot.message_handler(commands=['ban'])
 def handle_ban_command(message):
@@ -1307,12 +1307,12 @@ def handle_ban_command(message):
     if message.reply_to_message:
         user_id_to_ban = message.reply_to_message.from_user.id
         user_name = message.reply_to_message.from_user.first_name
-    # 2. Text Argument se ID nikalna (Fixed index bug)
+    # 2. Text Argument se ID nikalna
     else:
         args = message.text.split()
         if len(args) > 1:
             try:
-                user_id_to_ban = int(args[1]) # 👈 [FIXED] Pehle yahan sirf args tha, args[1] nahi
+                user_id_to_ban = int(args[1])
             except ValueError:
                 pass
 
@@ -1330,7 +1330,7 @@ def handle_ban_command(message):
             pass
         return
 
-    # Check if user is already in active timers, if yes, clear it to allow fresh ban
+    # Check if user is already in active timers
     if user_id_to_ban in active_ban_timers:
         active_ban_timers.pop(user_id_to_ban, None)
 
@@ -1341,24 +1341,28 @@ def handle_ban_command(message):
         f"⏳ <b>बैन काउंटडाउन शुरू हो चुका है!</b>\n\n"
         f"⚠️ 👤 हे {mention}, तुमने ओनर सर को नाराज किया है!\n"
         f"🛑 <b>चेतावनी:</b> चाहे तुम ग्रुप के एडमिन ही क्यों न हो, जल्दी से <b>ओनर सर को सॉरी बोलो</b> अन्यथा काउंटडाउन समाप्त होते ही मैं तुम्हें डिमोट करके हमेशा के लिए बैन कर दूंगा।\n\n"
-        f"⏱️ <b>बचा हुआ समय:</b> 5 मिनट 00秒"
+        f"⏱️ <b>बचा हुआ समय:</b> 5 मिनट 00 सेकंड"
     )
 
     try:
         warn_msg = bot.reply_to(message, warn_text, parse_mode="HTML")
         warn_msg_id = warn_msg.message_id
     except Exception as telegram_error:
-        # 🔍 Debugging alert: Agar telegram block kar raha hoga toh screen par dikhega
-        try: bot.reply_to(message, f"❌ Telegram Message Error: {telegram_error}"); except Exception: pass
+        try:
+            bot.reply_to(message, f"❌ Telegram Message Error: {telegram_error}")
+        except Exception:
+            pass
         return
 
     active_ban_timers[user_id_to_ban] = {"status": "active", "msg_id": warn_msg_id}
     
     try:
-        # Start thread safely
         threading.Thread(target=ban_countdown_thread, args=(user_id_to_ban, mention, warn_msg_id), daemon=True).start()
     except Exception as thread_error:
-        try: bot.reply_to(message, f"❌ Thread Error: {thread_error}"); except Exception: pass
+        try:
+            bot.reply_to(message, f"❌ Thread Error: {thread_error}")
+        except Exception:
+            pass
         
 
 # =====================================================================
