@@ -1298,8 +1298,8 @@ def handle_promote_command(message):
         
         success_text = (
             f"👑 <b>प्रमोशन सफल!</b>\n\n"
-            f"🎯 यूज़र {mention} (ID: <code>{user_id_to_promote}</code>) को बॉट के द्वारा सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
-            f"💡 <i>अब ओनर सर के आदेश पर यह बॉट इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर सकता.</i>"
+            f"🎯 यूज़र {mention} (ID: <code>{user_id_to_promote}</code>) को सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
+            f"💡 <i> सर आपके आदेश पर इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर दूंगा!</i>"
         )
         bot.reply_to(message, success_text, parse_mode="HTML")
     except Exception as e:
