@@ -16,7 +16,7 @@ from questions import QUIZ_LIST
 load_dotenv()
 API_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID = os.getenv("OWNER_ID")
-SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")  # 👈 [UPDATED] .env से ग्रुप आईडी लोड करने के लिए
+SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")
 
 if not API_TOKEN:
     raise ValueError("Error: BOT_TOKEN एनवायरनमेंट वेरिएबल्स में नहीं मिला!")
@@ -24,10 +24,10 @@ if not API_TOKEN:
 bot = telebot.TeleBot(API_TOKEN)
 DB_FILE = "bot_data.db"
 
-# ⏳ [MANDATORY] एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
+# ⏳ एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
 active_ban_timers = {}
 
-# 🚀 परफ़ॉर्मेंस बूस्ट: ग्लोबल बॉट यूज़रनेम वेरिएबल
+# 🚀 ग्लोबल बॉट यूज़रनेम वेरिएबल
 BOT_USERNAME = "Bot"
 try:
     BOT_USERNAME = bot.get_me().username
@@ -35,123 +35,52 @@ except Exception:
     pass
 
 if OWNER_ID:
-    try:
-        OWNER_ID = int(OWNER_ID)
-    except ValueError:
-        OWNER_ID = None
+    try: OWNER_ID = int(OWNER_ID)
+    except ValueError: OWNER_ID = None
 
-# 📌 [UPDATED] ग्रुप आईडी को टेक्स्ट से पूर्णांक (Integer) संख्या में बदलें
 if SUPPORT_GROUP_ID:
-    try:
-        SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
-    except ValueError:
-        SUPPORT_GROUP_ID = None
+    try: SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
+    except ValueError: SUPPORT_GROUP_ID = None
 
-# 💾 परमानेंट डेटाबेस आर्किटेक्चर (रीस्टार्ट प्रूफ)
+# 💾 परमानेंट डेटाबेस आर्किटेक्चर
 def init_db():
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA auto_vacuum = FULL;")
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS groups (
-                chat_id INTEGER PRIMARY KEY,
-                current_index INTEGER DEFAULT 0,
-                last_poll_id INTEGER DEFAULT NULL,
-                last_sent_time REAL DEFAULT 0,
-                language TEXT DEFAULT 'hindi',
-                interval INTEGER DEFAULT 1800,
-                auto_delete INTEGER DEFAULT 1
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                user_id INTEGER PRIMARY KEY,
-                user_name TEXT,
-                join_time REAL
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS poll_mapping (
-                poll_id TEXT PRIMARY KEY,
-                chat_id INTEGER,
-                correct_id INTEGER,
-                creation_time REAL DEFAULT 0
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS daily_scores (
-                chat_id INTEGER,
-                user_id INTEGER,
-                user_name TEXT,
-                correct_count INTEGER DEFAULT 0,
-                wrong_count INTEGER DEFAULT 0,
-                PRIMARY KEY (chat_id, user_id)
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS bot_settings (
-                key TEXT PRIMARY KEY,
-                value TEXT
-            )
-        ''')
+        cursor.execute('CREATE TABLE IF NOT EXISTS groups (chat_id INTEGER PRIMARY KEY, current_index INTEGER DEFAULT 0, last_poll_id INTEGER DEFAULT NULL, last_sent_time REAL DEFAULT 0, language TEXT DEFAULT "hindi", interval INTEGER DEFAULT 1800, auto_delete INTEGER DEFAULT 1)')
+        cursor.execute('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, user_name TEXT, join_time REAL)')
+        cursor.execute('CREATE TABLE IF NOT EXISTS poll_mapping (poll_id TEXT PRIMARY KEY, chat_id INTEGER, correct_id INTEGER, creation_time REAL DEFAULT 0)')
+        cursor.execute('CREATE TABLE IF NOT EXISTS daily_scores (chat_id INTEGER, user_id INTEGER, user_name TEXT, correct_count INTEGER DEFAULT 0, wrong_count INTEGER DEFAULT 0, PRIMARY KEY (chat_id, user_id))')
+        cursor.execute('CREATE TABLE IF NOT EXISTS bot_settings (key TEXT PRIMARY KEY, value TEXT)')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
         
-        # 🔍 [ANTI-SPAM SETTINGS DB] पुराना सेटिंग्स कॉलम लॉजिक
-        try:
-            cursor.execute("ALTER TABLE groups ADD COLUMN settings_msg_id INTEGER DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass 
+        try: cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
+        except sqlite3.OperationalError: pass
+        try: cursor.execute("ALTER TABLE groups ADD COLUMN settings_msg_id INTEGER DEFAULT 0")
+        except sqlite3.OperationalError: pass 
+        try: cursor.execute("ALTER TABLE groups ADD COLUMN start_msg_id INTEGER DEFAULT 0")
+        except sqlite3.OperationalError: pass 
+        try: cursor.execute("ALTER TABLE groups ADD COLUMN help_msg_id INTEGER DEFAULT 0")
+        except sqlite3.OperationalError: pass 
+        try: cursor.execute("ALTER TABLE groups ADD COLUMN join_time REAL DEFAULT 0")
+        except sqlite3.OperationalError: pass 
+        try: cursor.execute("ALTER TABLE daily_scores ADD COLUMN last_score_msg_id INTEGER DEFAULT 0")
+        except sqlite3.OperationalError: pass 
+        try: cursor.execute("ALTER TABLE poll_mapping ADD COLUMN creation_time REAL DEFAULT 0")
+        except sqlite3.OperationalError: pass
+        try: cursor.execute("ALTER TABLE groups ADD COLUMN last_warning_time REAL DEFAULT 0")
+        except sqlite3.OperationalError: pass
 
-        # 🔍 [ANTI-SPAM START DB] /start मैसेज आईडी सेव करने के लिए नया कॉलम जोड़ा गया
-        try:
-            cursor.execute("ALTER TABLE groups ADD COLUMN start_msg_id INTEGER DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass 
-
-        # 🔍 [ANTI-SPAM HELP DB] /help मैसेज आईडी सेव करने के लिए नया कॉलम जोड़ा गया
-        try:
-            cursor.execute("ALTER TABLE groups ADD COLUMN help_msg_id INTEGER DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass 
-            
-        # 🔍 [NEW 10-DAYS TRACKING] Groups table me join_time store karne ke liye column
-        try:
-            cursor.execute("ALTER TABLE groups ADD COLUMN join_time REAL DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass 
-            
-        # 🔍 [ANTI-SPAM MYSCORE DB] यूज़र का पिछला स्कोर कार्ड मैसेज आईडी सेव करने के लिए कॉलम
-        try:
-            cursor.execute("ALTER TABLE daily_scores ADD COLUMN last_score_msg_id INTEGER DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass 
-            
-        try:
-            cursor.execute("ALTER TABLE poll_mapping ADD COLUMN creation_time REAL DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass
-
-        # 🔍 [WARNING TRACKER DB] बॉट एडमिन न होने पर वार्निंग टाइम याद रखने के लिए नया कॉलम
-        try:
-            cursor.execute("ALTER TABLE groups ADD COLUMN last_warning_time REAL DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass
-
-        # ⚡ [SPEED BOOSTER INDEXES] Isse 10-days status query hamesha super-fast rahegi
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_groups_join_time ON groups(join_time);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_join_time ON users(join_time);")   
-            
         conn.commit()
 
 init_db()
 
-# Helper function to escape HTML special characters to prevent formatting bugs
 def escape_html(text):
-    if not text:
-        return ""
+    if not text: return ""
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    
+
 def is_user_admin(chat_id, user_id):
     if OWNER_ID and user_id == OWNER_ID:
         return True
@@ -160,6 +89,28 @@ def is_user_admin(chat_id, user_id):
         return member.status in ['creator', 'administrator']
     except Exception:
         return False
+
+
+# 💾 🤖 AUTOMATIC USER TRACKER (Strict Group Only)
+@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
+def track_and_save_users(message):
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        return
+    if message.from_user and not message.from_user.is_bot:
+        u_id = message.from_user.id
+        u_name = message.from_user.first_name
+        u_username = message.from_user.username
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
+                if cursor.fetchone():
+                    cursor.execute("UPDATE users SET user_name = ?, username = ? WHERE user_id = ?", (u_name, u_username, u_id))
+                else:
+                    cursor.execute("INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)", (u_id, u_name, u_username, time.time()))
+                conn.commit()
+        except Exception as e: print(f"DB Error: {e}")
+        
 
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
