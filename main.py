@@ -1174,26 +1174,6 @@ def send_help(message):
     except Exception: 
         pass
 
-# 💾 🤖 AUTOMATIC USER TRACKER (Strict Group Only)
-@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
-def track_and_save_users(message):
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        return
-    if message.from_user and not message.from_user.is_bot:
-        u_id = message.from_user.id
-        u_name = message.from_user.first_name
-        u_username = message.from_user.username
-        try:
-            with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                cursor = conn.cursor()
-                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
-                if cursor.fetchone():
-                    cursor.execute("UPDATE users SET user_name = ?, username = ? WHERE user_id = ?", (u_name, u_username, u_id))
-                else:
-                    cursor.execute("INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)", (u_id, u_name, u_username, time.time()))
-                conn.commit()
-        except Exception as e: print(f"DB Error: {e}")
-            
 # =====================================================================
 # 👑 3.5 /promote कमांड हैंडलर (Strict Group ID Check + Warning Alert)
 # =====================================================================
