@@ -1299,7 +1299,8 @@ def handle_promote_command(message):
         
         success_text = (
             f"👑 <b>प्रमोशन सफल!</b>\n\n"
-            f"✨ Name {mention} (ID: <code>{user_id_to_promote}</code>) को सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
+            f"✨ Name {mention}\n"
+            f"✨ [ID: <code>{user_id_to_promote}</code>] को सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
             f"💡 <i> सर आपके आदेश पर इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर दूंगा!</i>"
         )
         bot.reply_to(message, success_text, parse_mode="HTML")
@@ -1380,8 +1381,8 @@ def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
         if remaining_minutes > 0:
             update_text = (
                 f"⏳ <b>बैन काउंटडाउन जारी है...</b>\n\n"
-                f"⚠️ 👤 हे {target_mention}, तुम्हारे पास समय बहुत कम है!\n"
-                f"🛑 <b>ओनर सर को सॉरी बोलो</b> नहीं तो काउंटडाउन समाप्त होते ही तुम्हारे एडमिन राइट्स छीन कर तुम्हें बैन कर दिया जाएगा।\n\n"
+                f"👤 हे {target_mention}, तुम्हारे पास समय बहुत कम है!\n"
+                f"✨ <b>ओनर सर को सॉरी बोलो</b> नहीं तो काउंटडाउन समाप्त होते ही तुम्हारे एडमिन राइट्स छीन कर तुम्हें बैन कर दिया जाएगा।\n\n"
                 f"⏱️ <b>बचा हुआ समय:</b> {remaining_minutes} मिनट 00 सेकंड"
             )
             try:
@@ -1400,7 +1401,7 @@ def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
                 can_manage_video_chats=False, is_anonymous=False
             )
             bot.ban_chat_member(SUPPORT_GROUP_ID, target_id)
-            final_text = f"🎯 <b>समय समाप्त!</b>\n\nयूज़र {target_mention} ने माफ़ी नहीं मांगी, इसलिए इसके एडमिन राइट्स छीन कर इसे ग्रुप से <b>बैन (Ban)</b> कर दिया गया है। 🔨"
+            final_text = f"🎯 <b>समय समाप्त!</b>\n\nयूज़र {target_mention} ने माफ़ी नहीं मांगी, इसलिए इसके एडमिन राइट्स छीन कर इसे ग्रुप से <b>बैन (Ban)</b> कर दिया गया है। ✅"
             bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=final_text, parse_mode="HTML")
         except Exception as e:
             try:
@@ -1464,8 +1465,8 @@ def handle_ban_command(message):
 
     warn_text = (
         f"⏳ <b>बैन काउंटडाउन शुरू हो चुका है!</b>\n\n"
-        f"⚠️ 👤 हे {mention}, तुमने ओनर सर को नाराज किया है!\n"
-        f"🛑 <b>चेतावनी:</b> चाहे तुम ग्रुप के एडमिन ही क्यों न हो, जल्दी से <b>ओनर सर को सॉरी बोलो</b> अन्यथा काउंटडाउन समाप्त होते ही मैं तुम्हें डिमोट करके हमेशा के लिए बैन कर दूंगा।\n\n"
+        f"👤 हे {mention}, तुमने ओनर सर को नाराज किया है!\n"
+        f"✨ <b>चेतावनी:</b> चाहे तुम ग्रुप के एडमिन ही क्यों न हो, जल्दी से <b>ओनर सर को सॉरी बोलो</b> अन्यथा काउंटडाउन समाप्त होते ही मैं तुम्हें डिमोट करके हमेशा के लिए बैन कर दूंगा।\n\n"
         f"⏱️ <b>बचा हुआ समय:</b> 5 मिनट 00 सेकंड"
     )
 
