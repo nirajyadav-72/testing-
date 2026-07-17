@@ -90,6 +90,12 @@ def init_db():
         ''')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
         
+        # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
+        except sqlite3.OperationalError:
+            pass
+
         # 🔍 [ANTI-SPAM SETTINGS DB] पुराना सेटिंग्स कॉलम लॉजिक
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN settings_msg_id INTEGER DEFAULT 0")
@@ -125,7 +131,6 @@ def init_db():
         except sqlite3.OperationalError:
             pass 
             
-            
         conn.commit()
 
 init_db()
@@ -143,6 +148,40 @@ def escape_html(text):
     if not text: return ""
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
+
+# =====================================================================
+# 🏵️ 🤖 AUTOMATIC USER TRACKER (Strictly Restricted to Support Group Only
+#=====================================================================
+@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
+def track_and_save_users(message):
+    # 🔒 SURAKSHA CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar ke messages ko track karega
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        return
+
+    # Bot automatic group ke har active user ka latest data DB me save/update karega
+    if message.from_user and not message.from_user.is_bot:
+        u_id = message.from_user.id
+        u_name = message.from_user.first_name
+        u_username = message.from_user.username  # Telegram username bina @ ke
+        
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                # Check karein user pehle se hai ya nahi
+                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
+                if cursor.fetchone():
+                    cursor.execute(
+                        "UPDATE users SET user_name = ?, username = ? WHERE user_id = ?",
+                        (u_name, u_username, u_id)
+                    )
+                else:
+                    cursor.execute(
+                        "INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)",
+                        (u_id, u_name, u_username, time.time())
+                    )
+                conn.commit()
+        except Exception as e:
+            print(f"Error updating user tracker DB: {e}")
 
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
