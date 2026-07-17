@@ -1186,20 +1186,29 @@ def send_help(message):
         pass
 
 # =====================================================================
-# 📢 1. /send कमांड हैंडलर (सिर्फ ओनर के लिए - सपोर्ट ग्रुप में मीडिया भेजने को)
+# 📢 1. /send कमांड हैंडलर (सिर्फ ओनर के लिए)
 # =====================================================================
 @bot.message_handler(commands=['send'])
 def handle_send_command(message):
     if OWNER_ID is None or message.from_user.id != OWNER_ID:
-        try: bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!"); except Exception: pass
+        try:
+            bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!")
+        except Exception:
+            pass
         return
 
     if SUPPORT_GROUP_ID is None:
-        try: bot.reply_to(message, "❌ त्रुटि: .env फ़ाइल में SUPPORT_GROUP_ID नहीं मिला या गलत है!"); except Exception: pass
+        try:
+            bot.reply_to(message, "❌ त्रुटि: .env फ़ाइल में SUPPORT_GROUP_ID नहीं मिला या गलत है!")
+        except Exception:
+            pass
         return
 
     if not message.reply_to_message:
-        try: bot.reply_to(message, "💡 <b>कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!</b>", parse_mode="HTML"); except Exception: pass
+        try:
+            bot.reply_to(message, "💡 <b>कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!</b>", parse_mode="HTML")
+        except Exception:
+            pass
         return
 
     reply_msg = message.reply_to_message
@@ -1226,8 +1235,10 @@ def handle_send_command(message):
 
         bot.reply_to(message, "✅ मैसेज सफलतापूर्वक आपके सपोर्ट ग्रुप में भेज दिया गया है।")
     except Exception as e:
-        try: bot.reply_to(message, f"❌ मैसेज भेजने में विफलता आई: {e}"); except Exception: pass
-
+        try:
+            bot.reply_to(message, f"❌ मैसेज भेजने में विफलता आई: {e}")
+        except Exception:
+            pass
 
 # =====================================================================
 # ⏳ काउंटडाउन थ्रेड फंक्शन (Isolated outside the handler to fix syntax/scope)
