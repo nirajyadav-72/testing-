@@ -1194,43 +1194,95 @@ def track_and_save_users(message):
                 conn.commit()
         except Exception as e: print(f"DB Error: {e}")
             
+# =====================================================================
+# 👑 3.5 /promote कमांड हैंडलर (Strict Group ID Check + Warning Alert)
+# =====================================================================
 @bot.message_handler(commands=['promote'])
 def handle_promote_command(message):
-    if OWNER_ID is None or message.from_user.id != OWNER_ID: return
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        try: bot.reply_to(message, "❌ <b>सुरक्षा चेतावनी:</b> यह कमांड केवल मुख्य आधिकारिक सपोर्ट ग्रुप के अंदर ही काम कर सकती है!", parse_mode="HTML")
-        except Exception: pass
+    if OWNER_ID is None or message.from_user.id != OWNER_ID: 
         return
-    user_id_to_promote, user_name = None, "यूज़र"
+        
+    # 🔒 SURAKSHA CHECK: Agar chat ID support group se match nahi karti
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        try:
+            bot.reply_to(message, "❌ <b>सुरक्षा चेतावनी:</b> यह कमांड केवल मुख्य आधिकारिक सपोर्ट ग्रुप के अंदर ही काम कर सकती है! आप इसे यहाँ इस्तेमाल नहीं कर सकते।", parse_mode="HTML")
+        except Exception:
+            pass
+        return
+
+    user_id_to_promote = None
+    user_name = "यूज़र"
+
+    # 1. Reply se ID nikalna
     if message.reply_to_message:
         user_id_to_promote = message.reply_to_message.from_user.id
         user_name = message.reply_to_message.from_user.first_name
+    # 2. Text Argument se ID nikalna
     else:
         args = message.text.split(maxsplit=1)
         if len(args) > 1:
             input_text = args[1].strip()
-            if input_text.isdigit(): user_id_to_promote = int(input_text)
+            if input_text.isdigit():
+                user_id_to_promote = int(input_text)
             else:
                 clean_search = input_text.replace("@", "").strip().lower()
                 try:
                     with sqlite3.connect(DB_FILE, timeout=20) as conn:
                         cursor = conn.cursor()
-                        cursor.execute("SELECT user_id, user_name FROM users WHERE LOWER(username) = ? OR LOWER(user_name) LIKE ? LIMIT 1", (clean_search, f"%{clean_search}%"))
+                        cursor.execute(
+                            "SELECT user_id, user_name FROM users WHERE LOWER(username) = ? OR LOWER(user_name) LIKE ? LIMIT 1",
+                            (clean_search, f"%{clean_search}%")
+                        )
                         row = cursor.fetchone()
-                        if row: user_id_to_promote, user_name = row[0], row[1]
-                except Exception: pass
+                        if row:
+                            user_id_to_promote = row[0]
+                            user_name = row[1]
+                except Exception as db_err:
+                    print(f"Database search error in promote: {db_err}")
+
     if not user_id_to_promote:
-        try: bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र पर रिप्लाई करके <code>/promote</code> लिखें या <code>/promote @username</code> लिखें।", parse_mode="HTML")
-        except Exception: pass
+        try:
+            error_msg = (
+                "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/promote</code> लिखें,\n"
+                "या फिर <code>/promote @username</code> या <code>/promote User_Name</code> लिखें।\n\n"
+                "⚠️ <i>नोट: यूज़र का बॉट के डेटाबेस में होना (यानी ग्रुप में पहले कोई मैसेज किया होना) ज़रूरी है!</i>"
+            )
+            bot.reply_to(message, error_msg, parse_mode="HTML")
+        except Exception:
+            pass
         return
+
     try:
-        bot.promote_chat_member(chat_id=SUPPORT_GROUP_ID, user_id=user_id_to_promote, can_change_info=False, can_post_messages=False, can_edit_messages=False, can_delete_messages=True, can_invite_users=True, can_restrict_members=True, can_pin_messages=True, can_promote_members=False, can_manage_chat=True, can_manage_video_chats=True, is_anonymous=False)
+        bot.promote_chat_member(
+            chat_id=SUPPORT_GROUP_ID,
+            user_id=user_id_to_promote,
+            can_change_info=False,
+            can_post_messages=False,
+            can_edit_messages=False,
+            can_delete_messages=True,
+            can_invite_users=True,
+            can_restrict_members=True,
+            can_pin_messages=True,
+            can_promote_members=False,
+            can_manage_chat=True,
+            can_manage_video_chats=True,
+            is_anonymous=False
+        )
+        
         safe_name = escape_html(user_name)
         mention = f'<a href="tg://user?id={user_id_to_promote}">{safe_name}</a>'
-        bot.reply_to(message, f"👑 <b>प्रमोशन सफल!</b>\n\n🎯 यूज़र {mention} को बॉट के द्वारा सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।", parse_mode="HTML")
+        
+        success_text = (
+            f"👑 <b>प्रमोशन सफल!</b>\n\n"
+            f"🎯 यूज़र {mention} (ID: <code>{user_id_to_promote}</code>) को बॉट के द्वारा सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
+            f"💡 <i>अब ओनर सर के आदेश पर यह बॉट इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर सकता.</i>"
+        )
+        bot.reply_to(message, success_text, parse_mode="HTML")
     except Exception as e:
-        try: bot.reply_to(message, f"❌ प्रमोट करने में विफलता आई: {e}")
-        except Exception: pass
+        try:
+            bot.reply_to(message, f"❌ प्रमोट करने में विफलता आई: {e}")
+        except Exception:
+            pass
             
 # =====================================================================
 # 📢 1. /send कमांड हैंडलर (सिर्फ ओनर के लिए)
