@@ -2,7 +2,6 @@ import os
 import time
 import sqlite3
 import threading
-import logging
 from datetime import datetime
 import pytz
 import random
@@ -17,20 +16,18 @@ from questions import QUIZ_LIST
 load_dotenv()
 API_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID = os.getenv("OWNER_ID")
-SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")  # 👈 [UPDATED] .env से ग्रुप आईडी लोड करने के लिए
+SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")
 
 if not API_TOKEN:
     raise ValueError("Error: BOT_TOKEN एनवायरनमेंट वेरिएबल्स में नहीं मिला!")
 
 bot = telebot.TeleBot(API_TOKEN)
-telebot.logger.setLevel(logging.CRITICAL)
-
 DB_FILE = "bot_data.db"
 
 # ⏳ एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
 active_ban_timers = {}
 
-# 🚀 परफ़ॉर्मेंस बूस्ट: ग्लोबल बॉट यूज़रनेम वेरिएबल
+# 🚀 ग्लोबल बॉट यूज़रनेम वेरिएबल
 BOT_USERNAME = "Bot"
 try:
     BOT_USERNAME = bot.get_me().username
@@ -38,17 +35,12 @@ except Exception:
     pass
 
 if OWNER_ID:
-    try:
-        OWNER_ID = int(OWNER_ID)
-    except ValueError:
-        OWNER_ID = None
+    try: OWNER_ID = int(OWNER_ID)
+    except ValueError: OWNER_ID = None
 
-# 📌 [UPDATED] ग्रुप आईडी को टेक्स्ट से पूर्णांक (Integer) संख्या में बदलें
 if SUPPORT_GROUP_ID:
-    try:
-        SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
-    except ValueError:
-        SUPPORT_GROUP_ID = None
+    try: SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
+    except ValueError: SUPPORT_GROUP_ID = None
 
 # 💾 परमानेंट डेटाबेस आर्किटेक्चर (रीस्टार्ट प्रूफ)
 def init_db():
