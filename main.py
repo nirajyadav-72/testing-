@@ -25,6 +25,8 @@ from telebot import apihelper
 apihelper.ENABLE_MIDDLEWARE = True  # [ADD THIS LINE FIRST]
 
 bot = telebot.TeleBot(API_TOKEN)
+telebot.logger.setLevel(logging.CRITICAL)
+
 DB_FILE = "bot_data.db"
 
 # ⏳ एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
