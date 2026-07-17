@@ -1241,7 +1241,7 @@ def handle_send_command(message):
             pass
 
 # =====================================================================
-# ⏳ काउंटडाउन थ्रेड फंक्शन (Isolated outside the handler to fix syntax/scope)
+# ⏳ काउंटडाउन थ्रेड फंक्शन (Fixed Indentation & Single-Line Syntax)
 # =====================================================================
 def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
     remaining_minutes = 5
@@ -1260,7 +1260,10 @@ def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
                 f"🛑 <b>ओनर सर को सॉरी बोलो</b> नहीं तो काउंटडाउन समाप्त होते ही तुम्हारे एडमिन राइट्स छीन कर तुम्हें बैन कर दिया जाएगा।\n\n"
                 f"⏱️ <b>बचा हुआ समय:</b> {remaining_minutes} मिनट 00 सेकंड"
             )
-            try: bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=update_text, parse_mode="HTML"); except Exception: pass
+            try:
+                bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=update_text, parse_mode="HTML")
+            except Exception:
+                pass
     
     # Final execution after 5 minutes
     if target_id in active_ban_timers and active_ban_timers[target_id]["status"] == "active":
@@ -1276,10 +1279,12 @@ def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
             final_text = f"🎯 <b>समय समाप्त!</b>\n\nयूज़र {target_mention} ने माफ़ी नहीं मांगी, इसलिए इसके एडमिन राइट्स छीन कर इसे ग्रुप से <b>बैन (Ban)</b> कर दिया गया है। 🔨"
             bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=final_text, parse_mode="HTML")
         except Exception as e:
-            try: bot.send_message(SUPPORT_GROUP_ID, f"❌ बैन करने में विफलता: {e}"); except Exception: pass
+            try:
+                bot.send_message(SUPPORT_GROUP_ID, f"❌ बैन करने में विफलता: {e}")
+            except Exception:
+                pass
         active_ban_timers.pop(target_id, None)
-
-
+                
 # =====================================================================
 # 🔨 2. /ban कमांड हैंडलर
 # =====================================================================
