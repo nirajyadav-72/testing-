@@ -20,6 +20,9 @@ SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")
 
 if not API_TOKEN:
     raise ValueError("Error: BOT_TOKEN एनवायरनमेंट वेरिएबल्स में नहीं मिला!")
+# .env lines ke niche jahan bot initialize ho raha hai:
+from telebot import apihelper
+apihelper.ENABLE_MIDDLEWARE = True  # [ADD THIS LINE FIRST]
 
 bot = telebot.TeleBot(API_TOKEN)
 DB_FILE = "bot_data.db"
