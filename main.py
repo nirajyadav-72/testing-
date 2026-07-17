@@ -1298,8 +1298,9 @@ def handle_ban_command(message):
 
     active_ban_timers[user_id_to_ban] = {"status": "active", "msg_id": warn_msg_id}
     
-    # काउंटडाउन थ्रेड फंक्शन
-    def ban_countdown_thread(target_id, target_mention, target_name, message_id_to_edit):
+    
+# काउंटडाउन थ्रेड फंक्शन
+def ban_countdown_thread(target_id, target_mention, target_name, message_id_to_edit):
         remaining_minutes = 5
         while remaining_minutes > 0:
             time.sleep(60)
@@ -1380,72 +1381,6 @@ def handle_cancel_ban(message):
                 cancel_text = "✅ **ओनर सर ने तुम्हें माफ़ कर दिया!**\nबैन की प्रक्रिया को यहीं रोक दिया गया है। अगली बार नियमों का पालन करें।"
                 bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=msg_id, text=cancel_text, parse_mode="Markdown")
             except Exception: pass
-    
-# 📢 /send कमांड हैंडलर (रिप्लाई किए गए मैसेज को सपोर्ट ग्रुप में भेजने के लिए)
-@bot.message_handler(commands=['send'])
-def handle_send_command(message):
-    # 1. सुरक्षा जांच: केवल .env वाला OWNER_ID ही इस कमांड को चला सकता है
-    if OWNER_ID is None or message.from_user.id != OWNER_ID:
-        try:
-            bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!")
-        except Exception: pass
-        return
-
-    # 2. ग्रुप आईडी जांच: चेक करें कि .env से SUPPORT_GROUP_ID सही से लोड हुआ है या नहीं
-    if SUPPORT_GROUP_ID is None:
-        try:
-            bot.reply_to(message, "❌ त्रुटि: .env फ़ाइल में SUPPORT_GROUP_ID नहीं मिला या गलत है!")
-        except Exception: pass
-        return
-
-    # 3. रिप्लाई जांच: चेक करें कि क्या आपने किसी मैसेज पर रिप्लाई करके /send लिखा है
-    if not message.reply_to_message:
-        try:
-            bot.reply_to(message, "💡 *कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!*", parse_mode="Markdown")
-        except Exception: pass
-        return
-
-    reply_msg = message.reply_to_message
-
-    try:
-        # 4. मैसेज टाइप के अनुसार सिर्फ सपोर्ट ग्रुप में सेंड करना
-        if reply_msg.text:
-            bot.send_message(SUPPORT_GROUP_ID, reply_msg.text, entities=reply_msg.entities)
-            
-        elif reply_msg.photo:
-            bot.send_photo(SUPPORT_GROUP_ID, reply_msg.photo[-1].file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
-            
-        elif reply_msg.video:
-            bot.send_video(SUPPORT_GROUP_ID, reply_msg.video.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
-            
-        elif reply_msg.sticker:
-            bot.send_sticker(SUPPORT_GROUP_ID, reply_msg.sticker.file_id)
-            
-        elif reply_msg.document:
-            bot.send_document(SUPPORT_GROUP_ID, reply_msg.document.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
-            
-        elif reply_msg.voice:
-            bot.send_voice(SUPPORT_GROUP_ID, reply_msg.voice.file_id, caption=reply_msg.caption)
-            
-        elif reply_msg.audio:
-            bot.send_audio(SUPPORT_GROUP_ID, reply_msg.audio.file_id, caption=reply_msg.caption)
-            
-        elif reply_msg.animation:  # GIFs के लिए
-            bot.send_animation(SUPPORT_GROUP_ID, reply_msg.animation.file_id, caption=reply_msg.caption)
-            
-        else:
-            # अन्य किसी भी प्रकार के मीडिया या मैसेज के लिए सुरक्षित कॉपी बैकअप
-            bot.copy_message(SUPPORT_GROUP_ID, from_chat_id=message.chat.id, message_id=reply_msg.message_id)
-
-        # सफलता का नोटिफिकेशन ओनर को देना
-        bot.reply_to(message, "✅ मैसेज सफलतापूर्वक आपके सपोर्ट ग्रुप में भेज दिया गया है।")
-
-    except Exception as e:
-        # अगर टेलीग्राम कोई एरर देता है (जैसे बॉट सपोर्ट ग्रुप में मौजूद न हो)
-        try:
-            bot.reply_to(message, f"❌ मैसेज भेजने में विफलता आई: {e}\n\n💡 सुनिश्चित करें कि बॉट उस ग्रुप में एडमिन के रूप में मौजूद है।")
-        except Exception: pass
-        
 
 # 📊 लाइव स्टेटस कमांड (Strict Group & Owner Security Added)
 GROUPS_PER_PAGE = 10
