@@ -150,10 +150,10 @@ def escape_html(text):
 
 
 # =====================================================================
-# 🏵️ 🤖 AUTOMATIC USER TRACKER (Strictly Restricted to Support Group Only
-#=====================================================================
-@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
-def track_and_save_users(message):
+# 💾 🤖 AUTOMATIC USER TRACKER (Bypassed & Restructured to prevent command blocking)
+# =====================================================================
+@bot.middleware_handler(update_types=['message'])
+def track_and_save_users(bot_instance, message):
     # 🔒 SURAKSHA CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar ke messages ko track karega
     if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
         return
@@ -182,7 +182,7 @@ def track_and_save_users(message):
                 conn.commit()
         except Exception as e:
             print(f"Error updating user tracker DB: {e}")
-
+            
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
 def global_poll_manager():
