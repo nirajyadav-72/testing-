@@ -1182,6 +1182,205 @@ def send_help(message):
     except Exception: 
         pass
 
+# =====================================================================
+# ⏳ ग्लोबल वैरिएबल्स (बैन काउंटडाउन को ट्रैक करने के लिए)
+# =====================================================================
+active_ban_timers = {}
+
+# =====================================================================
+# 📢 1. /send कमांड हैंडलर (सिर्फ ओनर के लिए - सपोर्ट ग्रुप में मीडिया भेजने को)
+# =====================================================================
+@bot.message_handler(commands=['send'])
+def handle_send_command(message):
+    # सुरक्षा जांच
+    if OWNER_ID is None or message.from_user.id != OWNER_ID:
+        try: bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!"); except Exception: pass
+        return
+
+    # .env ग्रुप आईडी जांच
+    if SUPPORT_GROUP_ID is None:
+        try: bot.reply_to(message, "❌ त्रुटि: .env फ़ाइल में SUPPORT_GROUP_ID नहीं मिला या गलत है!"); except Exception: pass
+        return
+
+    # रिप्लाई जांच
+    if not message.reply_to_message:
+        try: bot.reply_to(message, "💡 *कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!*", parse_mode="Markdown"); except Exception: pass
+        return
+
+    reply_msg = message.reply_to_message
+
+    try:
+        # मैसेज टाइप के अनुसार सिर्फ सपोर्ट ग्रुप में सेंड करना
+        if reply_msg.text:
+            bot.send_message(SUPPORT_GROUP_ID, reply_msg.text, entities=reply_msg.entities)
+            
+        elif reply_msg.photo:
+            bot.send_photo(SUPPORT_GROUP_ID, reply_msg.photo[-1].file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
+            
+        elif reply_msg.video:
+            bot.send_video(SUPPORT_GROUP_ID, reply_msg.video.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
+            
+        elif reply_msg.sticker:
+            bot.send_sticker(SUPPORT_GROUP_ID, reply_msg.sticker.file_id)
+            
+        elif reply_msg.document:
+            bot.send_document(SUPPORT_GROUP_ID, reply_msg.document.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
+            
+        elif reply_msg.voice:
+            bot.send_voice(SUPPORT_GROUP_ID, reply_msg.voice.file_id, caption=reply_msg.caption)
+            
+        elif reply_msg.audio:
+            bot.send_audio(SUPPORT_GROUP_ID, reply_msg.audio.file_id, caption=reply_msg.caption)
+            
+        elif reply_msg.animation:
+            bot.send_animation(SUPPORT_GROUP_ID, reply_msg.animation.file_id, caption=reply_msg.caption)
+            
+        else:
+            bot.copy_message(SUPPORT_GROUP_ID, from_chat_id=message.chat.id, message_id=reply_msg.message_id)
+
+        bot.reply_to(message, "✅ मैसेज सफलतापूर्वक आपके सपोर्ट ग्रुप में भेज दिया गया है।")
+
+    except Exception as e:
+        try: bot.reply_to(message, f"❌ मैसेज भेजने में विफलता आई: {e}"); except Exception: pass
+
+# =====================================================================
+# 🔨 2. /ban कमांड हैंडलर (एडमिन्स के लिए भी - 5 मिनट काउंटडाउन के साथ)
+# =====================================================================
+@bot.message_handler(commands=['ban'])
+def handle_ban_command(message):
+    # सुरक्षा जांच: केवल ओनर चला सकता है
+    if OWNER_ID is None or message.from_user.id != OWNER_ID:
+        return
+
+    # लोकेशन जांच: केवल .env वाले SUPPORT_GROUP_ID के अंदर काम करेगा
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        try: bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!"); except Exception: pass
+        return
+
+    user_id_to_ban = None
+    user_name = "यूज़र"
+    mention = "यूज़र"
+
+    # यूज़र आईडी ढूंढना
+    if message.reply_to_message:
+        user_id_to_ban = message.reply_to_message.from_user.id
+        user_name = message.reply_to_message.from_user.first_name
+        mention = f"[{user_name}](tg://user?id={user_id_to_ban})"
+    else:
+        args = message.text.split()
+        if len(args) > 1:
+            try: user_id_to_ban = int(args[1]); except ValueError: pass
+
+    if not user_id_to_ban:
+        try: bot.reply_to(message, "💡 *तरीका:* यूज़र के मैसेज पर रिप्लाई करके `/ban` लिखें।", parse_mode="Markdown"); except Exception: pass
+        return
+
+    if user_id_to_ban == OWNER_ID:
+        try: bot.reply_to(message, "❌ आप खुद को बैन नहीं कर सकते!"); except Exception: pass
+        return
+
+    if user_id_to_ban in active_ban_timers:
+        try: bot.reply_to(message, "⏳ इस यूज़र के लिए चेतावनी काउंटडाउन पहले से ही चालू है!"); except Exception: pass
+        return
+
+    # चेतावनी मैसेज टेक्स्ट
+    warn_text = (
+        f"⏳ **बैन काउंटडाउन शुरू हो चुका है!**\n\n"
+        f"⚠️ 👤 हे {mention}, तुमने ओनर सर को नाराज किया है!\n"
+        f"🛑 **चेतावनी:** चाहे तुम ग्रुप के एडमिन ही क्यों न हो, जल्दी से **ओनर सर को सॉरी बोलो** अन्यथा काउंटडाउन समाप्त होते ही मैं तुम्हें डिमोट करके हमेशा के लिए बैन कर दूंगा।\n\n"
+        f"⏱️ **बचा हुआ समय:** 5 मिनट 00 सेकंड"
+    )
+
+    try:
+        warn_msg = bot.reply_to(message, warn_text, parse_mode="Markdown")
+        warn_msg_id = warn_msg.message_id
+    except Exception: return
+
+    active_ban_timers[user_id_to_ban] = {"status": "active", "msg_id": warn_msg_id}
+    
+    # काउंटडाउन थ्रेड फंक्शन
+    def ban_countdown_thread(target_id, target_mention, target_name, message_id_to_edit):
+        remaining_minutes = 5
+        while remaining_minutes > 0:
+            time.sleep(60)
+            remaining_minutes -= 1
+            
+            if target_id not in active_ban_timers or active_ban_timers[target_id]["status"] != "active":
+                return
+            
+            if remaining_minutes > 0:
+                update_text = (
+                    f"⏳ **बैन काउंटडाउन जारी है...**\n\n"
+                    f"⚠️ 👤 हे {target_mention}, तुम्हारे पास समय बहुत कम है!\n"
+                    f"🛑 **ओनर सर को सॉरी बोलो** नहीं तो काउंटडाउन समाप्त होते ही तुम्हारे एडमिन राइट्स छीन कर तुम्हें बैन कर दिया जाएगा।\n\n"
+                    f"⏱️ **बचा हुआ समय:** {remaining_minutes} मिनट 00 सेकंड"
+                )
+                try: bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=update_text, parse_mode="Markdown"); except Exception: pass
+        
+        # समय समाप्त होने पर फैसला
+        if target_id in active_ban_timers and active_ban_timers[target_id]["status"] == "active":
+            try:
+                # एडमिन डिमोट लॉजिक
+                bot.promote_chat_member(
+                    chat_id=SUPPORT_GROUP_ID, user_id=target_id,
+                    can_change_info=False, can_post_messages=False, can_edit_messages=False,
+                    can_delete_messages=False, can_invite_users=False, can_restrict_members=False,
+                    can_pin_messages=False, can_promote_members=False, can_manage_chat=False,
+                    can_manage_video_chats=False, is_anonymous=False
+                )
+                bot.ban_chat_member(SUPPORT_GROUP_ID, target_id)
+                final_text = f"🎯 **समय समाप्त!**\n\nयूज़र {target_mention} ने माफ़ी नहीं मांगी, इसलिए इसके एडमिन राइट्स छीन कर इसे ग्रुप से **बैन (Ban)** कर दिया गया है। 🔨"
+                bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=final_text, parse_mode="Markdown")
+            except Exception as e:
+                try: bot.send_message(SUPPORT_GROUP_ID, f"❌ बैन करने में विफलता: {e}"); except Exception: pass
+            active_ban_timers.pop(target_id, None)
+
+    threading.Thread(target=ban_countdown_thread, args=(user_id_to_ban, mention, user_name, warn_msg_id), daemon=True).start()
+
+# =====================================================================
+# 🔓 3. /unban कमांड हैंडलर (सिर्फ सपोर्ट ग्रुप के अंदर काम करेगा)
+# =====================================================================
+@bot.message_handler(commands=['unban'])
+def handle_unban_command(message):
+    if OWNER_ID is None or message.from_user.id != OWNER_ID: return
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        try: bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!"); except Exception: pass
+        return
+
+    user_id_to_unban = None
+    if message.reply_to_message:
+        user_id_to_unban = message.reply_to_message.from_user.id
+    else:
+        args = message.text.split()
+        if len(args) > 1:
+            try: user_id_to_unban = int(args[1]); except ValueError: pass
+
+    if not user_id_to_unban:
+        try: bot.reply_to(message, "💡 *तरीका:* यूज़र के मैसेज पर रिप्लाई करके `/unban` लिखें।", parse_mode="Markdown"); except Exception: pass
+        return
+
+    try:
+        bot.unban_chat_member(SUPPORT_GROUP_ID, user_id_to_unban, only_if_banned=True)
+        try: bot.reply_to(message, f"✅ यूज़र [ID: `{user_id_to_unban}`] को सफलतापूर्वक **अनबैन (Unban)** कर दिया गया है।", parse_mode="Markdown"); except Exception: pass
+    except Exception as e:
+        try: bot.reply_to(message, f"❌ अनबैन करने में एरर आया: {e}"); except Exception: pass
+
+# =====================================================================
+# 🔍 4. मैसेज लिसनर (ग्रुप में ओनर द्वारा 'cancel' लिखने पर रोकने के लिए)
+# =====================================================================
+@bot.message_handler(func=lambda message: message.chat.id == SUPPORT_GROUP_ID and message.text and message.text.lower() == 'cancel')
+def handle_cancel_ban(message):
+    if OWNER_ID is None or message.from_user.id != OWNER_ID: return
+    if active_ban_timers:
+        for user_id in list(active_ban_timers.keys()):
+            msg_id = active_ban_timers[user_id]["msg_id"]
+            active_ban_timers[user_id]["status"] = "cancelled"
+            active_ban_timers.pop(user_id, None)
+            try:
+                cancel_text = "✅ **ओनर सर ने तुम्हें माफ़ कर दिया!**\nबैन की प्रक्रिया को यहीं रोक दिया गया है। अगली बार नियमों का पालन करें।"
+                bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=msg_id, text=cancel_text, parse_mode="Markdown")
+            except Exception: pass
+    
 # 📢 /send कमांड हैंडलर (रिप्लाई किए गए मैसेज को सपोर्ट ग्रुप में भेजने के लिए)
 @bot.message_handler(commands=['send'])
 def handle_send_command(message):
