@@ -147,6 +147,10 @@ def is_user_admin(chat_id, user_id):
     except Exception:
         return False
 
+def escape_html(text):
+    if not text: return ""
+    return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
 def global_poll_manager():
