@@ -1285,6 +1285,7 @@ def handle_promote_command(message):
         return
 
     try:
+        # 1. Telegram Group me Admin Rights dena
         bot.promote_chat_member(
             chat_id=SUPPORT_GROUP_ID,
             user_id=user_id_to_promote,
@@ -1301,16 +1302,35 @@ def handle_promote_command(message):
             is_anonymous=False
         )
         
+        # 🟢 2. [ADDED HERE] Database me entry update karna taki is user par text limit lag sake
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                # Check karein agar user DB me pehle se nahi hai toh naya insert karein, warna update karein
+                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id_to_promote,))
+                if cursor.fetchone():
+                    cursor.execute("UPDATE users SET is_bot_promoted = 1 WHERE user_id = ?", (user_id_to_promote,))
+                else:
+                    cursor.execute(
+                        "INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, NULL, ?, 0, 1)",
+                        (user_id_to_promote, user_name, time.time())
+                    )
+                conn.commit()
+        except Exception as db_save_err:
+            print(f"Error saving is_bot_promoted to DB: {db_save_err}")
+
+        # 3. Success Message bhejna
         safe_name = escape_html(user_name)
         mention = f'<a href="tg://user?id={user_id_to_promote}">{safe_name}</a>'
         
         success_text = (
             f"👑 <b>प्रमोशन सफल!</b>\n\n"
-            f"✨ Name {mention}\n"
-            f"✨ [ID: <code>{user_id_to_promote}</code>] को सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
-            f"💡 <i> सर आपके आदेश पर इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर दूंगा!</i>"
+            f"✨ Name: {mention}\n"
+            f"✨ ID: <code>{user_id_to_promote}</code> को सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
+            f"💡 <i>सर आपके आदेश पर इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर दूंगा!</i>"
         )
         bot.reply_to(message, success_text, parse_mode="HTML")
+        
     except Exception as e:
         try:
             bot.reply_to(message, f"❌ प्रमोट करने में विफलता आई: {e}")
