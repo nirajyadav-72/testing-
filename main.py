@@ -1284,7 +1284,7 @@ def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
             except Exception:
                 pass
         active_ban_timers.pop(target_id, None)
-                
+
 # =====================================================================
 # 🔨 2. /ban कमांड हैंडलर
 # =====================================================================
@@ -1294,7 +1294,10 @@ def handle_ban_command(message):
         return
 
     if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        try: bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!"); except Exception: pass
+        try:
+            bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!")
+        except Exception:
+            pass
         return
 
     user_id_to_ban = None
@@ -1306,18 +1309,30 @@ def handle_ban_command(message):
     else:
         args = message.text.split()
         if len(args) > 1:
-            try: user_id_to_ban = int(args[1]); except ValueError: pass
+            try:
+                user_id_to_ban = int(args[1])
+            except ValueError:
+                pass
 
     if not user_id_to_ban:
-        try: bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/ban</code> लिखें।", parse_mode="HTML"); except Exception: pass
+        try:
+            bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/ban</code> लिखें।", parse_mode="HTML")
+        except Exception:
+            pass
         return
 
     if user_id_to_ban == OWNER_ID:
-        try: bot.reply_to(message, "❌ आप खुद को बैन नहीं कर सकते!"); except Exception: pass
+        try:
+            bot.reply_to(message, "❌ आप खुद को बैन नहीं कर सकते!")
+        except Exception:
+            pass
         return
 
     if user_id_to_ban in active_ban_timers:
-        try: bot.reply_to(message, "⏳ इस यूज़र के लिए चेतावनी काउंटडाउन पहले से ही चालू है!"); except Exception: pass
+        try:
+            bot.reply_to(message, "⏳ इस यूज़र के लिए चेतावनी काउंटडाउन पहले से ही चालू है!")
+        except Exception:
+            pass
         return
 
     safe_name = escape_html(user_name)
@@ -1350,7 +1365,10 @@ def handle_unban_command(message):
     if OWNER_ID is None or message.from_user.id != OWNER_ID: 
         return
     if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        try: bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!"); except Exception: pass
+        try:
+            bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!")
+        except Exception:
+            pass
         return
 
     user_id_to_unban = None
@@ -1359,30 +1377,40 @@ def handle_unban_command(message):
     else:
         args = message.text.split()
         if len(args) > 1:
-            try: user_id_to_unban = int(args[1]); except ValueError: pass
+            try:
+                user_id_to_unban = int(args[1])
+            except ValueError:
+                pass
 
     if not user_id_to_unban:
-        try: bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/unban</code> लिखें।", parse_mode="HTML"); except Exception: pass
+        try:
+            bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/unban</code> लिखें।", parse_mode="HTML")
+        except Exception:
+            pass
         return
 
     try:
         bot.unban_chat_member(SUPPORT_GROUP_ID, user_id_to_unban, only_if_banned=True)
-        # If user had an active countdown, clear it out too
         active_ban_timers.pop(user_id_to_unban, None)
-        try: bot.reply_to(message, f"✅ यूज़र [ID: <code>{user_id_to_unban}</code>] को सफलतापूर्वक <b>अनबैन (Unban)</b> कर दिया गया है।", parse_mode="HTML"); except Exception: pass
+        try:
+            bot.reply_to(message, f"✅ यूज़र [ID: <code>{user_id_to_unban}</code>] को सफलतापूर्वक <b>अनबैन (Unban)</b> कर दिया गया है।", parse_mode="HTML")
+        except Exception:
+            pass
     except Exception as e:
-        try: bot.reply_to(message, f"❌ अनबैन करने में एरर आया: {e}"); except Exception: pass
+        try:
+            bot.reply_to(message, f"❌ अनबैन करने में एरर आया: {e}")
+        except Exception:
+            pass
 
 
 # =====================================================================
-# 🔍 4. मैसेज लिसनर (काउंटडाउन मैसेज पर रिप्लाई करके 'cancel' लिखने पर रोकने के लिए)
+# 🔍 4. मैसेज लिसनर (ग्रुप में ओनर द्वारा 'cancel' लिखने पर रोकने के लिए)
 # =====================================================================
 @bot.message_handler(func=lambda message: message.chat.id == SUPPORT_GROUP_ID and message.text and message.text.lower() == 'cancel')
 def handle_cancel_ban(message):
     if OWNER_ID is None or message.from_user.id != OWNER_ID: 
         return
         
-    # Smart context fix: Only cancel if owner replies directly to the active warning alert message
     if message.reply_to_message:
         target_msg_id = message.reply_to_message.message_id
         
@@ -1391,8 +1419,12 @@ def handle_cancel_ban(message):
                 active_ban_timers[user_id]["status"] = "cancelled"
                 active_ban_timers.pop(user_id, None)
                 try:
+                    cancel_text = "✅ <b>ओनर सर ने तुम्हें माफ़ कर दिया!</b>\nबैन की प्रक्रिया को यहीं रोक दिया गया है। अगली बार नियमों का पालन करें।"
+                    bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=target_msg_id, text=cancel_text, parse_mode="HTML")
+                except Exception:
+                    pass
+                return
     
-
 # 📊 लाइव स्टेटस कमांड (Strict Group & Owner Security Added)
 GROUPS_PER_PAGE = 10
 
