@@ -146,6 +146,12 @@ def init_db():
 
 init_db()
 
+# Helper function to escape HTML special characters to prevent formatting bugs
+def escape_html(text):
+    if not text:
+        return ""
+    return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    
 def is_user_admin(chat_id, user_id):
     if OWNER_ID and user_id == OWNER_ID:
         return True
