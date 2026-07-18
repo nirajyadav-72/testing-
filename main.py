@@ -1283,7 +1283,7 @@ def handle_promote_command(message):
     # 🔒 SURAKSHA CHECK: Agar chat ID support group se match nahi karti
     if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
         try:
-            bot.reply_to(message, "❌ <b>सुरक्षा चेतावनी:</b> यह कमांड केवल मुख्य आधिकारिक सपोर्ट ग्रुप के अंदर ही काम कर सकती है! आप इसे यहाँ इस्तेमाल नहीं कर सकते।", parse_mode="HTML")
+            bot.reply_to(message, "❌ <b>सुरक्षा चेतावनी:</b> यह कमांड केवल मुख्य आधिकारिक सपोर्ट ग्रुप में ही काम करता है!", parse_mode="HTML")
         except Exception:
             pass
         return
