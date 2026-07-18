@@ -17,23 +17,17 @@ from questions import QUIZ_LIST
 load_dotenv()
 API_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID = os.getenv("OWNER_ID")
-SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")
+SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")  # 👈 [UPDATED] .env से ग्रुप आईडी लोड करने के लिए
 
 if not API_TOKEN:
     raise ValueError("Error: BOT_TOKEN एनवायरनमेंट वेरिएबल्स में नहीं मिला!")
-# .env lines ke niche jahan bot initialize ho raha hai:
-from telebot import apihelper
-apihelper.ENABLE_MIDDLEWARE = True  # [ADD THIS LINE FIRST]
 
 bot = telebot.TeleBot(API_TOKEN)
 telebot.logger.setLevel(logging.CRITICAL)
 
 DB_FILE = "bot_data.db"
 
-# ⏳ एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
-active_ban_timers = {}
-
-# 🚀 ग्लोबल बॉट यूज़रनेम वेरिएबल
+# 🚀 परफ़ॉर्मेंस बूस्ट: ग्लोबल बॉट यूज़रनेम वेरिएबल
 BOT_USERNAME = "Bot"
 try:
     BOT_USERNAME = bot.get_me().username
@@ -41,12 +35,17 @@ except Exception:
     pass
 
 if OWNER_ID:
-    try: OWNER_ID = int(OWNER_ID)
-    except ValueError: OWNER_ID = None
+    try:
+        OWNER_ID = int(OWNER_ID)
+    except ValueError:
+        OWNER_ID = None
 
+# 📌 [UPDATED] ग्रुप आईडी को टेक्स्ट से पूर्णांक (Integer) संख्या में बदलें
 if SUPPORT_GROUP_ID:
-    try: SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
-    except ValueError: SUPPORT_GROUP_ID = None
+    try:
+        SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
+    except ValueError:
+        SUPPORT_GROUP_ID = None
 
 # 💾 परमानेंट डेटाबेस आर्किटेक्चर (रीस्टार्ट प्रूफ)
 def init_db():
@@ -96,12 +95,6 @@ def init_db():
         ''')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
         
-        # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
-        try:
-            cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
-        except sqlite3.OperationalError:
-            pass
-
         # 🔍 [ANTI-SPAM SETTINGS DB] पुराना सेटिंग्स कॉलम लॉजिक
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN settings_msg_id INTEGER DEFAULT 0")
@@ -131,18 +124,12 @@ def init_db():
         except sqlite3.OperationalError:
             pass
 
-        # 🔍 [BOT PROMOTE TRACKER] Bot dwara banaye gaye admins ko track karne ke liye column
-        try:
-            cursor.execute("ALTER TABLE users ADD COLUMN is_bot_promoted INTEGER DEFAULT 0")
-        except sqlite3.OperationalError:
-            pass
-            
-
         # 🔍 [WARNING TRACKER DB] बॉट एडमिन न होने पर वार्निंग टाइम याद रखने के लिए नया कॉलम
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN last_warning_time REAL DEFAULT 0")
         except sqlite3.OperationalError:
             pass 
+            
             
         conn.commit()
 
@@ -156,32 +143,6 @@ def is_user_admin(chat_id, user_id):
         return member.status in ['creator', 'administrator']
     except Exception:
         return False
-
-def escape_html(text):
-    if not text: return ""
-    return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-
-# =====================================================================
-# ⏰ AUTOMATIC MIDNIGHT RESET THREAD (Har raat 12 baje limit 0 karne ke liye)
-# =====================================================================
-def auto_reset_midnight_loop():
-    tz = pytz.timezone('Asia/Kolkata')
-    while True:
-        try:
-            now = datetime.now(tz)
-            if now.hour == 0 and now.minute == 0:
-                with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                    cursor = conn.cursor()
-                    cursor.execute("UPDATE users SET msg_count = 0")
-                    conn.commit()
-                print("⏰ Success: Daily message limit automatic reset ho gayi!")
-                time.sleep(60)
-        except Exception as e:
-            print(f"Error in automatic reset thread: {e}")
-        time.sleep(30)
-
-threading.Thread(target=auto_reset_midnight_loop, daemon=True).start()
 
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
@@ -532,7 +493,7 @@ def handle_owner_broadcast(message):
 
     bot.send_message(
         chat_id=message.chat.id,
-        text="🏵️ *Would you like to pin this broadcast message to all groups?*",
+        text="🏵️ *क्या आप इस ब्रॉडकास्ट मैसेज को सभी ग्रुप्स में PIN करना चाहते हैं?*",
         reply_markup=markup,
         parse_mode="Markdown"
     )
@@ -984,7 +945,6 @@ def send_welcome(message):
     user_id = message.from_user.id
     chat_type = message.chat.type
     message_text = message.text.strip() if message.text else ""
-    current_timestamp = time.time()  # ⏱️ Naya timestamp variable
     
     # 🚨 Check if the command is for this bot specifically in groups
     if chat_type in ['group', 'supergroup']:
@@ -1067,29 +1027,26 @@ def send_welcome(message):
             try:
                 with sqlite3.connect(DB_FILE, timeout=20) as conn:
                     cursor = conn.cursor()
-                    # 🛠️ Naye group data me join_time store karna suru karega
-                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id, join_time) VALUES (?, ?)", (message.chat.id, current_timestamp))
+                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id) VALUES (?)", (message.chat.id,))
                     cursor.execute("UPDATE groups SET start_msg_id = ? WHERE chat_id = ?", (new_msg.message_id, message.chat.id))
                     conn.commit()
             except Exception: 
                 pass
 
-        # 🗑️ Group response delivery complete hote hi user ki command mita dein
+        # 🗑️ [NEW LOGIC] Group response delivery complete hote hi user ki command mita dein
         try:
             bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
         except Exception:
             pass
 
-        return  # Group chat process complete
+        return  # Group chat process yahan complete ho gaya
 
     # ==========================================
-    # 📌 2. PRIVATE CHAT LOGIC
+    # 📌 2. PRIVATE CHAT LOGIC (Indentation Fixed)
     # ==========================================
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT OR IGNORE INTO users (user_id, user_name, join_time) VALUES (?, ?, ?)", (user_id, full_name, current_timestamp))
-        # 🔄 Purane blank user ka join_time update karne ke liye
-        cursor.execute("UPDATE users SET join_time = ? WHERE user_id = ? AND (join_time IS NULL OR join_time = 0)", (current_timestamp, user_id))
+        cursor.execute("INSERT OR IGNORE INTO users (user_id, user_name, join_time) VALUES (?, ?, ?)", (user_id, full_name, time.time()))
         conn.commit()
 
     if OWNER_ID and user_id == OWNER_ID:
@@ -1144,7 +1101,7 @@ def send_welcome(message):
             bot.send_message(chat_id=message.chat.id, text=welcome_text, reply_markup=markup, parse_mode="Markdown")
         except Exception: 
             pass
-        
+    
         
 # ℹ️ हेल्प कमांड (Strict Username Validation के साथ FIXED)
 @bot.message_handler(commands=['help'])
@@ -1212,534 +1169,41 @@ def send_help(message):
                 
     except Exception: 
         pass
-
-# =====================================================================
-# 👑 3.5 /promote कमांड हैंडलर (Strict Group ID Check + Warning Alert)
-# =====================================================================
-@bot.message_handler(commands=['promote'])
-def handle_promote_command(message):
-    if OWNER_ID is None or message.from_user.id != OWNER_ID: 
-        return
-        
-    # 🔒 SURAKSHA CHECK: Agar chat ID support group se match nahi karti
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        try:
-            bot.reply_to(message, "❌ <b>सुरक्षा चेतावनी:</b> यह कमांड केवल मुख्य आधिकारिक सपोर्ट ग्रुप के अंदर ही काम कर सकती है! आप इसे यहाँ इस्तेमाल नहीं कर सकते।", parse_mode="HTML")
-        except Exception:
-            pass
-        return
-
-    user_id_to_promote = None
-    user_name = "यूज़र"
-
-    # 1. Reply se ID nikalna
-    if message.reply_to_message:
-        user_id_to_promote = message.reply_to_message.from_user.id
-        user_name = message.reply_to_message.from_user.first_name
-    # 2. Text Argument se ID nikalna
-    else:
-        args = message.text.split(maxsplit=1)
-        if len(args) > 1:
-            input_text = args[1].strip()
-            if input_text.isdigit():
-                user_id_to_promote = int(input_text)
-            else:
-                clean_search = input_text.replace("@", "").strip().lower()
-                try:
-                    with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                        cursor = conn.cursor()
-                        cursor.execute(
-                            "SELECT user_id, user_name FROM users WHERE LOWER(username) = ? OR LOWER(user_name) LIKE ? LIMIT 1",
-                            (clean_search, f"%{clean_search}%")
-                        )
-                        row = cursor.fetchone()
-                        if row:
-                            user_id_to_promote = row[0]
-                            user_name = row[1]
-                except Exception as db_err:
-                    print(f"Database search error in promote: {db_err}")
-
-    if not user_id_to_promote:
-        try:
-            error_msg = (
-                "💡 <b>Process:</b> Reply to the user's message and write <code>/promote</code>,\n"
-                "or <code>/promote @username</code> , <code>/promote User_Name</code>।\n\n"
-                "⚠️ <i>Note: The user must exist in the bot's database (i.e., they must have sent a message in the group before).</i>"
-            )
-            bot.reply_to(message, error_msg, parse_mode="HTML")
-        except Exception:
-            pass
-        return
-
-    try:
-        # 1. Telegram Group me Admin Rights dena
-        bot.promote_chat_member(
-            chat_id=SUPPORT_GROUP_ID,
-            user_id=user_id_to_promote,
-            can_change_info=False,
-            can_post_messages=False,
-            can_edit_messages=False,
-            can_delete_messages=True,
-            can_invite_users=True,
-            can_restrict_members=True,
-            can_pin_messages=True,
-            can_promote_members=False,
-            can_manage_chat=True,
-            can_manage_video_chats=True,
-            is_anonymous=False
-        )
-        
-        # 🟢 2. [ADDED HERE] Database me entry update karna taki is user par text limit lag sake
-        try:
-            with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                cursor = conn.cursor()
-                # Check karein agar user DB me pehle se nahi hai toh naya insert karein, warna update karein
-                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id_to_promote,))
-                if cursor.fetchone():
-                    cursor.execute("UPDATE users SET is_bot_promoted = 1 WHERE user_id = ?", (user_id_to_promote,))
-                else:
-                    cursor.execute(
-                        "INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, NULL, ?, 0, 1)",
-                        (user_id_to_promote, user_name, time.time())
-                    )
-                conn.commit()
-        except Exception as db_save_err:
-            print(f"Error saving is_bot_promoted to DB: {db_save_err}")
-
-        # 3. Success Message bhejna
-        safe_name = escape_html(user_name)
-        mention = f'<a href="tg://user?id={user_id_to_promote}">{safe_name}</a>'
-        
-        success_text = (
-            f"👑 <b>Promotion has been successfully completed.</b>\n\n"
-            f"✨ Name: {mention}\n"
-            f"✨ ID: <code>{user_id_to_promote}</code> was <b>successfully promoted</b> to Admin.\n"
-            f"💡 <i>Sir, I will demote or permanently ban this admin on your order!</i>"
-        )
-        bot.reply_to(message, success_text, parse_mode="HTML")
-        
-    except Exception as e:
-        try:
-            bot.reply_to(message, f"❌ An error occurred while promoting: {e}")
-        except Exception:
-            pass
-            
-# =====================================================================
-# 📢 1. /send कमांड हैंडलर (सिर्फ ओनर के लिए)
-# =====================================================================
-@bot.message_handler(commands=['send'])
-def handle_send_command(message):
-    if OWNER_ID is None or message.from_user.id != OWNER_ID:
-        try:
-            bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!")
-        except Exception:
-            pass
-        return
-
-    if SUPPORT_GROUP_ID is None:
-        try:
-            bot.reply_to(message, "❌ त्रुटि: .env फ़ाइल में SUPPORT_GROUP_ID नहीं मिला या गलत है!")
-        except Exception:
-            pass
-        return
-
-    if not message.reply_to_message:
-        try:
-            bot.reply_to(message, "💡 <b>कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!</b>", parse_mode="HTML")
-        except Exception:
-            pass
-        return
-
-    reply_msg = message.reply_to_message
-
-    try:
-        if reply_msg.text:
-            bot.send_message(SUPPORT_GROUP_ID, reply_msg.text, entities=reply_msg.entities)
-        elif reply_msg.photo:
-            bot.send_photo(SUPPORT_GROUP_ID, reply_msg.photo[-1].file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
-        elif reply_msg.video:
-            bot.send_video(SUPPORT_GROUP_ID, reply_msg.video.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
-        elif reply_msg.sticker:
-            bot.send_sticker(SUPPORT_GROUP_ID, reply_msg.sticker.file_id)
-        elif reply_msg.document:
-            bot.send_document(SUPPORT_GROUP_ID, reply_msg.document.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
-        elif reply_msg.voice:
-            bot.send_voice(SUPPORT_GROUP_ID, reply_msg.voice.file_id, caption=reply_msg.caption)
-        elif reply_msg.audio:
-            bot.send_audio(SUPPORT_GROUP_ID, reply_msg.audio.file_id, caption=reply_msg.caption)
-        elif reply_msg.animation:
-            bot.send_animation(SUPPORT_GROUP_ID, reply_msg.animation.file_id, caption=reply_msg.caption)
-        else:
-            bot.copy_message(SUPPORT_GROUP_ID, from_chat_id=reply_msg.chat.id, message_id=reply_msg.message_id)
-
-        bot.reply_to(message, "✅ मैसेज सफलतापूर्वक आपके सपोर्ट ग्रुप में भेज दिया गया है।")
-    except Exception as e:
-        try:
-            bot.reply_to(message, f"❌ मैसेज भेजने में विफलता आई: {e}")
-        except Exception:
-            pass
-
-# =====================================================================
-# ⏳ काउंटडाउन थ्रेड फंक्शन (Fixed Indentation & Single-Line Syntax)
-# =====================================================================
-def ban_countdown_thread(target_id, target_mention, message_id_to_edit):
-    remaining_minutes = 5
-    while remaining_minutes > 0:
-        time.sleep(60)
-        remaining_minutes -= 1
-        
-        # Check if the process was cancelled or removed mid-way
-        if target_id not in active_ban_timers or active_ban_timers[target_id]["status"] != "active":
-            return
-        
-        if remaining_minutes > 0:
-            update_text = (
-                f"⏳ <b>बैन काउंटडाउन जारी है...</b>\n\n"
-                f"👤 Hey {target_mention}, तुम्हारे पास समय बहुत कम है!\n"
-                f"✨ <b>ओनर सर को सॉरी बोलो</b> नहीं तो काउंटडाउन समाप्त होते ही तुम्हारे एडमिन राइट्स छीन कर तुम्हें बैन कर दिया जाएगा।\n\n"
-                f"⏱️ <b>शेष बचा हुआ समय:</b> {remaining_minutes} मिनट 00 सेकंड"
-            )
-            try:
-                bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=update_text, parse_mode="HTML")
-            except Exception:
-                pass
-    
-    # Final execution after 5 minutes
-    if target_id in active_ban_timers and active_ban_timers[target_id]["status"] == "active":
-        try:
-            bot.promote_chat_member(
-                chat_id=SUPPORT_GROUP_ID, user_id=target_id,
-                can_change_info=False, can_post_messages=False, can_edit_messages=False,
-                can_delete_messages=False, can_invite_users=False, can_restrict_members=False,
-                can_pin_messages=False, can_promote_members=False, can_manage_chat=False,
-                can_manage_video_chats=False, is_anonymous=False
-            )
-            bot.ban_chat_member(SUPPORT_GROUP_ID, target_id)
-            final_text = f"🎯 <b>समय समाप्त!</b>\n\nसर यूज़र {target_mention} ने माफ़ी नहीं मांगी, इसलिए इसके एडमिन राइट्स छीन कर इसे ग्रुप से <b>बैन (Ban)</b> कर दिया गया है। ✅"
-            bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=message_id_to_edit, text=final_text, parse_mode="HTML")
-        except Exception as e:
-            try:
-                bot.send_message(SUPPORT_GROUP_ID, f"❌ बैन करने में विफलता: {e}")
-            except Exception:
-                pass
-        active_ban_timers.pop(target_id, None)
-
-# =====================================================================
-# 🔨 2. /ban कमान्ड हैंडलर (Argument Index & Formatting Fully Fixed)
-# =====================================================================
-@bot.message_handler(commands=['ban'])
-def handle_ban_command(message):
-    if OWNER_ID is None or message.from_user.id != OWNER_ID:
-        return
-
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        try:
-            bot.reply_to(message, f"❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है! (Current Chat ID: {message.chat.id})")
-        except Exception:
-            pass
-        return
-
-    user_id_to_ban = None
-    user_name = "यूज़र"
-
-    # 1. Reply se ID nikalna
-    if message.reply_to_message:
-        user_id_to_ban = message.reply_to_message.from_user.id
-        user_name = message.reply_to_message.from_user.first_name
-    # 2. Text Argument se ID nikalna
-    else:
-        args = message.text.split()
-        if len(args) > 1:
-            try:
-                user_id_to_ban = int(args[1]) # 👈 [FIXED] Pehle yahan int(args) tha jo ki galat tha, ab args[1] hai
-            except ValueError:
-                pass
-
-    if not user_id_to_ban:
-        try:
-            bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/ban</code> लिखें या <code>/ban USER_ID</code> लिखें।", parse_mode="HTML")
-        except Exception:
-            pass
-        return
-
-    if user_id_to_ban == OWNER_ID:
-        try:
-            bot.reply_to(message, "❌ आप खुद को बैन नहीं कर सकते!")
-        except Exception:
-            pass
-        return
-
-    # Check if user is already in active timers
-    if user_id_to_ban in active_ban_timers:
-        active_ban_timers.pop(user_id_to_ban, None)
-
-    # 👈 Safe HTML tag formatting (Bina kisi external function par depend hue)
-    safe_name = str(user_name).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    mention = f'<a href="tg://user?id={user_id_to_ban}">{safe_name}</a>'
-
-    warn_text = (
-        f"⏳ <b>बैन काउंटडाउन शुरू हो चुका है!</b>\n\n"
-        f"👤 Hey {mention}, तुमने ओनर सर को नाराज किया है!\n"
-        f"✨ <b>चेतावनी:</b> चाहे तुम ग्रुप के एडमिन ही क्यों न हो, जल्दी से <b>ओनर सर को सॉरी बोलो</b> अन्यथा काउंटडाउन समाप्त होते ही मैं तुम्हें डिमोट करके हमेशा के लिए बैन कर दूंगा।\n\n"
-        f"⏱️ <b>शेष बचा हुआ समय:</b> 5 मिनट 00 सेकंड"
-    )
-
-    try:
-        warn_msg = bot.reply_to(message, warn_text, parse_mode="HTML")
-        warn_msg_id = warn_msg.message_id
-    except Exception as telegram_error:
-        try:
-            bot.reply_to(message, f"❌ Telegram Message Error: {telegram_error}")
-        except Exception:
-            pass
-        return
-
-    active_ban_timers[user_id_to_ban] = {"status": "active", "msg_id": warn_msg_id}
-    
-    try:
-        threading.Thread(target=ban_countdown_thread, args=(user_id_to_ban, mention, warn_msg_id), daemon=True).start()
-    except Exception as thread_error:
-        try:
-            bot.reply_to(message, f"❌ Thread Error: {thread_error}")
-        except Exception:
-            pass
-                
         
 
-# =====================================================================
-# 🔓 3. /unban कमांड हैंडलर
-# =====================================================================
-@bot.message_handler(commands=['unban'])
-def handle_unban_command(message):
-    if OWNER_ID is None or message.from_user.id != OWNER_ID: 
-        return
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        try:
-            bot.reply_to(message, "❌ यह कमांड केवल मुख्य सपोर्ट ग्रुप के अंदर ही इस्तेमाल की जा सकती है!")
-        except Exception:
-            pass
-        return
-
-    user_id_to_unban = None
-    if message.reply_to_message:
-        user_id_to_unban = message.reply_to_message.from_user.id
-    else:
-        args = message.text.split()
-        if len(args) > 1:
-            try:
-                user_id_to_unban = int(args[1])
-            except ValueError:
-                pass
-
-    if not user_id_to_unban:
-        try:
-            bot.reply_to(message, "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/unban</code> लिखें।", parse_mode="HTML")
-        except Exception:
-            pass
-        return
-
-    try:
-        bot.unban_chat_member(SUPPORT_GROUP_ID, user_id_to_unban, only_if_banned=True)
-        active_ban_timers.pop(user_id_to_unban, None)
-        try:
-            bot.reply_to(message, f"✅ यूज़र [ID: <code>{user_id_to_unban}</code>] को सफलतापूर्वक <b>अनबैन (Unban)</b> कर दिया गया है।\n\n✅ <b>सर ने तुम्हें माफ़ कर दिया!</b>\nबैन की प्रक्रिया को यहीं रोक दिया गया है। अगली बार नियमों का पालन करें।", parse_mode="HTML")
-        except Exception:
-            pass
-    except Exception as e:
-        try:
-            bot.reply_to(message, f"❌ अनबैन करने में एरर आया: {e}")
-        except Exception:
-            pass
-
-
-# =====================================================================
-# 🔍 4. मैसेज लिसनर (ग्रुप में ओनर द्वारा 'cancel' लिखने पर रोकने के लिए)
-# =====================================================================
-@bot.message_handler(func=lambda message: message.chat.id == SUPPORT_GROUP_ID and message.text and message.text.lower() == 'cancel')
-def handle_cancel_ban(message):
-    if OWNER_ID is None or message.from_user.id != OWNER_ID: 
-        return
-        
-    if message.reply_to_message:
-        target_msg_id = message.reply_to_message.message_id
-        
-        for user_id, timer_data in list(active_ban_timers.items()):
-            if timer_data["msg_id"] == target_msg_id and timer_data["status"] == "active":
-                active_ban_timers[user_id]["status"] = "cancelled"
-                active_ban_timers.pop(user_id, None)
-                try:
-                    cancel_text = "✅ <b>सर ने तुम्हें माफ़ कर दिया!</b>\nबैन की प्रक्रिया को यहीं रोक दिया गया है। अगली बार नियमों का पालन करें।"
-                    bot.edit_message_text(chat_id=SUPPORT_GROUP_ID, message_id=target_msg_id, text=cancel_text, parse_mode="HTML")
-                except Exception:
-                    pass
-                return
-    
-# =====================================================================
-# 💾 🤖 AUTOMATIC USER TRACKER + DAILY TEXT LIMIT (Bot Admins Included)
-# =====================================================================
-DAILY_MSG_LIMIT = 5  # 👈 Yahan aap apni marzi se limit set kar sakte hain
-
-@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
-def track_save_and_limit_users(message):
-    # 🔒 ULTRA-SECURITY CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar kaam karega
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        return
-
-    if message.from_user and not message.from_user.is_bot:
-        u_id = message.from_user.id
-        u_name = message.from_user.first_name
-        u_username = message.from_user.username
-        
-        # Core Rules check
-        is_core_owner = (OWNER_ID and u_id == OWNER_ID)
-
-        try:
-            with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                cursor = conn.cursor()
-                
-                # Database se user ka msg_count aur is_bot_promoted check karna
-                cursor.execute("SELECT msg_count, is_bot_promoted FROM users WHERE user_id = ?", (u_id,))
-                row = cursor.fetchone()
-                
-                current_count = 0
-                is_bot_promoted_admin = 0
-                
-                if row:
-                    current_count = row[0]
-                    is_bot_promoted_admin = row[1] if row[1] is not None else 0
-                
-                # Check karein ki kya is user par limit lagani hai?
-                # (Agar core owner nahi hai aur ya toh normal member hai ya fir bot ka banaya hua admin hai)
-                apply_limit = False
-                if not is_core_owner:
-                    if is_bot_promoted_admin == 1:
-                        apply_limit = True  # Bot dwara banaye gaye admin par limit lagegi 🟢
-                    else:
-                        # Agar database mein status normal hai, par check karein creator toh nahi hai
-                        try:
-                            member = bot.get_chat_member(SUPPORT_GROUP_ID, u_id)
-                            # Agar normal member hai toh limit lagegi, main creator/manually added core admin par nahi
-                            if member.status not in ['creator', 'administrator']:
-                                apply_limit = True
-                        except Exception:
-                            apply_limit = True
-
-                # 🛑 LIMIT ENFORCEMENT BLOCK
-                if apply_limit and current_count >= DAILY_MSG_LIMIT:
-                    try:
-                        # User/Bot-Admin ka message turant delete karein
-                        bot.delete_message(message.chat.id, message.message_id)
-                        
-                        # Sirf pehli baar limit end hone par alert bhejein
-                        if current_count == DAILY_MSG_LIMIT:
-                            safe_name = escape_html(u_name)
-                            alert_text = f"⚠️ Hey <a href='tg://user?id={u_id}'>{safe_name}</a>, आपकी आज की <b>{DAILY_MSG_LIMIT} मैसेजेस</b> की दैनिक सीमा समाप्त हो चुकी है!\n\nआपका daily text मेसेजेस की लिमिट समाप्त हो चुका है\nइसलिए आपके मैसेजेस रात 12 बजे तक डिलीट किए जाएंगे,\n\nआपके message प्लान को कल सुबह नवीनीकृत (renew) कर दिया जाएगा,।"
-                            bot.send_message(SUPPORT_GROUP_ID, alert_text, parse_mode="HTML")
-                    except Exception:
-                        pass
-                    
-                    cursor.execute("UPDATE users SET msg_count = msg_count + 1 WHERE user_id = ?", (u_id,))
-                    conn.commit()
-                    return
-                
-                # DB Update Logic (Limit ke andar hone par)
-                if row:
-                    cursor.execute(
-                        "UPDATE users SET user_name = ?, username = ?, msg_count = msg_count + 1 WHERE user_id = ?",
-                        (u_name, u_username, u_id)
-                    )
-                else:
-                    cursor.execute(
-                        "INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, ?, ?, 1, 0)",
-                        (u_id, u_name, u_username, time.time())
-                    )
-                conn.commit()
-                
-        except Exception as e:
-            print(f"Error in user tracker/bot-admin limit DB: {e}")
-
-# =====================================================================
-# 📊 लाइव स्टेटस कमांड (FIXED & SECURED)
-# =====================================================================
+# 📊 लाइव स्टेटस कमांड (Strict Group & Owner Security Added)
 GROUPS_PER_PAGE = 10
-
-# 🛠️ [CRITICAL FIX] Pehle database me check karein ki join_time column hai ya nahi
-def fix_groups_table_column():
-    try:
-        with sqlite3.connect(DB_FILE, timeout=20) as conn:
-            cursor = conn.cursor()
-            cursor.execute("ALTER TABLE groups ADD COLUMN join_time REAL DEFAULT 0")
-            conn.commit()
-            print("✅ Success: groups table me 'join_time' column jod diya gaya hai.")
-    except sqlite3.OperationalError:
-        # Agar column pehle se hoga toh error aayega, jise hum ignore kar denge
-        pass
-
-fix_groups_table_column()
 
 @bot.message_handler(commands=['status'])
 def send_stats(message):
-    user_id = message.from_user.id
-    chat_id = message.chat.id
-    
-    # OWNER CHECK: Kya message bhejne wala owner hai?
-    is_owner = (OWNER_ID and user_id == OWNER_ID)
-    
-    # CHAT CHECK: Kya ye private chat hai ya authorized support group?
-    is_valid_chat = (message.chat.type == 'private' or (SUPPORT_GROUP_ID and chat_id == SUPPORT_GROUP_ID))
+    is_owner = (OWNER_ID and message.from_user.id == OWNER_ID)
+    is_valid_chat = (message.chat.type == 'private' or (SUPPORT_GROUP_ID and message.chat.id == SUPPORT_GROUP_ID))
 
-    # Strict Check: Owner hona zaroori hai AUR chat bhi sahi honi chahiye
     if not (is_owner and is_valid_chat):
-        try: 
-            bot.send_message(chat_id, "❌ This command is only valid for the bot owner and in authorized chats.")
-        except Exception: 
-            pass
+        try: bot.send_message(message.chat.id, "❌ This command is only valid for the bot owner and in authorized chats.")
+        except Exception: pass
         return
 
-    # Loading message bhejein
+    # [UPDATED] शुरुआत में ही एक लोडिंग मैसेज भेजेंगे ताकि यूज़र को लगे कि बॉट एक्टिव है
+    status_msg = bot.send_message(message.chat.id, "⏳ **Fetching statistics and group data... Please wait...**", parse_mode="Markdown")
+    
+    # डेटा लोड करके पुराने मैसेज को एडिट कर देंगे
+    text, markup = generate_status_page(page=0)
     try:
-        status_msg = bot.send_message(chat_id, "⏳ **Fetching statistics and group data... Please wait...**", parse_mode="Markdown")
-        
-        # Status page generate karein
-        text, markup = generate_status_page(page=0)
-        
-        bot.edit_message_text(chat_id=chat_id, message_id=status_msg.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
-    except Exception as e:
-        print(f"Error in status command main handler: {e}")
-        try: 
-            bot.send_message(chat_id, "🛑 Error generating status. Check console logs.")
-        except Exception: 
-            pass
+        bot.edit_message_text(chat_id=message.chat.id, message_id=status_msg.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
+    except Exception:
+        try: bot.send_message(message.chat.id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
+        except Exception: pass
 
 def generate_status_page(page=0):
-    current_time = time.time()
-    ten_days_ago = current_time - 864000  # ⏱️ 10 din pehle ka timestamp
-
-    try:
-        with sqlite3.connect(DB_FILE, timeout=20) as conn:
-            cursor = conn.cursor()
-            
-            # Saare active chats nikalwein
-            cursor.execute("SELECT chat_id FROM groups")
-            all_chats = cursor.fetchall()
-            
-            # Total users count
-            cursor.execute("SELECT COUNT(*) FROM users")
-            res_u = cursor.fetchone()
-            u_count = res_u[0] if res_u else 0
-
-            # Pichle 10 dino me join huye users
-            cursor.execute("SELECT COUNT(*) FROM users WHERE join_time >= ?", (ten_days_ago,))
-            res_nu = cursor.fetchone()
-            new_users_10_days = res_nu[0] if res_nu else 0
-
-            # [FIXED QUERY] Pichle 10 dino me join huye groups (Column fix ke baad ab ye crash nahi hoga)
-            cursor.execute("SELECT COUNT(*) FROM groups WHERE join_time >= ?", (ten_days_ago,))
-            res_ng = cursor.fetchone()
-            new_groups_10_days = res_ng[0] if res_ng else 0
-    except Exception as db_err:
-        print(f"Database error inside generate_status_page: {db_err}")
-        return "❌ Database Error while fetching stats.", InlineKeyboardMarkup()
+    with sqlite3.connect(DB_FILE, timeout=20) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT chat_id FROM groups")
+        all_chats = cursor.fetchall()
+        
+        cursor.execute("SELECT COUNT(*) FROM users")
+        res_u = cursor.fetchone()
+        u_count = res_u[0] if res_u else 0
 
     g_count = len(all_chats)
     start_idx = page * GROUPS_PER_PAGE
@@ -1753,11 +1217,7 @@ def generate_status_page(page=0):
         f"📊 *Bot Live Status & Statistics*\n"
         f"---------------------------------------\n"
         f"🎯 Total Active Groups: **{g_count}**\n"
-        f"👤 Total Active Users: **{u_count}**\n\n"
-        f"📈 *Growth In Last 10 Days:*\n"
-        f"➕ New Groups Added: **{new_groups_10_days}**\n"
-        f"➕ New Users Started: **{new_users_10_days}**\n"
-        f"---------------------------------------\n"
+        f"👤 Total Active Users: **{u_count}**\n"
         f"📖 Page: **{page + 1} / {total_pages}**\n"
         f"---------------------------------------\n\n"
         f"⚡ *Active Groups List:*\n\n"
@@ -1767,14 +1227,14 @@ def generate_status_page(page=0):
         for idx, (chat_id,) in enumerate(current_page_groups, start_idx + 1):
             try:
                 chat_info = bot.get_chat(chat_id)
-                group_name = escape_html(chat_info.title)
+                group_name = chat_info.title
                 
                 try:
                     invite_link = bot.export_chat_invite_link(chat_id)
                     link_text = f"[Click to Join]({invite_link})"
                 except Exception:
                     if chat_info.username:
-                        link_text = f"[Click to Join](https://t.me/{chat_info.username})"
+                        link_text = f"[Click to Join](https://t.me{chat_info.username})"
                     else:
                         link_text = "⚠️ No Admin (No Link)"
                 
@@ -1785,64 +1245,75 @@ def generate_status_page(page=0):
     else:
         stats_text += "⚠️ No groups found on this page.\n"
 
-    # [FIXED BUTTONS] Style attribute ko hata diya gaya hai kyunki telebot ise support nahi karta
     markup = InlineKeyboardMarkup()
     buttons_row = []
 
     if page > 0:
-        buttons_row.append(InlineKeyboardButton(text="⏮️ Previous", callback_data=f"statpage_{page-1}"))
+        buttons_row.append(InlineKeyboardButton(text="⏮️ Previous", callback_data=f"statpage_{page-1}", style="primary"))
     if end_idx < g_count:
-        buttons_row.append(InlineKeyboardButton(text="Next Page 🔀", callback_data=f"statpage_{page+1}"))
+        buttons_row.append(InlineKeyboardButton(text="Next Page 🔀", callback_data=f"statpage_{page+1}", style="primary"))
 
     if buttons_row:
         markup.row(*buttons_row)
         
-    markup.row(InlineKeyboardButton(text="Close ❌", callback_data="status_close"))
+    markup.row(InlineKeyboardButton(text="Close ❌", callback_data="status_close", style="danger"))
     return stats_text, markup
-                                         
 
+# 🔄 पेज बदलने और क्लोज करने का बटन हैंडलर
 @bot.callback_query_handler(func=lambda call: call.data.startswith("statpage_") or call.data == "status_close")
 def handle_status_pagination(call):
+    # सिर्फ बॉट ओनर ही बटन दबा सकता है
     if not (OWNER_ID and call.from_user.id == OWNER_ID):
         bot.answer_callback_query(call.id, text="❌ This menu is only for the bot owner.", show_alert=True)
         return
 
     if call.data == "status_close":
-        try: bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-        except Exception: pass
+        try:
+            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+        except Exception:
+            pass
         return
 
+    # 'statpage_1' में से पेज नंबर (1) अलग निकालना
     try:
         target_page = int(call.data.split("_")[1])
+        
+        # टेलीग्राम को बताएं कि लोडिंग हो रही है
         bot.answer_callback_query(call.id, text=f"Loading Page {target_page + 1}...")
+        
+        # नए पेज का डेटा जेनरेट करें
         text, markup = generate_status_page(page=target_page)
+        
+        # पुराने मैसेज को नए पेज के डेटा से एडिट करें
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
     except Exception as e:
         print(f"पेज बदलने में एरर: {e}")
+            
 
+# 🤖 ग्रुप जॉइन/लीव ट्रैकर (सेम वेलकम मैसेज आर्किटेक्चर)
 @bot.my_chat_member_handler()
 def handle_left_or_joined(my_chat_member):
     new_status = my_chat_member.new_chat_member.status
-    old_status = my_chat_member.old_chat_member.status
+    old_status = my_chat_member.old_chat_member.status  # 🔍 पुराना स्टेटस ट्रैक करें
     chat_id = my_chat_member.chat.id
     chat_title = my_chat_member.chat.title
-    current_timestamp = time.time()
     
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
         
         if new_status in ["administrator", "member"]:
+            # Check karein ki kya group pehle se database mein maujood hai?
             cursor.execute("SELECT chat_id FROM groups WHERE chat_id = ?", (chat_id,))
             group_exists = cursor.fetchone()
             
+            # 🎯 अगर ग्रुप पहले से मौजूद नहीं है (यानी बॉट सच में नया जॉइन हुआ है)
+            # या फिर बॉट पहले ग्रुप से पूरी तरह लेफ्ट/किक हो चुका था, सिर्फ तभी वेलकम मैसेज भेजेगा।
             if not group_exists or old_status in ["left", "kicked"]:
                 if not group_exists:
-                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id, interval, last_sent_time, join_time) VALUES (?, 1800, 0, ?)", (chat_id, current_timestamp))
-                    conn.commit()
-                else:
-                    cursor.execute("UPDATE groups SET join_time = ? WHERE chat_id = ?", (current_timestamp, chat_id))
+                    cursor.execute("INSERT OR IGNORE INTO groups (chat_id, interval, last_sent_time) VALUES (?, 1800, 0)", (chat_id,))
                     conn.commit()
                 
+                # 🖼️ 'images' फोल्डर से रैंडम फोटो चुनना
                 image_folder = "images"
                 selected_image_path = None
                 try:
@@ -1869,6 +1340,7 @@ def handle_left_or_joined(my_chat_member):
                 )
                 
                 group_markup = InlineKeyboardMarkup()
+                # 🛠️ [FIXED] t.me के बाद forward slash ( / ) जोड़ दिया गया है
                 add_to_group_url = f"https://t.me/{BOT_USERNAME}?startgroup=true"
                 group_markup.add(InlineKeyboardButton(text="✨ ᴀᴅᴅ ᴍᴇ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ", url=add_to_group_url, style="primary"))
                 
@@ -1879,47 +1351,14 @@ def handle_left_or_joined(my_chat_member):
                     else:
                         bot.send_message(chat_id=chat_id, text=group_text, reply_markup=group_markup, parse_mode="Markdown")
                 except Exception:
-                    try: bot.send_message(chat_id=chat_id, text=group_text, reply_markup=group_markup, parse_mode="Markdown")
+                    try:
+                        bot.send_message(chat_id=chat_id, text=group_text, reply_markup=group_markup, parse_mode="Markdown")
                     except Exception: pass
                 
         elif new_status in ["left", "kicked"]:
+            # Bot ko group se nikalne par data automatically clean ho jayega
             cursor.execute("DELETE FROM groups WHERE chat_id = ?", (chat_id,))
             conn.commit()
-
-# =====================================================================
-# 💾 🤖 AUTOMATIC USER TRACKER (NORMAL HANDLER - NO BLOCKING)
-# =====================================================================
-@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'sticker', 'document', 'voice', 'video'])
-def track_and_save_users_normal(message):
-    # 🔒 SURAKSHA CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar ke messages ko track karega
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        return
-
-    # Bot automatic group ke har active user ka latest data DB me save/update karega
-    if message.from_user and not message.from_user.is_bot:
-        u_id = message.from_user.id
-        u_name = message.from_user.first_name
-        u_username = message.from_user.username  # Telegram username bina @ ke
-        
-        try:
-            with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                cursor = conn.cursor()
-                # Check karein user pehle se hai ya nahi
-                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
-                if cursor.fetchone():
-                    cursor.execute(
-                        "UPDATE users SET user_name = ?, username = ? WHERE user_id = ?",
-                        (u_name, u_username, u_id)
-                    )
-                else:
-                    cursor.execute(
-                        "INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)",
-                        (u_id, u_name, u_username, time.time())
-                    )
-                conn.commit()
-        except Exception as e:
-            print(f"Error updating user tracker DB: {e}")
-        
                 
 # ❤️‍🩹 थ्रेड्स स्टार्ट करें
 threading.Thread(target=global_poll_manager, daemon=True).start()
