@@ -17,17 +17,23 @@ from questions import QUIZ_LIST
 load_dotenv()
 API_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID = os.getenv("OWNER_ID")
-SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")  # 👈 [UPDATED] .env से ग्रुप आईडी लोड करने के लिए
+SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")
 
 if not API_TOKEN:
     raise ValueError("Error: BOT_TOKEN एनवायरनमेंट वेरिएबल्स में नहीं मिला!")
+# .env lines ke niche jahan bot initialize ho raha hai:
+from telebot import apihelper
+apihelper.ENABLE_MIDDLEWARE = True  # [ADD THIS LINE FIRST]
 
 bot = telebot.TeleBot(API_TOKEN)
 telebot.logger.setLevel(logging.CRITICAL)
 
 DB_FILE = "bot_data.db"
 
-# 🚀 परफ़ॉर्मेंस बूस्ट: ग्लोबल बॉट यूज़रनेम वेरिएबल
+# ⏳ एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
+active_ban_timers = {}
+
+# 🚀 ग्लोबल बॉट यूज़रनेम वेरिएबल
 BOT_USERNAME = "Bot"
 try:
     BOT_USERNAME = bot.get_me().username
@@ -35,17 +41,12 @@ except Exception:
     pass
 
 if OWNER_ID:
-    try:
-        OWNER_ID = int(OWNER_ID)
-    except ValueError:
-        OWNER_ID = None
+    try: OWNER_ID = int(OWNER_ID)
+    except ValueError: OWNER_ID = None
 
-# 📌 [UPDATED] ग्रुप आईडी को टेक्स्ट से पूर्णांक (Integer) संख्या में बदलें
 if SUPPORT_GROUP_ID:
-    try:
-        SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
-    except ValueError:
-        SUPPORT_GROUP_ID = None
+    try: SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
+    except ValueError: SUPPORT_GROUP_ID = None
 
 # 💾 परमानेंट डेटाबेस आर्किटेक्चर (रीस्टार्ट प्रूफ)
 def init_db():
@@ -95,6 +96,12 @@ def init_db():
         ''')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
         
+        # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
+        except sqlite3.OperationalError:
+            pass
+
         # 🔍 [ANTI-SPAM SETTINGS DB] पुराना सेटिंग्स कॉलम लॉजिक
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN settings_msg_id INTEGER DEFAULT 0")
@@ -124,12 +131,18 @@ def init_db():
         except sqlite3.OperationalError:
             pass
 
+        # 🔍 [BOT PROMOTE TRACKER] Bot dwara banaye gaye admins ko track karne ke liye column
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN is_bot_promoted INTEGER DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass
+            
+
         # 🔍 [WARNING TRACKER DB] बॉट एडमिन न होने पर वार्निंग टाइम याद रखने के लिए नया कॉलम
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN last_warning_time REAL DEFAULT 0")
         except sqlite3.OperationalError:
             pass 
-            
             
         conn.commit()
 
@@ -143,6 +156,11 @@ def is_user_admin(chat_id, user_id):
         return member.status in ['creator', 'administrator']
     except Exception:
         return False
+
+def escape_html(text):
+    if not text: return ""
+    return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    
 
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
