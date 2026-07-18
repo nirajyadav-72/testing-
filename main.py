@@ -1843,7 +1843,41 @@ def track_save_and_limit_users(message):
                 
         except Exception as e:
             print(f"Error in user tracker/bot-admin limit DB: {e}")
-                    
+
+# =====================================================================
+# 💾 🤖 AUTOMATIC USER TRACKER (Bypassed & Restructured to prevent command blocking)
+# =====================================================================
+@bot.middleware_handler(update_types=['message'])
+def track_and_save_users(bot_instance, message):
+    # 🔒 SURAKSHA CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar ke messages ko track karega
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        return
+
+    # Bot automatic group ke har active user ka latest data DB me save/update karega
+    if message.from_user and not message.from_user.is_bot:
+        u_id = message.from_user.id
+        u_name = message.from_user.first_name
+        u_username = message.from_user.username  # Telegram username bina @ ke
+        
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                # Check karein user pehle se hai ya nahi
+                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
+                if cursor.fetchone():
+                    cursor.execute(
+                        "UPDATE users SET user_name = ?, username = ? WHERE user_id = ?",
+                        (u_name, u_username, u_id)
+                    )
+                else:
+                    cursor.execute(
+                        "INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)",
+                        (u_id, u_name, u_username, time.time())
+                    )
+                conn.commit()
+        except Exception as e:
+            print(f"Error updating user tracker DB: {e}")
+                                
 # ❤️‍🩹 थ्रेड्स स्टार्ट करें
 threading.Thread(target=global_poll_manager, daemon=True).start()
 threading.Thread(target=daily_leaderboard_scheduler, daemon=True).start()
