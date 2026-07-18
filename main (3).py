@@ -1691,51 +1691,89 @@ def track_save_and_limit_users(message):
                 
         except Exception as e:
             print(f"Error in user tracker/bot-admin limit DB: {e}")
-                    
-# 📊 लाइव स्टेटस कमांड (Strict Group & Owner Security Added)
+
+# =====================================================================
+# 📊 लाइव स्टेटस कमांड (FIXED & SECURED)
+# =====================================================================
 GROUPS_PER_PAGE = 10
+
+# 🛠️ [CRITICAL FIX] Pehle database me check karein ki join_time column hai ya nahi
+def fix_groups_table_column():
+    try:
+        with sqlite3.connect(DB_FILE, timeout=20) as conn:
+            cursor = conn.cursor()
+            cursor.execute("ALTER TABLE groups ADD COLUMN join_time REAL DEFAULT 0")
+            conn.commit()
+            print("✅ Success: groups table me 'join_time' column jod diya gaya hai.")
+    except sqlite3.OperationalError:
+        # Agar column pehle se hoga toh error aayega, jise hum ignore kar denge
+        pass
+
+fix_groups_table_column()
 
 @bot.message_handler(commands=['status'])
 def send_stats(message):
-    is_owner = (OWNER_ID and message.from_user.id == OWNER_ID)
-    is_valid_chat = (message.chat.type == 'private' or (SUPPORT_GROUP_ID and message.chat.id == SUPPORT_GROUP_ID))
+    user_id = message.from_user.id
+    chat_id = message.chat.id
+    
+    # OWNER CHECK: Kya message bhejne wala owner hai?
+    is_owner = (OWNER_ID and user_id == OWNER_ID)
+    
+    # CHAT CHECK: Kya ye private chat hai ya authorized support group?
+    is_valid_chat = (message.chat.type == 'private' or (SUPPORT_GROUP_ID and chat_id == SUPPORT_GROUP_ID))
 
+    # Strict Check: Owner hona zaroori hai AUR chat bhi sahi honi chahiye
     if not (is_owner and is_valid_chat):
-        try: bot.send_message(message.chat.id, "❌ This command is only valid for the bot owner and in authorized chats.")
-        except Exception: pass
+        try: 
+            bot.send_message(chat_id, "❌ This command is only valid for the bot owner and in authorized chats.")
+        except Exception: 
+            pass
         return
 
-    status_msg = bot.send_message(message.chat.id, "⏳ **Fetching statistics and group data... Please wait...**", parse_mode="Markdown")
-    
-    text, markup = generate_status_page(page=0)
+    # Loading message bhejein
     try:
-        bot.edit_message_text(chat_id=message.chat.id, message_id=status_msg.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
-    except Exception:
-        try: bot.send_message(message.chat.id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
-        except Exception: pass
+        status_msg = bot.send_message(chat_id, "⏳ **Fetching statistics and group data... Please wait...**", parse_mode="Markdown")
+        
+        # Status page generate karein
+        text, markup = generate_status_page(page=0)
+        
+        bot.edit_message_text(chat_id=chat_id, message_id=status_msg.message_id, text=text, reply_markup=markup, parse_mode="Markdown", disable_web_page_preview=True)
+    except Exception as e:
+        print(f"Error in status command main handler: {e}")
+        try: 
+            bot.send_message(chat_id, "🛑 Error generating status. Check console logs.")
+        except Exception: 
+            pass
 
 def generate_status_page(page=0):
     current_time = time.time()
-    ten_days_ago = current_time - 864000  # ⏱️ 10 din pehle ka timestamp (10 * 24 * 60 * 60)
+    ten_days_ago = current_time - 864000  # ⏱️ 10 din pehle ka timestamp
 
-    with sqlite3.connect(DB_FILE, timeout=20) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT chat_id FROM groups")
-        all_chats = cursor.fetchall()
-        
-        cursor.execute("SELECT COUNT(*) FROM users")
-        res_u = cursor.fetchone()
-        u_count = res_u[0] if res_u else 0
+    try:
+        with sqlite3.connect(DB_FILE, timeout=20) as conn:
+            cursor = conn.cursor()
+            
+            # Saare active chats nikalwein
+            cursor.execute("SELECT chat_id FROM groups")
+            all_chats = cursor.fetchall()
+            
+            # Total users count
+            cursor.execute("SELECT COUNT(*) FROM users")
+            res_u = cursor.fetchone()
+            u_count = res_u[0] if res_u else 0
 
-        # 📊 Pichle 10 dino me join huye users count karein
-        cursor.execute("SELECT COUNT(*) FROM users WHERE join_time >= ?", (ten_days_ago,))
-        res_nu = cursor.fetchone()
-        new_users_10_days = res_nu[0] if res_nu else 0
+            # Pichle 10 dino me join huye users
+            cursor.execute("SELECT COUNT(*) FROM users WHERE join_time >= ?", (ten_days_ago,))
+            res_nu = cursor.fetchone()
+            new_users_10_days = res_nu[0] if res_nu else 0
 
-        # 📊 Pichle 10 dino me join huye groups count karein
-        cursor.execute("SELECT COUNT(*) FROM groups WHERE join_time >= ?", (ten_days_ago,))
-        res_ng = cursor.fetchone()
-        new_groups_10_days = res_ng[0] if res_ng else 0
+            # [FIXED QUERY] Pichle 10 dino me join huye groups (Column fix ke baad ab ye crash nahi hoga)
+            cursor.execute("SELECT COUNT(*) FROM groups WHERE join_time >= ?", (ten_days_ago,))
+            res_ng = cursor.fetchone()
+            new_groups_10_days = res_ng[0] if res_ng else 0
+    except Exception as db_err:
+        print(f"Database error inside generate_status_page: {db_err}")
+        return "❌ Database Error while fetching stats.", InlineKeyboardMarkup()
 
     g_count = len(all_chats)
     start_idx = page * GROUPS_PER_PAGE
@@ -1763,7 +1801,7 @@ def generate_status_page(page=0):
         for idx, (chat_id,) in enumerate(current_page_groups, start_idx + 1):
             try:
                 chat_info = bot.get_chat(chat_id)
-                group_name = chat_info.title
+                group_name = escape_html(chat_info.title)
                 
                 try:
                     invite_link = bot.export_chat_invite_link(chat_id)
@@ -1781,19 +1819,21 @@ def generate_status_page(page=0):
     else:
         stats_text += "⚠️ No groups found on this page.\n"
 
+    # [FIXED BUTTONS] Style attribute ko hata diya gaya hai kyunki telebot ise support nahi karta
     markup = InlineKeyboardMarkup()
     buttons_row = []
 
     if page > 0:
-        buttons_row.append(InlineKeyboardButton(text="⏮️ Previous", callback_data=f"statpage_{page-1}", style="primary"))
+        buttons_row.append(InlineKeyboardButton(text="⏮️ Previous", callback_data=f"statpage_{page-1}"))
     if end_idx < g_count:
-        buttons_row.append(InlineKeyboardButton(text="Next Page 🔀", callback_data=f"statpage_{page+1}", style="primary"))
+        buttons_row.append(InlineKeyboardButton(text="Next Page 🔀", callback_data=f"statpage_{page+1}"))
 
     if buttons_row:
         markup.row(*buttons_row)
         
-    markup.row(InlineKeyboardButton(text="Close ❌", callback_data="status_close", style="danger"))
+    markup.row(InlineKeyboardButton(text="Close ❌", callback_data="status_close"))
     return stats_text, markup
+                                         
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("statpage_") or call.data == "status_close")
 def handle_status_pagination(call):
