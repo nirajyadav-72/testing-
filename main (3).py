@@ -216,6 +216,12 @@ def track_and_save_users(bot_instance, message):
                 conn.commit()
         except Exception as e:
             print(f"Error updating user tracker DB: {e}")
+
+            
+# 🌟 [CRITICAL FIX]: Ye line function ke bilkul end me bina kisi if-condition ke aayegi.
+# 💡 Iska indentation (space) bilkul shuruati 'if' ke barabar hona chahiye.
+if hasattr(bot_instance, 'process_new_messages'):
+        bot_instance.process_new_messages([message])
             
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
