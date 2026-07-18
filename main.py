@@ -183,46 +183,6 @@ def auto_reset_midnight_loop():
 
 threading.Thread(target=auto_reset_midnight_loop, daemon=True).start()
 
-# =====================================================================
-# 💾 🤖 AUTOMATIC USER TRACKER (Bypassed & Restructured to prevent command blocking)
-# =====================================================================
-@bot.middleware_handler(update_types=['message'])
-def track_and_save_users(bot_instance, message):
-    # 🔒 SURAKSHA CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar ke messages ko track karega
-    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
-        return
-
-    # Bot automatic group ke har active user ka latest data DB me save/update karega
-    if message.from_user and not message.from_user.is_bot:
-        u_id = message.from_user.id
-        u_name = message.from_user.first_name
-        u_username = message.from_user.username  # Telegram username bina @ ke
-        
-        try:
-            with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                cursor = conn.cursor()
-                # Check karein user pehle se hai ya nahi
-                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
-                if cursor.fetchone():
-                    cursor.execute(
-                        "UPDATE users SET user_name = ?, username = ? WHERE user_id = ?",
-                        (u_name, u_username, u_id)
-                    )
-                else:
-                    cursor.execute(
-                        "INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)",
-                        (u_id, u_name, u_username, time.time())
-                    )
-                conn.commit()
-        except Exception as e:
-            print(f"Error updating user tracker DB: {e}")
-
-            
-# 🌟 [CRITICAL FIX]: Ye line function ke bilkul end me bina kisi if-condition ke aayegi.
-# 💡 Iska indentation (space) bilkul shuruati 'if' ke barabar hona chahiye.
-if hasattr(bot_instance, 'process_new_messages'):
-        bot_instance.process_new_messages([message])
-            
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
 def global_poll_manager():
@@ -1925,6 +1885,41 @@ def handle_left_or_joined(my_chat_member):
         elif new_status in ["left", "kicked"]:
             cursor.execute("DELETE FROM groups WHERE chat_id = ?", (chat_id,))
             conn.commit()
+
+# =====================================================================
+# 💾 🤖 AUTOMATIC USER TRACKER (NORMAL HANDLER - NO BLOCKING)
+# =====================================================================
+@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'sticker', 'document', 'voice', 'video'])
+def track_and_save_users_normal(message):
+    # 🔒 SURAKSHA CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar ke messages ko track karega
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        return
+
+    # Bot automatic group ke har active user ka latest data DB me save/update karega
+    if message.from_user and not message.from_user.is_bot:
+        u_id = message.from_user.id
+        u_name = message.from_user.first_name
+        u_username = message.from_user.username  # Telegram username bina @ ke
+        
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                # Check karein user pehle se hai ya nahi
+                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (u_id,))
+                if cursor.fetchone():
+                    cursor.execute(
+                        "UPDATE users SET user_name = ?, username = ? WHERE user_id = ?",
+                        (u_name, u_username, u_id)
+                    )
+                else:
+                    cursor.execute(
+                        "INSERT INTO users (user_id, user_name, username, join_time) VALUES (?, ?, ?, ?)",
+                        (u_id, u_name, u_username, time.time())
+                    )
+                conn.commit()
+        except Exception as e:
+            print(f"Error updating user tracker DB: {e}")
+        
                 
 # ❤️‍🩹 थ्रेड्स स्टार्ट करें
 threading.Thread(target=global_poll_manager, daemon=True).start()
