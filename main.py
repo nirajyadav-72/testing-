@@ -191,7 +191,7 @@ def auto_reset_midnight_loop():
         try:
             now = datetime.now(tz)
             if now.hour == 0 and now.minute == 0:
-                with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                with sqlite3.connect(DB_FILE, timeout=20, check_same_thread=False) as conn:
                     cursor = conn.cursor()
                     cursor.execute("UPDATE users SET msg_count = 0")
                     conn.commit()
