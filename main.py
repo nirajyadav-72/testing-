@@ -1398,6 +1398,173 @@ def handle_left_or_joined(my_chat_member):
             # Bot ko group se nikalne par data automatically clean ho jayega
             cursor.execute("DELETE FROM groups WHERE chat_id = ?", (chat_id,))
             conn.commit()
+
+# =====================================================================
+# 👑 3.5 /promote कमांड हैंडलर (Strict Group ID Check + Warning Alert)
+# =====================================================================
+@bot.message_handler(commands=['promote'])
+def handle_promote_command(message):
+    if OWNER_ID is None or message.from_user.id != OWNER_ID: 
+        return
+        
+    # 🔒 SURAKSHA CHECK: Agar chat ID support group se match nahi karti
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        try:
+            bot.reply_to(message, "❌ <b>सुरक्षा चेतावनी:</b> यह कमांड केवल मुख्य आधिकारिक सपोर्ट ग्रुप के अंदर ही काम कर सकती है! आप इसे यहाँ इस्तेमाल नहीं कर सकते।", parse_mode="HTML")
+        except Exception:
+            pass
+        return
+
+    user_id_to_promote = None
+    user_name = "यूज़र"
+
+    # 1. Reply se ID nikalna
+    if message.reply_to_message:
+        user_id_to_promote = message.reply_to_message.from_user.id
+        user_name = message.reply_to_message.from_user.first_name
+    # 2. Text Argument se ID nikalna
+    else:
+        args = message.text.split(maxsplit=1)
+        if len(args) > 1:
+            input_text = args[1].strip()
+            if input_text.isdigit():
+                user_id_to_promote = int(input_text)
+            else:
+                clean_search = input_text.replace("@", "").strip().lower()
+                try:
+                    with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            "SELECT user_id, user_name FROM users WHERE LOWER(username) = ? OR LOWER(user_name) LIKE ? LIMIT 1",
+                            (clean_search, f"%{clean_search}%")
+                        )
+                        row = cursor.fetchone()
+                        if row:
+                            user_id_to_promote = row[0]
+                            user_name = row[1]
+                except Exception as db_err:
+                    print(f"Database search error in promote: {db_err}")
+
+    if not user_id_to_promote:
+        try:
+            error_msg = (
+                "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/promote</code> लिखें,\n"
+                "या फिर <code>/promote @username</code> या <code>/promote User_Name</code> लिखें।\n\n"
+                "⚠️ <i>नोट: यूज़र का बॉट के डेटाबेस में होना (यानी ग्रुप में पहले कोई मैसेज किया होना) ज़रूरी है!</i>"
+            )
+            bot.reply_to(message, error_msg, parse_mode="HTML")
+        except Exception:
+            pass
+        return
+
+    try:
+        # 1. Telegram Group me Admin Rights dena
+        bot.promote_chat_member(
+            chat_id=SUPPORT_GROUP_ID,
+            user_id=user_id_to_promote,
+            can_change_info=False,
+            can_post_messages=False,
+            can_edit_messages=False,
+            can_delete_messages=True,
+            can_invite_users=True,
+            can_restrict_members=True,
+            can_pin_messages=True,
+            can_promote_members=False,
+            can_manage_chat=True,
+            can_manage_video_chats=True,
+            is_anonymous=False
+        )
+        
+        # 🟢 2. [ADDED HERE] Database me entry update karna taki is user par text limit lag sake
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                # Check karein agar user DB me pehle se nahi hai toh naya insert karein, warna update karein
+                cursor.execute("SELECT user_id FROM users WHERE user_id = ?", (user_id_to_promote,))
+                if cursor.fetchone():
+                    cursor.execute("UPDATE users SET is_bot_promoted = 1 WHERE user_id = ?", (user_id_to_promote,))
+                else:
+                    cursor.execute(
+                        "INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, NULL, ?, 0, 1)",
+                        (user_id_to_promote, user_name, time.time())
+                    )
+                conn.commit()
+        except Exception as db_save_err:
+            print(f"Error saving is_bot_promoted to DB: {db_save_err}")
+
+        # 3. Success Message bhejna
+        safe_name = escape_html(user_name)
+        mention = f'<a href="tg://user?id={user_id_to_promote}">{safe_name}</a>'
+        
+        success_text = (
+            f"👑 <b>प्रमोशन सफल!</b>\n\n"
+            f"✨ Name: {mention}\n"
+            f"✨ ID: <code>{user_id_to_promote}</code> को सफलतापूर्वक <b>एडमिन (Admin)</b> बना दिया गया है।\n"
+            f"💡 <i>सर आपके आदेश पर इस एडमिन को डिमोट या हमेशा के लिए बैन भी कर दूंगा!</i>"
+        )
+        bot.reply_to(message, success_text, parse_mode="HTML")
+        
+    except Exception as e:
+        try:
+            bot.reply_to(message, f"❌ प्रमोट करने में विफलता आई: {e}")
+        except Exception:
+            pass
+            
+# =====================================================================
+# 📢 1. /send कमांड हैंडलर (सिर्फ ओनर के लिए)
+# =====================================================================
+@bot.message_handler(commands=['send'])
+def handle_send_command(message):
+    if OWNER_ID is None or message.from_user.id != OWNER_ID:
+        try:
+            bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!")
+        except Exception:
+            pass
+        return
+
+    if SUPPORT_GROUP_ID is None:
+        try:
+            bot.reply_to(message, "❌ त्रुटि: .env फ़ाइल में SUPPORT_GROUP_ID नहीं मिला या गलत है!")
+        except Exception:
+            pass
+        return
+
+    if not message.reply_to_message:
+        try:
+            bot.reply_to(message, "💡 <b>कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!</b>", parse_mode="HTML")
+        except Exception:
+            pass
+        return
+
+    reply_msg = message.reply_to_message
+
+    try:
+        if reply_msg.text:
+            bot.send_message(SUPPORT_GROUP_ID, reply_msg.text, entities=reply_msg.entities)
+        elif reply_msg.photo:
+            bot.send_photo(SUPPORT_GROUP_ID, reply_msg.photo[-1].file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
+        elif reply_msg.video:
+            bot.send_video(SUPPORT_GROUP_ID, reply_msg.video.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
+        elif reply_msg.sticker:
+            bot.send_sticker(SUPPORT_GROUP_ID, reply_msg.sticker.file_id)
+        elif reply_msg.document:
+            bot.send_document(SUPPORT_GROUP_ID, reply_msg.document.file_id, caption=reply_msg.caption, caption_entities=reply_msg.caption_entities)
+        elif reply_msg.voice:
+            bot.send_voice(SUPPORT_GROUP_ID, reply_msg.voice.file_id, caption=reply_msg.caption)
+        elif reply_msg.audio:
+            bot.send_audio(SUPPORT_GROUP_ID, reply_msg.audio.file_id, caption=reply_msg.caption)
+        elif reply_msg.animation:
+            bot.send_animation(SUPPORT_GROUP_ID, reply_msg.animation.file_id, caption=reply_msg.caption)
+        else:
+            bot.copy_message(SUPPORT_GROUP_ID, from_chat_id=reply_msg.chat.id, message_id=reply_msg.message_id)
+
+        bot.reply_to(message, "✅ मैसेज सफलतापूर्वक आपके सपोर्ट ग्रुप में भेज दिया गया है।")
+    except Exception as e:
+        try:
+            bot.reply_to(message, f"❌ मैसेज भेजने में विफलता आई: {e}")
+        except Exception:
+            pass
+
                 
 # ❤️‍🩹 थ्रेड्स स्टार्ट करें
 threading.Thread(target=global_poll_manager, daemon=True).start()
