@@ -94,8 +94,12 @@ def init_db():
                 value TEXT
             )
         ''')
+        # ❌ Line 176 में error
+        cursor.execute("UPDATE users SET msg_count = 0")
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
-        
+        # ❌ Line 1736 में error आ रही है
+        cursor.execute("SELECT COUNT(*) FROM groups WHERE join_time >= ?", (ten_days_ago,))
+
         # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
         try:
             cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
