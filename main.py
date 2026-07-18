@@ -755,7 +755,12 @@ def manual_leaderboard_sender(message):
         conn.commit()
         
     try:
-        bot.edit_message_text(chat_id=message.chat.id, message_id=status_msg.message_id, text=f"✅ **Chief, the manual result has been successfully sent!**\n📊 Total **{success_count}** Leaderboards sent to active groups and scores have been reset!", parse_mode="Markdown")
+        bot.edit_message_text(
+    chat_id=message.chat.id, 
+    message_id=status_msg.message_id, 
+    text=f"✅ **Chief, the manual result has been successfully sent!**\n📊 Total **{success_count}** ग्रुप्स को लीडरबोर्ड सफलतापूर्वक भेज दिया गया है।",
+    parse_mode="Markdown"
+        )
     except Exception: pass
 
 def daily_leaderboard_scheduler():
