@@ -1760,7 +1760,90 @@ def handle_cancel_ban(message):
                     pass
                 return
 
+# =====================================================================
+# 💾 🤖 AUTOMATIC USER TRACKER + DAILY TEXT LIMIT (Bot Admins Included)
+# =====================================================================
+DAILY_MSG_LIMIT = 10  # 👈 Yahan aap apni marzi se limit set kar sakte hain
 
+@bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
+def track_save_and_limit_users(message):
+    # 🔒 ULTRA-SECURITY CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar kaam karega
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        return
+
+    if message.from_user and not message.from_user.is_bot:
+        u_id = message.from_user.id
+        u_name = message.from_user.first_name
+        u_username = message.from_user.username
+        
+        # Core Rules check
+        is_core_owner = (OWNER_ID and u_id == OWNER_ID)
+
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                
+                # Database se user ka msg_count aur is_bot_promoted check karna
+                cursor.execute("SELECT msg_count, is_bot_promoted FROM users WHERE user_id = ?", (u_id,))
+                row = cursor.fetchone()
+                
+                current_count = 0
+                is_bot_promoted_admin = 0
+                
+                if row:
+                    current_count = row[0]
+                    is_bot_promoted_admin = row[1] if row[1] is not None else 0
+                
+                # Check karein ki kya is user par limit lagani hai?
+                # (Agar core owner nahi hai aur ya toh normal member hai ya fir bot ka banaya hua admin hai)
+                apply_limit = False
+                if not is_core_owner:
+                    if is_bot_promoted_admin == 1:
+                        apply_limit = True  # Bot dwara banaye gaye admin par limit lagegi 🟢
+                    else:
+                        # Agar database mein status normal hai, par check karein creator toh nahi hai
+                        try:
+                            member = bot.get_chat_member(SUPPORT_GROUP_ID, u_id)
+                            # Agar normal member hai toh limit lagegi, main creator/manually added core admin par nahi
+                            if member.status not in ['creator', 'administrator']:
+                                apply_limit = True
+                        except Exception:
+                            apply_limit = True
+
+                # 🛑 LIMIT ENFORCEMENT BLOCK
+                if apply_limit and current_count >= DAILY_MSG_LIMIT:
+                    try:
+                        # User/Bot-Admin ka message turant delete karein
+                        bot.delete_message(message.chat.id, message.message_id)
+                        
+                        # Sirf pehli baar limit end hone par alert bhejein
+                        if current_count == DAILY_MSG_LIMIT:
+                            safe_name = escape_html(u_name)
+                            alert_text = f"⚠️ 👤 हे <a href='tg://user?id={u_id}'>{safe_name}</a>, आपकी आज की <b>{DAILY_MSG_LIMIT} मैसेजेस</b> की दैनिक सीमा समाप्त हो चुकी है! आप बॉट-प्रमोटेड एडमिन हैं, इसलिए आपके मैसेजेस भी कल सुबह तक डिलीट किए जाएंगे।"
+                            bot.send_message(SUPPORT_GROUP_ID, alert_text, parse_mode="HTML")
+                    except Exception:
+                        pass
+                    
+                    cursor.execute("UPDATE users SET msg_count = msg_count + 1 WHERE user_id = ?", (u_id,))
+                    conn.commit()
+                    return
+                
+                # DB Update Logic (Limit ke andar hone par)
+                if row:
+                    cursor.execute(
+                        "UPDATE users SET user_name = ?, username = ?, msg_count = msg_count + 1 WHERE user_id = ?",
+                        (u_name, u_username, u_id)
+                    )
+                else:
+                    cursor.execute(
+                        "INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, ?, ?, 1, 0)",
+                        (u_id, u_name, u_username, time.time())
+                    )
+                conn.commit()
+                
+        except Exception as e:
+            print(f"Error in user tracker/bot-admin limit DB: {e}")
+                    
 # ❤️‍🩹 थ्रेड्स स्टार्ट करें
 threading.Thread(target=global_poll_manager, daemon=True).start()
 threading.Thread(target=daily_leaderboard_scheduler, daemon=True).start()
