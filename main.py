@@ -1323,7 +1323,7 @@ def handle_promote_command(message):
             error_msg = (
                 "💡 <b>तरीका:</b> यूज़र के मैसेज पर रिप्लाई करके <code>/promote</code> लिखें,\n"
                 "या फिर <code>/promote @username</code> या <code>/promote User_Name</code> लिखें।\n\n"
-                "⚠️ <i>नोट: यूज़र का बॉट के डेटाबेस में होना (यानी ग्रुप में पहले कोई मैसेज किया होना) ज़रूरी है!</i>"
+                "⚠️ <i>नोट: यूज़र का बॉट के डेटाबेस में होना (यानी ग्रुप में सक्रिय होना) अनिवार्य है!</i>"
             )
             bot.reply_to(message, error_msg, parse_mode="HTML")
         except Exception:
@@ -1404,7 +1404,8 @@ def handle_send_command(message):
 
     if not message.reply_to_message:
         try:
-            bot.reply_to(message, "💡 <b>कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर रिप्लाई (Reply) करके करें!</b>", parse_mode="HTML")
+            bot.reply_to(message, "💡 <b>कृपया इस कमांड का उपयोग किसी मैसेज, फोटो, वीडियो या स्टिकर पर Reply करके करें।</b>")
+            
         except Exception:
             pass
         return
