@@ -50,8 +50,11 @@ if SUPPORT_GROUP_ID:
 
 # 💾 परमानेंट डेटाबेस आर्किटेक्चर (रीस्टार्ट प्रूफ)
 def init_db():
-    with sqlite3.connect(DB_FILE, timeout=20) as conn:
+    # [FIX] Multi-threading database locks se bachne ke liye check_same_thread=False add kiya gaya hai
+    with sqlite3.connect(DB_FILE, timeout=20, check_same_thread=False) as conn:
         cursor = conn.cursor()
+        
+        # [FIX] Default structure me 'join_time' column add kiya gaya (Fills Problem #1)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS groups (
                 chat_id INTEGER PRIMARY KEY,
@@ -60,14 +63,18 @@ def init_db():
                 last_sent_time REAL DEFAULT 0,
                 language TEXT DEFAULT 'hindi',
                 interval INTEGER DEFAULT 1800,
-                auto_delete INTEGER DEFAULT 1
+                auto_delete INTEGER DEFAULT 1,
+                join_time REAL DEFAULT 0
             )
         ''')
+        
+        # [FIX] Default structure me 'msg_count' column add kiya gaya (Fills Problem #2)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 user_id INTEGER PRIMARY KEY,
                 user_name TEXT,
-                join_time REAL
+                join_time REAL DEFAULT 0,
+                msg_count INTEGER DEFAULT 0
             )
         ''')
         cursor.execute('''
@@ -96,6 +103,20 @@ def init_db():
         ''')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
         
+        # 💡 MIGRATION SAFETY CHECKS (Purani files me dynamic column alteration):
+        
+        # [MIGRATION FIX #1] Groups table me join_time migration safety logic
+        try:
+            cursor.execute("ALTER TABLE groups ADD COLUMN join_time REAL DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass
+
+        # [MIGRATION FIX #2] Users table me msg_count migration safety logic
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN msg_count INTEGER DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass
+
         # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
         try:
             cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
@@ -124,8 +145,9 @@ def init_db():
         try:
             cursor.execute("ALTER TABLE daily_scores ADD COLUMN last_score_msg_id INTEGER DEFAULT 0")
         except sqlite3.OperationalError:
-            pass 
-            
+            pass
+
+        # 🔍 [no Idea 💡]
         try:
             cursor.execute("ALTER TABLE poll_mapping ADD COLUMN creation_time REAL DEFAULT 0")
         except sqlite3.OperationalError:
@@ -136,7 +158,6 @@ def init_db():
             cursor.execute("ALTER TABLE users ADD COLUMN is_bot_promoted INTEGER DEFAULT 0")
         except sqlite3.OperationalError:
             pass
-            
 
         # 🔍 [WARNING TRACKER DB] बॉट एडमिन न होने पर वार्निंग टाइम याद रखने के लिए नया कॉलम
         try:
@@ -160,8 +181,7 @@ def is_user_admin(chat_id, user_id):
 def escape_html(text):
     if not text: return ""
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-
+        
 # =====================================================================
 # ⏰ AUTOMATIC MIDNIGHT RESET THREAD (Har raat 12 baje limit 0 karne ke liye)
 # =====================================================================
