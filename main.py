@@ -162,6 +162,27 @@ def escape_html(text):
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     
 
+# =====================================================================
+# ⏰ AUTOMATIC MIDNIGHT RESET THREAD (Har raat 12 baje limit 0 karne ke liye)
+# =====================================================================
+def auto_reset_midnight_loop():
+    tz = pytz.timezone('Asia/Kolkata')
+    while True:
+        try:
+            now = datetime.now(tz)
+            if now.hour == 0 and now.minute == 0:
+                with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE users SET msg_count = 0")
+                    conn.commit()
+                print("⏰ Success: Daily message limit automatic reset ho gayi!")
+                time.sleep(60)
+        except Exception as e:
+            print(f"Error in automatic reset thread: {e}")
+        time.sleep(30)
+
+threading.Thread(target=auto_reset_midnight_loop, daemon=True).start()
+
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
 def global_poll_manager():
