@@ -48,7 +48,6 @@ if SUPPORT_GROUP_ID:
     try: SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
     except ValueError: SUPPORT_GROUP_ID = None
 
-# 💾 परमानेंट डेटाबेस आर्किटेक्चर (रीस्टार्ट प्रूफ)
 def init_db():
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
         cursor = conn.cursor()
@@ -96,6 +95,15 @@ def init_db():
         ''')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
         
+        # 🆕 [USER LIMITS / TRACKER DB] यूज़र मैसेज लिमिट ट्रैक करने के लिए नई टेबल
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS user_limits (
+                user_id INTEGER PRIMARY KEY,
+                msg_count INTEGER DEFAULT 0,
+                last_msg_time REAL DEFAULT 0
+            )
+        ''')
+        
         # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
         try:
             cursor.execute("ALTER TABLE users ADD COLUMN username TEXT DEFAULT NULL")
@@ -137,12 +145,23 @@ def init_db():
         except sqlite3.OperationalError:
             pass
             
-
         # 🔍 [WARNING TRACKER DB] बॉट एडमिन न होने पर वार्निंग टाइम याद रखने के लिए नया कॉलम
         try:
             cursor.execute("ALTER TABLE groups ADD COLUMN last_warning_time REAL DEFAULT 0")
         except sqlite3.OperationalError:
             pass 
+
+        # 🛠️ [FIX] users टेबल में msg_count कॉलम जोड़ना (सुरक्षित तरीका)
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN msg_count INTEGER DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass
+
+        # 🛠️ [FIX] groups टेबल में msg_count कॉलम जोड़ना (सुरक्षित तरीका)
+        try:
+            cursor.execute("ALTER TABLE groups ADD COLUMN msg_count INTEGER DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass
             
         conn.commit()
 
