@@ -1796,11 +1796,14 @@ def handle_cancel_ban(message):
 # =====================================================================
 # 💾 🤖 AUTOMATIC USER TRACKER + DAILY TEXT LIMIT (Bot Admins Included)
 # =====================================================================
-DAILY_MSG_LIMIT = 30  # 👈 Yahan aap apni marzi se limit set kar sakte hain
+DAILY_MSG_LIMIT = 5  # 👈 Yahan aap apni marzi se limit set kar sakte hain
 
 @bot.message_handler(func=lambda message: True, content_types=['text', 'photo', 'video', 'sticker', 'document', 'voice', 'audio', 'animation'])
 def track_save_and_limit_users(message):
-    # 🔒 ULTRA-SECURITY CHECK: Sirf .env wale SUPPORT_GROUP_ID ke andar kaam karega
+    # 🌟 NAYA: Agar command hai (jaise /free), toh ise yahin rok dein taaki tracker disturb na ho
+    if message.text and message.text.startswith('/'):
+        return
+
     if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
         return
 
@@ -1808,15 +1811,11 @@ def track_save_and_limit_users(message):
         u_id = message.from_user.id
         u_name = message.from_user.first_name
         u_username = message.from_user.username
-        
-        # Core Rules check
         is_core_owner = (OWNER_ID and u_id == OWNER_ID)
 
         try:
             with sqlite3.connect(DB_FILE, timeout=20) as conn:
                 cursor = conn.cursor()
-                
-                # Database se user ka msg_count aur is_bot_promoted check karna
                 cursor.execute("SELECT msg_count, is_bot_promoted FROM users WHERE user_id = ?", (u_id,))
                 row = cursor.fetchone()
                 
@@ -1824,35 +1823,34 @@ def track_save_and_limit_users(message):
                 is_bot_promoted_admin = 0
                 
                 if row:
-                    current_count = row[0]
+                    current_count = row[0]  # 🌟 FIX: row[0] se count nikala
                     is_bot_promoted_admin = row[1] if row[1] is not None else 0
                 
-                # Check karein ki kya is user par limit lagani hai?
-                # (Agar core owner nahi hai aur ya toh normal member hai ya fir bot ka banaya hua admin hai)
                 apply_limit = False
                 if not is_core_owner:
                     if is_bot_promoted_admin == 1:
-                        apply_limit = True  # Bot dwara banaye gaye admin par limit lagegi 🟢
+                        apply_limit = True
                     else:
-                        # Agar database mein status normal hai, par check karein creator toh nahi hai
-                        try:
-                            member = bot.get_chat_member(SUPPORT_GROUP_ID, u_id)
-                            # Agar normal member hai toh limit lagegi, main creator/manually added core admin par nahi
-                            if member.status not in ['creator', 'administrator']:
-                                apply_limit = True
-                        except Exception:
+                        # 🌟 NAYA: Baar-baar Telegram API call karne ke bajaye 5 min ka cache check
+                        current_time = time.time()
+                        if u_id not in ADMIN_CACHE or (current_time - ADMIN_CACHE[u_id]['time'] > 300):
+                            try:
+                                member = bot.get_chat_member(SUPPORT_GROUP_ID, u_id)
+                                is_admin = member.status in ['creator', 'administrator']
+                                ADMIN_CACHE[u_id] = {'is_admin': is_admin, 'time': current_time}
+                            except Exception:
+                                ADMIN_CACHE[u_id] = {'is_admin': False, 'time': current_time}
+                        
+                        if not ADMIN_CACHE[u_id]['is_admin']:
                             apply_limit = True
 
                 # 🛑 LIMIT ENFORCEMENT BLOCK
                 if apply_limit and current_count >= DAILY_MSG_LIMIT:
                     try:
-                        # User/Bot-Admin ka message turant delete karein
                         bot.delete_message(message.chat.id, message.message_id)
-                        
-                        # Sirf pehli baar limit end hone par alert bhejein
                         if current_count == DAILY_MSG_LIMIT:
                             safe_name = escape_html(u_name)
-                            alert_text = f"⚠️ Hey <a href='tg://user?id={u_id}'>{safe_name}</a>, आपकी आज की <b>{DAILY_MSG_LIMIT} मैसेजेस</b> की दैनिक सीमा समाप्त हो चुकी है!\n\nआपका daily text मेसेजेस की लिमिट समाप्त हो चुका है\nइसलिए आपके मैसेजेस रात 12 बजे तक डिलीट किए जाएंगे,\n\nआपके message प्लान को कल सुबह नवीनीकृत (renew) कर दिया जाएगा,।"
+                            alert_text = f"⚠️ Hey <a href='tg://user?id={u_id}'>{safe_name}</a>, आपकी आज की <b>{DAILY_MSG_LIMIT} मैसेजेस</b> की दैनिक सीमा समाप्त हो चुकी है!\n\nआपका daily text मेसेजेस की लिमिट समाप्त हो चुका है\nइसलिए आपके मैसेजेस रात 12 बजे तक डिलीट किए जाएंगे,\n\nआपके message प्लान को कल सुबह नवीनीकृत (renew) कर दिया जाएगा।"
                             bot.send_message(SUPPORT_GROUP_ID, alert_text, parse_mode="HTML")
                     except Exception:
                         pass
@@ -1861,22 +1859,102 @@ def track_save_and_limit_users(message):
                     conn.commit()
                     return
                 
-                # DB Update Logic (Limit ke andar hone par)
                 if row:
-                    cursor.execute(
-                        "UPDATE users SET user_name = ?, username = ?, msg_count = msg_count + 1 WHERE user_id = ?",
-                        (u_name, u_username, u_id)
-                    )
+                    cursor.execute("UPDATE users SET user_name = ?, username = ?, msg_count = msg_count + 1 WHERE user_id = ?", (u_name, u_username, u_id))
                 else:
-                    cursor.execute(
-                        "INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, ?, ?, 1, 0)",
-                        (u_id, u_name, u_username, time.time())
-                    )
+                    cursor.execute("INSERT INTO users (user_id, user_name, username, join_time, msg_count, is_bot_promoted) VALUES (?, ?, ?, ?, 1, 0)", (u_id, u_name, u_username, time.time()))
                 conn.commit()
                 
         except Exception as e:
             print(f"Error in user tracker/bot-admin limit DB: {e}")
-                   
+
+@bot.message_handler(commands=['free'])
+def free_user_command(message):
+    # 🔒 Sirf SUPPORT_GROUP_ID ke andar kaam karega
+    if SUPPORT_GROUP_ID is None or message.chat.id != SUPPORT_GROUP_ID:
+        return
+
+    u_id = message.from_user.id
+    is_core_owner = (OWNER_ID and u_id == OWNER_ID)
+    
+    # Check karein ki command chalane wala admin hai ya nahi
+    is_admin = False
+    if is_core_owner:
+        is_admin = True
+    else:
+        try:
+            member = bot.get_chat_member(SUPPORT_GROUP_ID, u_id)
+            if member.status in ['creator', 'administrator']:
+                is_admin = True
+        except Exception:
+            pass
+
+    if not is_admin:
+        bot.reply_to(message, "❌ यह कमांड सिर्फ ग्रुप एडमीन्स के लिए है।")
+        return
+
+    target_user_id = None
+    target_name = "User"
+
+    # CASE 1: Agar admin ne kisi user ke message par REPLY kiya hai
+    if message.reply_to_message:
+        target_user_id = message.reply_to_message.from_user.id
+        target_name = message.reply_to_message.from_user.first_name
+        if message.reply_to_message.from_user.is_bot:
+            bot.reply_to(message, "❌ आप किसी बोट को फ्री नहीं कर सकते।")
+            return
+
+    # CASE 2: Agar admin ne naam ya username likha hai (e.g., /free @username ya /free Rahul)
+    else:
+        args = message.text.split(maxsplit=1)
+        if len(args) < 2:
+            bot.reply_to(message, "💡 <b>सही तरीका:</b>\n1. मैसेज पर Reply करके <code>/free</code> लिखें\n2. <code>/free @username</code> लिखें\n3. <code>/free User Name</code> (यूजर का नाम) लिखें।", parse_mode="HTML")
+            return
+        
+        search_query = args[1].strip()
+
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                
+                if search_query.startswith("@"):
+                    # Username se search
+                    username_arg = search_query.replace("@", "").strip()
+                    cursor.execute("SELECT user_id, user_name FROM users WHERE LOWER(username) = LOWER(?)", (username_arg,))
+                else:
+                    # 🌟 NAYA: User ke Name se search (Aadha naam likhne par bhi dhoondh lega)
+                    cursor.execute("SELECT user_id, user_name FROM users WHERE LOWER(user_name) LIKE LOWER(?)", (f"%{search_query}%",))
+                
+                rows = cursor.fetchall()
+                if not rows:
+                    bot.reply_to(message, f"❌ यूजर <b>'{search_query}'</b> डेटाबेस में नहीं मिला।", parse_mode="HTML")
+                    return
+                
+                # Agar ek naam ke zyada log mile toh pehle wale ko select karega
+                target_user_id = rows[0][0]
+                target_name = rows[0][1]
+
+        except Exception as e:
+            print(f"Error fetching user by name/username: {e}")
+            bot.reply_to(message, "❌ यूजर को खोजने में कोई खराबी आई।")
+            return
+
+    # User ka count database me 0 karna
+    if target_user_id:
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                cursor.execute("UPDATE users SET msg_count = 0 WHERE user_id = ?", (target_user_id,))
+                conn.commit()
+            
+            safe_name = escape_html(target_name)
+            success_text = f"✅ <a href='tg://user?id={target_user_id}'>{safe_name}</a> को आज के लिए <b>फ्री</b> कर दिया गया है! अब वे फिर से मैसेज कर सकते हैं।"
+            bot.send_message(SUPPORT_GROUP_ID, success_text, parse_mode="HTML")
+            
+        except Exception as e:
+            print(f"Error in free command DB update: {e}")
+            bot.reply_to(message, "❌ डेटाबेस अपडेट करने में कोई खराबी आई।")
+        
 # =====================================================================
 # 💾 🤖 AUTOMATIC USER TRACKER (Bypassed & Restructured to prevent command blocking)
 # =====================================================================
