@@ -3,7 +3,7 @@ import time
 import sqlite3
 import threading
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import random
 import telebot
@@ -47,6 +47,8 @@ if OWNER_ID:
 if SUPPORT_GROUP_ID:
     try: SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
     except ValueError: SUPPORT_GROUP_ID = None
+
+ADMIN_CACHE = {}
 
 def init_db():
     with sqlite3.connect(DB_FILE, timeout=20) as conn:
