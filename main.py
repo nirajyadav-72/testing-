@@ -186,21 +186,38 @@ def escape_html(text):
 # =====================================================================
 def auto_reset_midnight_loop():
     tz = pytz.timezone('Asia/Kolkata')
+    print("⏰ Midnight Reset Thread Active Ho Gaya!")
+    
     while True:
         try:
             now = datetime.now(tz)
-            if now.hour == 0 and now.minute == 0:
-                with sqlite3.connect(DB_FILE, timeout=20) as conn:
-                    cursor = conn.cursor()
-                    cursor.execute("UPDATE users SET msg_count = 0")
-                    conn.commit()
-                print("⏰ Success: Daily message limit automatic reset ho gayi!")
-                time.sleep(60)
+            
+            # 🌟 NAYA: Agli raat ke exact 12:00 baje ka time nikalna
+            tomorrow = now + timedelta(days=1)
+            midnight = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
+            
+            seconds_until_midnight = (midnight - now).total_seconds()
+            
+            # Thread ko seedhe utne seconds ke liye sulana (No CPU load)
+            if seconds_until_midnight > 0:
+                time.sleep(seconds_until_midnight)
+            
+            # Raat ke 12 baje reset logic
+            with sqlite3.connect(DB_FILE, timeout=40) as conn:
+                cursor = conn.cursor()
+                cursor.execute("UPDATE users SET msg_count = 0")
+                conn.commit()
+                
+            print(f"⏰ Success: Daily message limit automatic reset ho gayi! Time: {datetime.now(tz)}")
+            time.sleep(5)
+            
         except Exception as e:
             print(f"Error in automatic reset thread: {e}")
-        time.sleep(30)
+            time.sleep(30)
 
+# Thread start karein
 threading.Thread(target=auto_reset_midnight_loop, daemon=True).start()
+
 
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 # 🔄 हर ग्रुप के लिए कस्टमाइज्ड पोल शेड्यूलर लूप
