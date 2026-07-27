@@ -886,12 +886,13 @@ def handle_poll_answer(poll_answer):
             
         conn.commit()
 
+
 # =========================================================
-# 🔥 [TOP] TELEGRAM MESSAGE EFFECTS IDS DEFINITIONS
+# 🔥 [TOP] TELEGRAM MESSAGE EFFECTS IDs
 # =========================================================
 EFFECT_FIRE = "5104841245755180586"   # 🔥 (आग)
 EFFECT_LIKE = "5107584321108051014"   # 👍 (थम्ब्स अप)
-EFFECT_PARTY = "5046509860342981222"  # 🎉 (पार्टी / सेलिब्रेशन)
+EFFECT_PARTY = "5046509860342981222"  # 🎉 (पार्टी)
 EFFECT_LOVE = "5044134455711629546"   # ❤️ (दिल)
 # =========================================================
 
@@ -916,7 +917,8 @@ def check_user_score(message):
     except Exception: 
         pass
 
-    # Database se user ka score aur purani message ID nikalna
+    # Database se user ka score aur purani message ID nikalna [⚠️ FIXED VARIABLE ERROR HERE]
+    correct, wrong, old_score_msg_id = 0, 0, 0
     try:
         with sqlite3.connect(DB_FILE, timeout=20) as conn:
             cursor = conn.cursor()
@@ -925,15 +927,12 @@ def check_user_score(message):
                 (chat_id, user_id)
             )
             res = cursor.fetchone()
-    except Exception:
-        res = None
-    
-    if res:
-        correct = res[0]
-        wrong = res[1]
-        old_score_msg_id = res[2] if res[2] else 0
-    else:
-        correct, wrong, old_score_msg_id = 0, 0, 0
+            if res:
+                correct = res[0] if res[0] is not None else 0
+                wrong = res[1] if res[1] is not None else 0
+                old_score_msg_id = res[2] if res[2] else 0
+    except Exception as e:
+        print(f"Database Read Error: {e}")
 
     # स्कोर कैलकुलेशन (Right: +2 | Wrong: -0.5)
     final_score = (correct * 2) - (wrong * 0.5)
@@ -946,12 +945,12 @@ def check_user_score(message):
             pass
 
     # स्कोर फ़ॉर्मेटर फिक्स (.5 वाले स्कोर को डेसिमल में रखेगा, बाकी .0 हटा देगा)
-    if final_score.is_integer():
+    if isinstance(final_score, float) and final_score.is_integer():
         display_score = str(int(final_score))
     else:
-        display_score = f"{final_score:.1f}"
+        display_score = f"{final_score:.1f}" if isinstance(final_score, float) else str(final_score)
 
-    # टेलीग्राम सेफ मार्कडाउन स्कोर टेक्स्ट फॉर्मेटिंग
+    # टेलीग्राम सेफ मार्कধারণ स्कोर टेक्स्ट फॉर्मेटिंग
     score_text = (
         f"🏆 *Congratulations {message.from_user.first_name}, your today's quiz score!*\n"
         f"📊 *Marking: Right (+2) | Wrong (-0.5)*\n"
@@ -971,33 +970,47 @@ def check_user_score(message):
     close_button = InlineKeyboardButton(
         text="ᴄʟᴏꜱᴇ ᴄᴀʀᴅ", 
         callback_data=f"close_score_{user_id}",
-        style="primary"  # Isse button Red color ka dikhega
+        style="primary"
     )
     markup.add(close_button)
 
+    new_score_msg = None
     try: 
-        # नया स्कोर कार्ड भेजें (🎉 पार्टी इफ़ेक्ट और रेड क्लोज बटन के साथ)
+        # नया स्कोर कार्ड भेजें (🎉 पार्टी इफ़ेक्ट के साथ)
         new_score_msg = bot.send_message(
             chat_id=chat_id, 
             text=score_text, 
             parse_mode="Markdown", 
             reply_markup=markup,
-            message_effect_id=EFFECT_PARTY  # ✨ यहाँ 🎉 इफ़ेक्ट जोड़ दिया गया है
+            message_effect_id=EFFECT_PARTY  # ✨ यहाँ इफ़ेक्ट सेट है
         )
+    except Exception:
+        try:
+            # सुरक्षित तरीका: अगर लाइब्रेरी पुरानी है तो बिना इफ़ेक्ट के मैसेज सेंड हो जाएगा, बॉट बंद नहीं होगा
+            new_score_msg = bot.send_message(
+                chat_id=chat_id, 
+                text=score_text, 
+                parse_mode="Markdown", 
+                reply_markup=markup
+            )
+        except Exception:
+            pass
         
-        # [SAVE NEW ID] नए स्कोर कार्ड की आईडी को डेटाबेस में इस यूज़र के डेटा के साथ अपडेट करें
-        with sqlite3.connect(DB_FILE, timeout=20) as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO daily_scores (chat_id, user_id, user_name, correct_count, wrong_count, last_score_msg_id)
-                VALUES (?, ?, ?, ?, ?, ?)
-                ON CONFLICT(chat_id, user_id) DO UPDATE SET 
-                    user_name = excluded.user_name,
-                    last_score_msg_id = excluded.last_score_msg_id
-            """, (chat_id, user_id, message.from_user.first_name, correct, wrong, new_score_msg.message_id))
-            conn.commit()
-    except Exception: 
-        pass
+    # [SAVE NEW ID] नए स्कोर कार्ड की आईडी को डेटाबेस में अपडेट करें
+    if new_score_msg:
+        try:
+            with sqlite3.connect(DB_FILE, timeout=20) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO daily_scores (chat_id, user_id, user_name, correct_count, wrong_count, last_score_msg_id)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(chat_id, user_id) DO UPDATE SET 
+                        user_name = excluded.user_name,
+                        last_score_msg_id = excluded.last_score_msg_id
+                """, (chat_id, user_id, message.from_user.first_name, correct, wrong, new_score_msg.message_id))
+                conn.commit()
+        except Exception as e: 
+            print(f"Database Write Error: {e}")
     
 
 # बटन क्लिक हैंडलर (इसे आप कोड में नीचे कहीं भी पेस्ट कर सकते हैं)
