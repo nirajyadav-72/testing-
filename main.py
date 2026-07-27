@@ -7,7 +7,7 @@ from datetime import datetime
 import pytz
 import random
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReactionTypeEmoji
 from dotenv import load_dotenv
 
 # 📚 दूसरी फाइल से प्रश्न इम्पोर्ट करें
