@@ -886,6 +886,15 @@ def handle_poll_answer(poll_answer):
             
         conn.commit()
 
+# =========================================================
+# 🔥 [TOP] TELEGRAM MESSAGE EFFECTS IDS DEFINITIONS
+# =========================================================
+EFFECT_FIRE = "5104841245755180586"   # 🔥 (आग)
+EFFECT_LIKE = "5107584321108051014"   # 👍 (थम्ब्स अप)
+EFFECT_PARTY = "5046509860342981222"  # 🎉 (पार्टी / सेलिब्रेशन)
+EFFECT_LOVE = "5044134455711629546"   # ❤️ (दिल)
+# =========================================================
+
 # 📊 यूजर लाइव स्कोर ट्रैकर कस्टमाइज्ड कमांड (प्राइवेट चैट ब्लॉक के साथ)
 @bot.message_handler(commands=['myscore'])
 def check_user_score(message):
@@ -967,8 +976,14 @@ def check_user_score(message):
     markup.add(close_button)
 
     try: 
-        # नया स्कोर कार्ड भेजें (रेड क्लोज बटन के साथ)
-        new_score_msg = bot.send_message(chat_id=chat_id, text=score_text, parse_mode="Markdown", reply_markup=markup)
+        # नया स्कोर कार्ड भेजें (🎉 पार्टी इफ़ेक्ट और रेड क्लोज बटन के साथ)
+        new_score_msg = bot.send_message(
+            chat_id=chat_id, 
+            text=score_text, 
+            parse_mode="Markdown", 
+            reply_markup=markup,
+            message_effect_id=EFFECT_PARTY  # ✨ यहाँ 🎉 इफ़ेक्ट जोड़ दिया गया है
+        )
         
         # [SAVE NEW ID] नए स्कोर कार्ड की आईडी को डेटाबेस में इस यूज़र के डेटा के साथ अपडेट करें
         with sqlite3.connect(DB_FILE, timeout=20) as conn:
@@ -983,6 +998,7 @@ def check_user_score(message):
             conn.commit()
     except Exception: 
         pass
+    
 
 # बटन क्लिक हैंडलर (इसे आप कोड में नीचे कहीं भी पेस्ट कर सकते हैं)
 @bot.callback_query_handler(func=lambda call: call.data.startswith("close_score_"))
