@@ -887,17 +887,8 @@ def handle_poll_answer(poll_answer):
         conn.commit()
 
 
-# =========================================================
-# 🔥 [TOP] TELEGRAM MESSAGE EFFECTS IDs
-# =========================================================
-EFFECT_FIRE = "5104841245755180586"   # 🔥 (आग)
-EFFECT_LIKE = "5107584321108051014"   # 👍 (थम्ब्स अप)
-EFFECT_PARTY = "5046509860342981222"  # 🎉 (पार्टी)
-EFFECT_LOVE = "5044134455711629546"   # ❤️ (दिल)
-# =========================================================
-
 # 📊 यूजर लाइव स्कोर ट्रैकर कस्टमाइज्ड कमांड (प्राइवेट चैट ब्लॉक के साथ)
-@bot.message_handler(commands=['myscore'])
+@bot.message_handler(commands=['commands', 'myscore'])
 def check_user_score(message):
     chat_type = message.chat.type
     chat_id = message.chat.id
@@ -917,7 +908,7 @@ def check_user_score(message):
     except Exception: 
         pass
 
-    # Database se user ka score aur purani message ID nikalna [⚠️ FIXED VARIABLE ERROR HERE]
+    # Database se user ka score aur purani message ID nikalna
     correct, wrong, old_score_msg_id = 0, 0, 0
     try:
         with sqlite3.connect(DB_FILE, timeout=20) as conn:
@@ -945,12 +936,12 @@ def check_user_score(message):
             pass
 
     # स्कोर फ़ॉर्मेटर फिक्स (.5 वाले स्कोर को डेसिमल में रखेगा, बाकी .0 हटा देगा)
-    if isinstance(final_score, float) and final_score.is_integer():
+    if isinstance(final_score, (int, float)) and hasattr(final_score, 'is_integer') and final_score.is_integer():
         display_score = str(int(final_score))
     else:
         display_score = f"{final_score:.1f}" if isinstance(final_score, float) else str(final_score)
 
-    # टेलीग्राम सेफ मार्कধারণ स्कोर टेक्स्ट फॉर्मेटिंग
+    # टेलीग्राम सेफ मार्कडाउन स्कोर टेक्स्ट फॉर्मेटिंग
     score_text = (
         f"🏆 *Congratulations {message.from_user.first_name}, your today's quiz score!*\n"
         f"📊 *Marking: Right (+2) | Wrong (-0.5)*\n"
@@ -968,7 +959,7 @@ def check_user_score(message):
     # Red Colored Close Button (Danger Style)
     markup = InlineKeyboardMarkup()
     close_button = InlineKeyboardButton(
-        text="ᴄʟᴏꜱᴇ ᴄᴀʀᴅ", 
+        text=" Regulatory CLOSE CARD", 
         callback_data=f"close_score_{user_id}",
         style="primary"
     )
@@ -976,25 +967,22 @@ def check_user_score(message):
 
     new_score_msg = None
     try: 
-        # नया स्कोर कार्ड भेजें (🎉 पार्टी इफ़ेक्ट के साथ)
+        # 1. नया स्कोर कार्ड भेजें
         new_score_msg = bot.send_message(
             chat_id=chat_id, 
             text=score_text, 
             parse_mode="Markdown", 
-            reply_markup=markup,
-            message_effect_id=EFFECT_PARTY  # ✨ यहाँ इफ़ेक्ट सेट है
+            reply_markup=markup
         )
-    except Exception:
-        try:
-            # सुरक्षित तरीका: अगर लाइब्रेरी पुरानी है तो बिना इफ़ेक्ट के मैसेज सेंड हो जाएगा, बॉट बंद नहीं होगा
-            new_score_msg = bot.send_message(
-                chat_id=chat_id, 
-                text=score_text, 
-                parse_mode="Markdown", 
-                reply_markup=markup
-            )
-        except Exception:
-            pass
+        
+        # 2. भेजे गए स्कोर कार्ड पर तुरंत 🎉 (पार्टी) रिएक्शन इमोजी लगाएं
+        bot.set_message_reaction(
+            chat_id=chat_id,
+            message_id=new_score_msg.message_id,
+            reaction=[ReactionTypeEmoji(emoji="🎉")]
+        )
+    except Exception as e:
+        print(f"Message or Reaction Error: {e}")
         
     # [SAVE NEW ID] नए स्कोर कार्ड की आईडी को डेटाबेस में अपडेट करें
     if new_score_msg:
@@ -1011,7 +999,7 @@ def check_user_score(message):
                 conn.commit()
         except Exception as e: 
             print(f"Database Write Error: {e}")
-    
+            
 
 # बटन क्लिक हैंडलर (इसे आप कोड में नीचे कहीं भी पेस्ट कर सकते हैं)
 @bot.callback_query_handler(func=lambda call: call.data.startswith("close_score_"))
