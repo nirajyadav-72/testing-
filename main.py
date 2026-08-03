@@ -202,6 +202,33 @@ def auto_reset_midnight_loop():
 
 threading.Thread(target=auto_reset_midnight_loop, daemon=True).start()
 
+# =====================================================================
+# 📝 EXPLANATION TRUNCATOR FUNCTION (Explanation ko chota karne ke liye)
+# =====================================================================
+def truncate_explanation(explanation_text, max_length=100):
+    """
+    Explanation ko specified length tak chota karta hai.
+    Agar text lamba ho toh "..." add karta hai.
+    
+    Args:
+        explanation_text: Original explanation text
+        max_length: Maximum characters (default 100)
+    
+    Returns:
+        Truncated explanation string
+    """
+    if not explanation_text:
+        return None
+    
+    explanation_text = str(explanation_text).strip()
+    
+    if len(explanation_text) <= max_length:
+        return explanation_text
+    
+    # Characters ke hisaab se chota karo aur "..." add karo
+    truncated = explanation_text[:max_length].rsplit(' ', 1)[0] + "..."
+    return truncated
+    
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 def global_poll_manager():
     while True:
@@ -263,7 +290,7 @@ def global_poll_manager():
                             current_index = 0
 
                         quiz = filtered_quiz[current_index]
-                        explanation_text = quiz.get("explanation", None)
+                        explanation_text = truncate_explanation(quiz.get("explanation", None), max_length=100)
                         
                         try:
                             sent_message = bot.send_poll(
