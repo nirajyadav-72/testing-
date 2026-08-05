@@ -2863,4 +2863,284 @@ QUIZ_LIST = [
         "lang": "english",
         "explanation": "💡 The Fourth Schedule of the Constitution deals with the allocation of seats in the Rajya Sabha to the States and Union Territories."
     },
+    {
+        "question": "From which country was the idea of the 'Language of the Preamble and Concurrent List' borrowed? [SSC GD]",
+        "options": ["USA", "Australia", "Canada", "Ireland"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The concept of the Concurrent List and the language of the Preamble in the Indian Constitution were inspired by the Constitution of Australia."
+    },
+    {
+        "question": "Who appoints the Chief Justice of a High Court? [SSC CGL]",
+        "options": ["President of India", "Governor of the State", "Chief Justice of India", "Chief Minister of the State"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Under Article 217, the President appoints the Chief Justice of a High Court after consultation with the Chief Justice of India and the Governor of the state."
+    },
+    {
+        "question": "Under which Article of the Constitution can 'President's Rule' be imposed in a state? [SSC CPO]",
+        "options": ["Article 352", "Article 356", "Article 360", "Article 365"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 If the constitutional machinery in a state fails, President's Rule can be imposed there under Article 356."
+    },
+    {
+        "question": "What is the maximum interval permitted between two sessions of Parliament? [SSC MTS]",
+        "options": ["3 months", "6 months", "9 months", "1 year"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 According to the Constitution, there must not be a gap of more than 6 months between two sessions of Parliament, meaning it must meet at least twice a year."
+    },
+    {
+        "question": "Article 51A of the Indian Constitution is related to which of the following? [SSC CGL]",
+        "options": ["Fundamental Rights", "Fundamental Duties", "Directive Principles of State Policy", "Emergency Provisions"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Article 51A inside Part IV(A) outlines the Fundamental Duties of the citizens of India."
+    },
+    {
+        "question": "Who administers the oath of office to a Governor? [SSC MTS]",
+        "options": ["President of India", "Chief Justice of the respective High Court", "Chief Justice of India", "Chief Minister of the State"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under Article 159, the Chief Justice of the respective state's High Court administers the oath of office to the Governor."
+    },
+    {
+        "question": "Which Article provides for 'Equal Justice and Free Legal Aid'? [SSC CHSL]",
+        "options": ["Article 39", "Article 39A", "Article 43", "Article 43A"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Article 39A, added by the 42nd Amendment in 1976, directs the State to provide free legal aid to ensure justice is not denied to any citizen due to economic disabilities."
+    },
+    {
+        "question": "Which Article of the Indian Constitution mentions 'Promotion of international peace and security'? [SSC CGL]",
+        "options": ["Article 48", "Article 49", "Article 50", "Article 51"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Article 51, the concluding article of the Directive Principles of State Policy, outlines the promotion of international peace and security."
+    },
+    {
+        "question": "Who was appointed as the 'Constitutional Advisor' to the Constituent Assembly? [SSC CPO]",
+        "options": ["Dr. B.R. Ambedkar", "B.N. Rau", "K.M. Munshi", "Sachchidanand Sinha"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Sir Benegal Narsing Rau (B.N. Rau) was appointed as the Constitutional Advisor to the Constituent Assembly in 1946."
+    },
+    {
+        "question": "Which Part of the Indian Constitution deals with the administration of 'Union Territories'? [SSC CHSL]",
+        "options": ["Part VI", "Part VII", "Part VIII", "Part IX"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Part VIII (Articles 239 to 242) of the Constitution details the administrative structure and powers of Union Territories."
+    },
+    {
+        "question": "Under which Article does the President have the power to seek advice from the Supreme Court? [SSC CGL]",
+        "options": ["Article 131", "Article 137", "Article 141", "Article 143"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Article 143 deals with the advisory jurisdiction of the Supreme Court, authorizing the President to seek its opinion on matters of public importance."
+    },
+    {
+        "question": "From where was the concept of 'Single Citizenship' borrowed in the Indian Constitution? [SSC GD]",
+        "options": ["Canada", "USA", "Britain", "France"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 India has a uniform single citizenship for the entire country, an architectural feature adapted from the British Constitution."
+    },
+    {
+        "question": "Who has the power to dissolve the Lok Sabha before the completion of its normal term? [SSC MTS]",
+        "options": ["Prime Minister", "Speaker of Lok Sabha", "President on the advice of the Prime Minister", "Both Houses of Parliament jointly"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Under Article 85(2)(b), the President can dissolve the Lok Sabha prematurely on the advice of the Prime Minister (Council of Ministers)."
+    },
+    {
+        "question": "Which Article provides for the 'Protection of interests of minorities'? [SSC CHSL]",
+        "options": ["Article 28", "Article 29", "Article 30", "Article 32"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under Fundamental Rights, Article 29 grants protection to distinct cultural groups, sections of citizens, and minorities to conserve their language, script, or culture."
+    },
+    {
+        "question": "Under which Article can a 'Legislative Council' in a state be created or abolished? [SSC CGL]",
+        "options": ["Article 168", "Article 169", "Article 170", "Article 171"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 According to Article 169, Parliament can create or abolish a state's Legislative Council if the respective Legislative Assembly passes a resolution to that effect."
+    },
+    {
+        "question": "Who appoints the Chairman and members of the Union Public Service Commission (UPSC)? [SSC CPO]",
+        "options": ["Prime Minister", "President of India", "Chief Justice of India", "Parliamentary Committee"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under Article 316, the President of India appoints the Chairman and other members of the UPSC."
+    },
+    {
+        "question": "Who presented the 'Objectives Resolution' in the Constituent Assembly? [SSC MTS]",
+        "options": ["Dr. B.R. Ambedkar", "Jawaharlal Nehru", "Dr. Rajendra Prasad", "Sachchidanand Sinha"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Pandit Jawaharlal Nehru moved the historic Objectives Resolution on 13 December 1946, which later formed the bedrock of the Preamble."
+    },
+    {
+        "question": "Under which Article can the Supreme Court issue Writs for enforcement of Fundamental Rights? [SSC CGL]",
+        "options": ["Article 32", "Article 131", "Article 226", "Article 143"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 In case of violation of Fundamental Rights, citizens can directly approach the Supreme Court under Article 32, and High Courts under Article 226, to seek writs."
+    },
+    {
+        "question": "The 74th Constitutional Amendment Act is related to which of the following? [SSC CHSL]",
+        "options": ["Panchayati Raj System", "Urban Local Bodies (Municipalities)", "Anti-Defection Law", "Fundamental Duties"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The 74th Amendment Act (1992) granted constitutional recognition to urban local self-government bodies (Municipalities) and added the 12th Schedule."
+    },
+    {
+        "question": "Who has the authority to alter boundaries or form new states in India? [SSC CPO]",
+        "options": ["President", "Prime Minister", "Parliament", "State Legislative Assembly"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 3 of the Constitution empowers the Parliament to form new states, increase or diminish state areas, and alter boundaries or names of existing states."
+    },
+    {
+        "question": "Part IX(A) of the Indian Constitution is related to which of the following? [SSC MTS]",
+        "options": ["Panchayats", "Municipalities", "Cooperative Societies", "Scheduled Castes"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Part IX-A was added to the Constitution by the 74th Amendment Act, dealing with the governance framework of Municipalities."
+    },
+    {
+        "question": "Who is the 'First Law Officer' of the Government of India? [SSC CGL]",
+        "options": ["Chief Justice of India", "Union Law Minister", "Attorney General of India", "Solicitor General of India"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Under Article 76, the Attorney General of India serves as the chief legal advisor to the government and its First Law Officer."
+    },
+    {
+        "question": "From which country were the 'Emergency Provisions' borrowed in the Indian Constitution? [SSC GD]",
+        "options": ["Canada", "Germany (Weimar Constitution)", "South Africa", "USA"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The suspension of Fundamental Rights during an emergency is borrowed from the Weimar Constitution of Germany."
+    },
+    {
+        "question": "Who takes the final decision regarding the disqualification of a member of Parliament? [SSC CGL]",
+        "options": ["Speaker of Lok Sabha", "Election Commission", "President in accordance with the opinion of the Election Commission", "Supreme Court"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Under Article 103, decisions on questions as to disqualifications of members (excluding defection) are taken by the President based on the Election Commission's binding opinion."
+    },
+    {
+        "question": "Which Article of the Constitution deals with the 'Procedure for Constitutional Amendment'? [SSC CHSL]",
+        "options": ["Article 356", "Article 360", "Article 368", "Article 370"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Part XX, Article 368 empowers Parliament to amend the Constitution without altering its basic structure."
+    },
+    {
+        "question": "Under which Article is protection against 'Preventive Detention' guaranteed? [SSC CPO]",
+        "options": ["Article 20", "Article 21", "Article 22", "Article 23"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 22 grants protection against arrest and detention in certain cases, including safeguard protocols under preventive detention laws."
+    },
+    {
+        "question": "From where was the principle of 'Judicial Review' adopted in the Indian Constitution? [SSC MTS]",
+        "options": ["Britain", "USA", "Canada", "Ireland"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The independence of the judiciary and the power of Judicial Review are adopted from the Constitution of the United States of America (USA)."
+    },
+    {
+        "question": "How many times at least must the Lok Sabha meet in a year? [SSC GD]",
+        "options": ["Once", "Twice", "Thrice", "Four times"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Since the maximum gap between two sessions cannot exceed 6 months, it is constitutionally mandatory for Lok Sabha to meet at least twice a year."
+    },
+    {
+        "question": "In which Article is the provision for a 'Uniform Civil Code' mentioned? [SSC CGL]",
+        "options": ["Article 40", "Article 42", "Article 44", "Article 46"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 44 under the Directive Principles of State Policy explicitly states that the State shall endeavor to secure a Uniform Civil Code for all citizens."
+    },
+    {
+        "question": "From where were the ideals of 'Liberty, Equality, and Fraternity' in the Preamble taken? [SSC CHSL]",
+        "options": ["American Revolution", "French Revolution", "Russian Revolution", "British Constitution"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The ideals of 'Liberty, Equality, and Fraternity' featured in the Preamble are inspired by the French Revolution of 1789."
+    },
+    {
+        "question": "Which Article empowers Parliament to legislate on a subject in the State List in national interest? [SSC CPO]",
+        "options": ["Article 249", "Article 250", "Article 252", "Article 254"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Under Article 249, if Rajya Sabha passes a resolution supported by a two-thirds majority, Parliament gains the power to legislate on a state subject."
+    },
+    {
+        "question": "Which Article of the Indian Constitution prohibits the 'Employment of children in factories, etc.'? [SSC MTS]",
+        "options": ["Article 21", "Article 23", "Article 24", "Article 25"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 24 mandates that no child below the age of 14 years shall be employed to work in any factory, mine, or engaged in hazardous employment."
+    },
+    {
+        "question": "Who is the ex-officio Chairman of NITI Aayog? [SSC CGL]",
+        "options": ["President of India", "Prime Minister of India", "Union Finance Minister", "Commerce Minister"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The Prime Minister of India serves as the ex-officio Chairman of NITI Aayog, which replaced the old Planning Commission."
+    },
+    {
+        "question": "How long can a person remain a Minister without being a member of either House of Parliament? [SSC CGL]",
+        "options": ["3 months", "6 months", "9 months", "1 year"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Article 75(5) states that a minister who for any period of six consecutive months is not a member of either House shall cease to be a minister."
+    },
+    {
+        "question": "Which Article of the Constitution provides for the 'Constitution of Parliament'? [SSC MTS]",
+        "options": ["Article 79", "Article 80", "Article 81", "Article 85"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Article 79 states that there shall be a Parliament for the Union consisting of the President and two Houses (Rajya Sabha and Lok Sabha)."
+    },
+    {
+        "question": "By which Constitutional Amendment was the 'Right to Education' made a Fundamental Right? [SSC CHSL]",
+        "options": ["42nd Amendment", "44th Amendment", "86th Amendment", "91st Amendment"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The 86th Constitutional Amendment Act of 2002 added Article 21A, rendering free and compulsory education for children aged 6–14 a Fundamental Right."
+    },
+    {
+        "question": "Who was the first Deputy Speaker of Lok Sabha? [SSC CPO]",
+        "options": ["G.V. Mavalankar", "M. Ananthasayanam Ayyangar", "Hukam Singh", "Neelam Sanjiva Reddy"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 M. Ananthasayanam Ayyangar was the first Deputy Speaker of the first Lok Sabha, later serving as its second Speaker."
+    },
+    {
+        "question": "Which Schedule of the Indian Constitution is related to the 'Powers and responsibilities of Municipalities'? [SSC CGL]",
+        "options": ["9th Schedule", "10th Schedule", "11th Schedule", "12th Schedule"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 The 12th Schedule, added via the 74th Amendment Act of 1992, contains 18 functional items assigned to urban municipal bodies."
+    },
+    {
+        "question": "The provision for a 'Joint Sitting of both Houses of Parliament' was borrowed from which country? [SSC CHSL]",
+        "options": ["USA", "Australia", "Canada", "Britain"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The legislative mechanics governing a Joint Sitting under Article 108 find their inspirational origin in the Constitution of Australia."
+    },
+    {
+        "question": "By whom is the Chief Minister of a state appointed? [SSC GD]",
+        "options": ["President of India", "Governor of the State", "Chief Justice of High Court", "Speaker of Assembly"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Article 164 notes that the Chief Minister shall be appointed by the Governor, and other ministers on the advice of the Chief Minister."
+    }
 ]
