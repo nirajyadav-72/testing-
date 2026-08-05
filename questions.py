@@ -2440,5 +2440,427 @@ QUIZ_LIST = [
         "lang": "hindi",
         "explanation": "💡 आवर्त सारणी की अक्रिय गैस 'जीनॉन' (Xenon) को स्ट्रेंजर गैस कहा जाता है क्योंकि ग्रीक भाषा में जीनॉन शब्द का अर्थ ही अजनबी (Stranger) होता है।"
     },
-    
+    # =====================================================
+    # ------------------- HINDI QUIZZES -------------------
+    # =====================================================
+    {
+        "question": "Who was the founder of Arya Samaj? [SSC GD 24-Jan-2023 Shift-1]",
+        "options": ["Swami Vivekananda", "Raja Ram Mohan Roy", "Swami Dayanand Saraswati", "Atmaram Pandurang"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Swami Dayanand Saraswati founded the Arya Samaj in Mumbai in 1875 and gave the slogan 'Back to the Vedas'."
+    },
+    {
+        "question": "From which Upanishad is the famous phrase 'Satyamev Jayate' taken? [SSC CHSL 14-Aug-2023 Shift-4]",
+        "options": ["Kathopanishad", "Mundakopanishad", "Chandogya Upanishad", "Mandukya Upanishad"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 India's national motto, 'Satyamev Jayate' (Truth alone triumphs), is extracted from the Mundakopanishad."
+    },
+    {
+        "question": "In which year was the Battle of Kalinga fought? [SSC MTS 09-May-2023 Shift-2]",
+        "options": ["261 BC", "269 BC", "326 BC", "232 BC"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Emperor Ashoka invaded Kalinga in the 8th year of his coronation (261 BC). Moved by the massive bloodshed, he adopted Buddhism."
+    },
+    {
+        "question": "When did the Vikram Samvat era begin? [SSC CGL 03-Dec-2022 Shift-3]",
+        "options": ["78 AD", "57 BC", "319 AD", "248 AD"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 King Vikramaditya started the Vikram Samvat calendar in 57 BC to commemorate his victory over the Shakas."
+    },
+    {
+        "question": "Which dynasty built the famous Khajuraho monuments? [SSC CPO 03-Oct-2023 Shift-2]",
+        "options": ["Chandela", "Chola", "Pallava", "Chalukya"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The temples at Khajuraho in Madhya Pradesh were constructed by the Chandela rulers between 950 and 1050 AD."
+    },
+    {
+        "question": "With whom did Al-Biruni, the author of Kitab-ul-Hind, come to India? [SSC CGL 25-Jul-2023 Shift-1]",
+        "options": ["Mahmud Ghaznavi", "Muhammad Ghori", "Timur", "Genghis Khan"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The renowned scholar Al-Biruni accompanied Mahmud Ghaznavi during his military invasions of India in the 11th century."
+    },
+    {
+        "question": "In which year did Akbar establish the 'Din-i-Ilahi' religion? [SSC CHSL 16-Mar-2023 Shift-3]",
+        "options": ["1575 AD", "1582 AD", "1579 AD", "1585 AD"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Combining elements from various faiths, Akbar introduced a new code/religion called 'Din-i-Ilahi' in 1582 AD."
+    },
+    {
+        "question": "Which Governor-General played a key role in abolishing the Sati system? [SSC CGL 26-Jul-2023 Shift-2]",
+        "options": ["Lord Dalhousie", "Lord William Bentinck", "Lord Wellesley", "Lord Ripon"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Supported by Raja Ram Mohan Roy's efforts, Lord William Bentinck banned Sati under Regulation XVII in 1829."
+    },
+    {
+        "question": "Who was the political guru of Mahatma Gandhi? [SSC MTS 10-May-2023 Shift-1]",
+        "options": ["Bal Gangadhar Tilak", "Gopal Krishna Gokhale", "Dadabhai Naoroji", "Madan Mohan Malaviya"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Gandhiji regarded Gopal Krishna Gokhale as his political mentor, on whose advice he traveled across India after returning from South Africa."
+    },
+    {
+        "question": "Which was Mahatma Gandhi's first successful Satyagraha in India? [SSC CHSL 03-Aug-2023 Shift-3]",
+        "options": ["Kheda Satyagraha", "Ahmedabad Mill Strike", "Champaran Satyagraha", "Bardoli Satyagraha"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 In 1917, Gandhiji launched his first successful Satyagraha in Champaran, Bihar, protesting against the forced indigo cultivation (Tinkathia system)."
+    },
+    {
+        "question": "In which year did the Simon Commission arrive in India? [SSC GD 30-Jan-2023 Shift-2]",
+        "options": ["1927 AD", "1928 AD", "1929 AD", "1931 AD"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 While the commission was constituted in 1927, it reached India (Bombay) on 3 February 1928, facing widespread protests."
+    },
+    {
+        "question": "Who was the first Governor-General of independent India? [SSC CGL 14-Jul-2023 Shift-4]",
+        "options": ["Lord Wavell", "Lord Mountbatten", "C. Rajagopalachari", "Dr. Rajendra Prasad"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Lord Mountbatten became the first Governor-General of independent India, whereas C. Rajagopalachari was the first and only Indian Governor-General."
+    },
+    {
+        "question": "Who authored the book 'Poverty and Un-British Rule in India'? [SSC CGL 19-Jul-2023 Shift-2]",
+        "options": ["R. C. Dutt", "Dadabhai Naoroji", "Jawaharlal Nehru", "Surendranath Banerjee"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Dadabhai Naoroji, the 'Grand Old Man of India', introduced the 'Drain of Wealth Theory' in this historic book."
+    },
+    {
+        "question": "When did the first meeting of the Indian Constituent Assembly take place? [SSC CGL 11-Jul-2024 Shift-2]",
+        "options": ["9 December 1946", "11 December 1946", "13 December 1946", "26 January 1950"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The first meeting of the Constituent Assembly was held on 9 December 1946, where Dr. Sachchidanand Sinha was chosen as the temporary President."
+    },
+    {
+        "question": "Who was the permanent Chairman of the Constituent Assembly? [SSC CHSL 04-Jul-2024 Shift-1]",
+        "options": ["Dr. B.R. Ambedkar", "Dr. Rajendra Prasad", "Jawaharlal Nehru", "Sachchidanand Sinha"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 On 11 December 1946, Dr. Rajendra Prasad was elected as the permanent President/Chairman of the Constituent Assembly."
+    },
+    {
+        "question": "Who was the Chairman of the 'Drafting Committee' of the Indian Constitution? [SSC MTS 12-Sep-2024 Shift-3]",
+        "options": ["Dr. Rajendra Prasad", "Jawaharlal Nehru", "Dr. B.R. Ambedkar", "K.M. Munshi"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Dr. B.R. Ambedkar was the head of the seven-member Drafting Committee responsible for framing the Constitution."
+    },
+    {
+        "question": "When was the Constitution of India formally adopted? [SSC CPO 28-Jun-2024 Shift-1]",
+        "options": ["26 January 1950", "26 November 1949", "15 August 1947", "26 January 1947"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The Constituent Assembly adopted and enacted the Indian Constitution on 26 November 1949."
+    },
+    {
+        "question": "From which country were 'Fundamental Rights' borrowed in the Indian Constitution? [SSC CGL 21-Jul-2023 Shift-2]",
+        "options": ["Britain", "USA", "USSR", "Canada"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The concept of Fundamental Rights in the Indian Constitution was inspired by the Bill of Rights of the United States of America (USA)."
+    },
+    {
+        "question": "Under which Article of the Constitution is the right to 'Equality before Law' guaranteed? [SSC CHSL 14-Aug-2023 Shift-3]",
+        "options": ["Article 14", "Article 15", "Article 16", "Article 17"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Article 14 states that the State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India."
+    },
+    {
+        "question": "Which Article of the Constitution abolishes 'Untouchability'? [SSC MTS 02-Sep-2023 Shift-1]",
+        "options": ["Article 15", "Article 16", "Article 17", "Article 18"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 17 of the Indian Constitution abolishes untouchability and forbids its practice in any form."
+    },
+    {
+        "question": "Which Article was described by Dr. B.R. Ambedkar as the 'Heart and Soul of the Constitution'? [SSC CPO 04-Oct-2023 Shift-2]",
+        "options": ["Article 14", "Article 19", "Article 21", "Article 32"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Article 32 (Right to Constitutional Remedies) was considered by Dr. Ambedkar as the heart and soul of the Constitution."
+    },
+    {
+        "question": "In which year were 'Fundamental Duties' added to the Indian Constitution? [SSC GD 16-Jan-2023 Shift-4]",
+        "options": ["1975 AD", "1976 AD", "1978 AD", "1985 AD"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Fundamental Duties were added to Part IV(A) of the Constitution by the 42nd Amendment Act of 1976 on the recommendation of the Swaran Singh Committee."
+    },
+    {
+        "question": "Which Part of the Indian Constitution includes the 'Directive Principles of State Policy' (DPSP)? [SSC CGL 18-Jul-2023 Shift-3]",
+        "options": ["Part II", "Part III", "Part IV", "Part V"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Part IV of the Constitution contains Articles 36 to 51 relating to the Directive Principles of State Policy, which were borrowed from Ireland."
+    },
+    {
+        "question": "Who administers the oath of office to the President of India? [SSC MTS 11-May-2023 Shift-2]",
+        "options": ["Chief Justice of India", "Prime Minister", "Vice President", "Speaker of Lok Sabha"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Under Article 60 of the Constitution, the Chief Justice of India (CJI) administers the oath of office to the President."
+    },
+    {
+        "question": "To whom does the President of India submit his resignation? [SSC CHSL 15-Mar-2023 Shift-1]",
+        "options": ["Prime Minister", "Chief Justice of India", "Vice President", "Speaker of Lok Sabha"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 According to Article 56(1)(a), the President of India addresses his resignation letter to the Vice President."
+    },
+    {
+        "question": "Who is the ex-officio Chairman of Rajya Sabha? [SSC CGL 14-Jul-2023 Shift-1]",
+        "options": ["President", "Prime Minister", "Vice President", "Speaker of Lok Sabha"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Vice President of India serves as the ex-officio Chairman of the Rajya Sabha (Council of States)."
+    },
+    {
+        "question": "Who decides whether a bill is a 'Money Bill' or not? [SSC CPO 05-Oct-2023 Shift-3]",
+        "options": ["President", "Prime Minister", "Finance Minister", "Speaker of Lok Sabha"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Under Article 110(3) of the Constitution, the decision of the Speaker of Lok Sabha is final regarding whether a bill is a Money Bill."
+    },
+    {
+        "question": "Who presides over the Joint Sitting of both Houses of Parliament? [SSC CGL 26-Jul-2023 Shift-4]",
+        "options": ["President", "Vice President", "Prime Minister", "Speaker of Lok Sabha"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 The power to summon a Joint Sitting lies with the President (Article 108), but it is presided over by the Speaker of Lok Sabha."
+    },
+    {
+        "question": "What is the minimum age limit to become a member of Lok Sabha? [SSC MTS 04-Sep-2023 Shift-2]",
+        "options": ["18 years", "21 years", "25 years", "30 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 According to the Constitution, a person must be at least 25 years old to become a member of Lok Sabha."
+    },
+    {
+        "question": "What is the tenure of the members of Rajya Sabha? [SSC GD 11-Jan-2023 Shift-2]",
+        "options": ["4 years", "5 years", "6 years", "Permanent"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Rajya Sabha is a permanent body, but its members are elected for a term of 6 years, and one-third of its members retire every 2 years."
+    },
+    {
+        "question": "Which was the first state in India to be formed on a linguistic basis? [SSC CGL 24-Jul-2023 Shift-2]",
+        "options": ["West Bengal", "Andhra Pradesh", "Tamil Nadu", "Gujarat"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Andhra Pradesh was the first state formed on a linguistic basis in the year 1953."
+    },
+    {
+        "question": "The 73rd Constitutional Amendment Act is related to which of the following? [SSC CHSL 17-Mar-2023 Shift-4]",
+        "options": ["Municipalities", "Panchayati Raj System", "Fundamental Duties", "Anti-Defection Law"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Through the 73rd Amendment (1992), constitutional status was granted to the Panchayati Raj System, and the 11th Schedule was added."
+    },
+    {
+        "question": "How many Schedules were originally present in the Constitution of India? [SSC GD 24-Jan-2023 Shift-1]",
+        "options": ["8", "10", "12", "15"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 There were only 8 Schedules in the original Constitution, but following subsequent amendments, the count has increased to 12."
+    },
+    {
+        "question": "Under which Article can a 'Financial Emergency' be imposed in India? [SSC CGL 20-Jul-2023 Shift-4]",
+        "options": ["Article 352", "Article 356", "Article 360", "Article 368"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The President can declare a Financial Emergency under Article 360. Fortunately, it has never been declared in India so far."
+    },
+    {
+        "question": "Which Article outlines the procedure for amending the Constitution? [SSC MTS 05-May-2023 Shift-1]",
+        "options": ["Article 356", "Article 360", "Article 368", "Article 370"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 368 in Part XX grants powers to the Parliament to amend the Constitution, inspired by the Constitution of South Africa."
+    },
+    {
+        "question": "Who was the first Law Minister of independent India? [SSC CGL 17-Jul-2023 Shift-3]",
+        "options": ["Jawaharlal Nehru", "Sardar Vallabhbhai Patel", "Maulana Abul Kalam Azad", "Dr. B.R. Ambedkar"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Dr. Bhimrao Ramji Ambedkar served as the first Minister of Law and Justice of independent India."
+    },
+    {
+        "question": "According to the Indian Constitution, who is the first citizen of the country? [SSC CHSL 09-Aug-2023 Shift-2]",
+        "options": ["Prime Minister", "President", "Chief Justice of India", "Speaker of Lok Sabha"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The President of India is the constitutional head of state and is considered the first citizen of India."
+    },
+    {
+        "question": "Which Constitutional Amendment is famously known as the 'Mini Constitution'? [SSC MTS 15-May-2023 Shift-3]",
+        "options": ["42nd Amendment", "44th Amendment", "52nd Amendment", "86th Amendment"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The 42nd Constitutional Amendment Act (1976) introduced extensive modifications to the Constitution, earning it the label 'Mini Constitution'."
+    },
+    {
+        "question": "When were the words 'Secular' and 'Socialist' added to the Preamble of the Indian Constitution? [SSC CGL 18-Jul-2023 Shift-1]",
+        "options": ["By the 24th Amendment", "By the 42nd Amendment", "By the 44th Amendment", "By the 46th Amendment"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Three new words, 'Socialist', 'Secular', and 'Integrity', were incorporated into the Preamble via the 42nd Constitutional Amendment Act of 1976."
+    },
+    {
+        "question": "Under which Article of the Constitution is the 'Right to Education' a Fundamental Right? [SSC CHSL 14-Aug-2023 Shift-4]",
+        "options": ["Article 19", "Article 20(A)", "Article 21(A)", "Article 22"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The 86th Constitutional Amendment Act of 2002 inserted Article 21(A) to make free and compulsory education for children aged 6 to 14 years a Fundamental Right."
+    },
+    {
+        "question": "Who appoints the Chief Election Commissioner of India? [SSC MTS 09-May-2023 Shift-2]",
+        "options": ["Prime Minister", "Parliament", "President", "Chief Justice of India"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 According to Article 324(2) of the Constitution, the Chief Election Commissioner and other Election Commissioners are appointed by the President."
+    },
+    {
+        "question": "How many languages are currently included in the 8th Schedule of the Indian Constitution? [SSC CGL 03-Dec-2022 Shift-3]",
+        "options": ["14", "18", "22", "24"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The original Constitution had 14 languages in the 8th Schedule, but after various amendments, the number has increased to 22."
+    },
+    {
+        "question": "Which Schedule of the Indian Constitution deals with the Anti-Defection Law? [SSC CPO 03-Oct-2023 Shift-2]",
+        "options": ["7th Schedule", "8th Schedule", "9th Schedule", "10th Schedule"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 The 10th Schedule was added to the Constitution by the 52nd Amendment Act (1985) to address political defection."
+    },
+    {
+        "question": "Under which Article is the Comptroller and Auditor General (CAG) of India appointed? [SSC CGL 25-Jul-2023 Shift-1]",
+        "options": ["Article 76", "Article 110", "Article 148", "Article 280"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Comptroller and Auditor General (CAG) of India is appointed by the President under Article 148 of the Constitution."
+    },
+    {
+        "question": "Under which Article is the 'Finance Commission' constituted in India? [SSC CHSL 16-Mar-2023 Shift-3]",
+        "options": ["Article 248", "Article 280", "Article 312", "Article 315"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under Article 280, the Finance Commission is constituted by the President every five years."
+    },
+    {
+        "question": "In which Article of the Indian Constitution is the 'Uniform Civil Code' mentioned? [SSC CGL 26-Jul-2023 Shift-2]",
+        "options": ["Article 40", "Article 44", "Article 45", "Article 48"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under the Directive Principles of State Policy, Article 44 provides for a Uniform Civil Code (UCC) for the citizens."
+    },
+    {
+        "question": "By which amendment was the voting age in India reduced from 21 to 18 years? [SSC MTS 10-May-2023 Shift-1]",
+        "options": ["42nd Amendment", "44th Amendment", "61st Amendment", "74th Amendment"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The 61st Constitutional Amendment Act of 1989 reduced the voting age from 21 years to 18 years."
+    },
+    {
+        "question": "Who is the Chairman of NITI Aayog? [SSC CHSL 03-Aug-2023 Shift-3]",
+        "options": ["President", "Prime Minister", "Finance Minister", "Vice President"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Formed on January 1, 2015, to replace the Planning Commission, NITI Aayog is chaired by the Prime Minister of India."
+    },
+    {
+        "question": "What is the retirement age of the judges of the Supreme Court? [SSC GD 30-Jan-2023 Shift-2]",
+        "options": ["60 years", "62 years", "65 years", "70 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 According to the Indian Constitution, judges of the Supreme Court hold office until they attain the age of 65 years."
+    },
+    {
+        "question": "What is the retirement age of High Court judges in India? [SSC CGL 14-Jul-2023 Shift-4]",
+        "options": ["60 years", "62 years", "65 years", "68 years"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 In India, the age of retirement for judges of High Courts is fixed at 62 years."
+    },
+    {
+        "question": "Which Article is related to the appointment of the Attorney General of India? [SSC CGL 19-Jul-2023 Shift-2]",
+        "options": ["Article 72", "Article 76", "Article 88", "Article 143"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under Article 76, the Attorney General of India (the chief legal advisor to the government) is appointed by the President."
+    },
+    {
+        "question": "Which Fundamental Right was removed by the 44th Constitutional Amendment (1978)? [SSC CGL 05-Dec-2022 Shift-1]",
+        "options": ["Right to Equality", "Right to Freedom", "Right to Property", "Right to Freedom of Religion"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The 44th Amendment removed the Right to Property from the list of Fundamental Rights and made it a legal right under Article 300(A)."
+    },
+    {
+        "question": "Who was the first Speaker of Lok Sabha? [SSC CHSL 14-Mar-2023 Shift-2]",
+        "options": ["Ganesh Vasudev Mavalankar", "M. Ananthasayanam Ayyangar", "Hukam Singh", "Neelam Sanjiva Reddy"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 G.V. Mavalankar (Ganesh Vasudev Mavalankar) was the first Speaker of the Lok Sabha in independent India."
+    },
+    {
+        "question": "Which Article of the Indian Constitution is related to the 'Organization of Village Panchayats'? [SSC CGL]",
+        "options": ["Article 32", "Article 40", "Article 48", "Article 50"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under the Directive Principles of State Policy, Article 40 directs the states to organize village panchayats."
+    },
+    {
+        "question": "Which Article of the Constitution provides for the 'Separation of Judiciary from Executive'? [SSC MTS]",
+        "options": ["Article 45", "Article 48", "Article 50", "Article 51"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 50 directs the State to take steps to separate the judiciary from the executive in the public services."
+    },
+    {
+        "question": "Under which Article is the right to 'Equality of Opportunity in Public Employment' given? [SSC MTS]",
+        "options": ["Article 14", "Article 15", "Article 16", "Article 17"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 16 of the Indian Constitution guarantees equality of opportunity for all citizens in matters relating to employment under the State."
+    },
+    {
+        "question": "From which country was the 'Parliamentary System of Government' adopted in India? [SSC CHSL]",
+        "options": ["USA", "Britain (UK)", "Canada", "Ireland"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The bicameral legislative system and parliamentary form of government in India are inspired by the British Constitution."
+    },
+    {
+        "question": "How many members are nominated to the Rajya Sabha by the President? [SSC CPO]",
+        "options": ["2", "10", "12", "15"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 According to Article 80, the President nominates 12 members to the Rajya Sabha from the fields of literature, science, art, and social service."
+    },
+    {
+        "question": "Under which Article of the Indian Constitution is the 'Protection of Life and Personal Liberty' (Right to Life) provided? [SSC CGL]",
+        "options": ["Article 19", "Article 20", "Article 21", "Article 22"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 21 guarantees that no person shall be deprived of his life or personal liberty except according to procedure established by law."
+    },
+    {
+        "question": "Which Schedule of the Indian Constitution deals with the allocation of seats in the Rajya Sabha? [SSC CHSL]",
+        "options": ["Second Schedule", "Third Schedule", "Fourth Schedule", "Sixth Schedule"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Fourth Schedule of the Constitution deals with the allocation of seats in the Rajya Sabha to the States and Union Territories."
+    },
 ]
