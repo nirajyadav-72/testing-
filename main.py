@@ -986,7 +986,7 @@ def check_user_score(message):
     # Red Colored Close Button (Danger Style)
     markup = InlineKeyboardMarkup()
     close_button = InlineKeyboardButton(
-        text=" Regulatory CLOSE CARD", 
+        text=" CLOSE CARD", 
         callback_data=f"close_score_{user_id}",
         style="primary"
     )
