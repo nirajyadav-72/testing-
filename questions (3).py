@@ -5,6 +5,146 @@ QUIZ_LIST = [
     # ------------------- HINDI QUIZZES -------------------
     # =====================================================
     {
+        "question": "संसद के संयुक्त सत्र को कौन बुलाता है?\n\n[SSC GD 11-Jan-2023 Shift-3]",
+        "options": ["राष्ट्रपति", "प्रधानमंत्री", "लोकसभा अध्यक्ष", "उपराष्ट्रपति"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 108 के तहत संसद का संयुक्त सत्र राष्ट्रपति द्वारा बुलाया जाता है।"
+    },
+    {
+        "question": "मौलिक अधिकारों की संख्या वर्तमान में कितनी है?\n\n[SSC MTS 04-May-2023 Shift-1]",
+        "options": ["5", "6", "7", "8"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 मूल संविधान में 7 मौलिक अधिकार थे, लेकिन वर्तमान में केवल 6 मौलिक अधिकार हैं।"
+    },
+    {
+        "question": "संपत्ति के अधिकार को किस संशोधन द्वारा हटाया गया?\n\n[SSC CHSL 16-Mar-2023 Shift-2]",
+        "options": ["42वां", "44वां", "61वां", "86वां"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 44वें संविधान संशोधन (1978) द्वारा संपत्ति के अधिकार को मौलिक अधिकारों से हटा दिया गया।"
+    },
+    {
+        "question": "किस अनुच्छेद को आपातकाल में भी निलंबित नहीं किया जा सकता?\n\n[SSC GD 13-Jan-2023 Shift-2]",
+        "options": ["अनुच्छेद 19", "अनुच्छेद 21", "अनुच्छेद 24", "अनुच्छेद 32"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 20 और 21 (जीवन का अधिकार) को राष्ट्रीय आपातकाल के दौरान भी निलंबित नहीं किया जा सकता।"
+    },
+    {
+        "question": "नीति आयोग का पदेन अध्यक्ष कौन होता है?\n\n[SSC MTS 09-May-2023 Shift-3]",
+        "options": ["राष्ट्रपति", "वित्त मंत्री", "प्रधानमंत्री", "गृह मंत्री"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 भारत का प्रधानमंत्री नीति आयोग (NITI Aayog) का पदेन अध्यक्ष होता है।"
+    },
+    {
+        "question": "भारत के राष्ट्रपति को पद से हटाने की प्रक्रिया क्या है?\n\n[SSC CHSL 14-Mar-2023 Shift-4]",
+        "options": ["महाभियोग", "अविश्वास प्रस्ताव", "जनमत संग्रह", "न्यायिक समीक्षा"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 61 के तहत राष्ट्रपति पर महाभियोग (Impeachment) चलाकर उन्हें पद से हटाया जा सकता है।"
+    },
+    {
+        "question": "पंचायती राज व्यवस्था सबसे पहले किस राज्य में लागू हुई?\n\n[SSC GD 23-Jan-2023 Shift-1]",
+        "options": ["उत्तर प्रदेश", "बिहार", "राजस्थान", "गुजरात"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 2 अक्टूबर 1959 को राजस्थान के नागौर जिले में सबसे पहले पंचायती राज व्यवस्था लागू की गई थी।"
+    },
+    {
+        "question": "उच्च न्यायालय के मुख्य न्यायाधीश की नियुक्ति कौन करता है?\n\n[SSC MTS 17-May-2023 Shift-2]",
+        "options": ["राज्यपाल", "राष्ट्रपति", "मुख्यमंत्री", "प्रधानमंत्री"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 हाई कोर्ट और सुप्रीम कोर्ट के सभी न्यायाधीशों की नियुक्ति भारत के राष्ट्रपति द्वारा की जाती है।"
+    },
+    {
+        "question": "संविधान सभा की पहली बैठक कब हुई थी?\n\n[SSC GD 06-Feb-2023 Shift-2]",
+        "options": ["9 दिसंबर 1946", "15 अगस्त 1947", "26 जनवरी 1950", "26 नवंबर 1949"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 संविधान सभा की पहली बैठक 9 दिसंबर 1946 को हुई थी, जिसके अस्थायी अध्यक्ष सच्चिदानंद सिन्हा थे।"
+    },
+    {
+        "question": "प्रस्तावना में 'समाजवादी' शब्द किस संशोधन द्वारा जोड़ा गया?\n\n[SSC CHSL 17-Mar-2023 Shift-3]",
+        "options": ["24वां", "42वां", "44वां", "73वां"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 42वें संविधान संशोधन (1976) द्वारा प्रस्तावना में समाजवादी, धर्मनिरपेक्ष और अखंडता शब्द जोड़े गए थे।"
+    },
+    {
+        "question": "Who calls the Joint Session of Parliament?\n\n[SSC GD 11-Jan-2023 Shift-3]",
+        "options": ["President", "Prime Minister", "Speaker of Lok Sabha", "Vice-President"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Under Article 108, the Joint Session of Parliament is called by the President."
+    },
+    {
+        "question": "What is the number of Fundamental Rights at present?\n\n[SSC MTS 04-May-2023 Shift-1]",
+        "options": ["5", "6", "7", "8"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 There were 7 fundamental rights originally, but at present there are only 6."
+    },
+    {
+        "question": "By which amendment was the Right to Property removed?\n\n[SSC CHSL 16-Mar-2023 Shift-2]",
+        "options": ["42nd", "44th", "61st", "86th"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The Right to Property was removed from the list of Fundamental Rights by the 44th Amendment (1978)."
+    },
+    {
+        "question": "Which Article cannot be suspended even during an Emergency?\n\n[SSC GD 13-Jan-2023 Shift-2]",
+        "options": ["Article 19", "Article 21", "Article 24", "Article 32"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Articles 20 and 21 (Right to Life) cannot be suspended even during a National Emergency."
+    },
+    {
+        "question": "Who is the Ex-officio Chairman of NITI Aayog?\n\n[SSC MTS 09-May-2023 Shift-3]",
+        "options": ["President", "Finance Minister", "Prime Minister", "Home Minister"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Prime Minister of India acts as the Ex-officio Chairman of NITI Aayog."
+    },
+    {
+        "question": "What is the procedure to remove the President of India from office?\n\n[SSC CHSL 14-Mar-2023 Shift-4]",
+        "options": ["Impeachment", "No-Confidence Motion", "Referendum", "Judicial Review"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Under Article 61, the President can be removed from office through the process of Impeachment."
+    },
+    {
+        "question": "In which state was the Panchayati Raj system first implemented?\n\n[SSC GD 23-Jan-2023 Shift-1]",
+        "options": ["Uttar Pradesh", "Bihar", "Rajasthan", "Gujarat"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Panchayati Raj system was first introduced in Nagaur district of Rajasthan on October 2, 1959."
+    },
+    {
+        "question": "Who appoints the Chief Justice of a High Court?\n\n[SSC MTS 17-May-2023 Shift-2]",
+        "options": ["Governor", "President", "Chief Minister", "Prime Minister"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 All judges of High Courts and the Supreme Court are appointed by the President of India."
+    },
+    {
+        "question": "When was the first meeting of the Constituent Assembly held?\n\n[SSC GD 06-Feb-2023 Shift-2]",
+        "options": ["9 December 1946", "15 August 1947", "26 January 1950", "26 November 1949"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The first meeting of the Constituent Assembly was held on 9 December 1946 with Sachchidanand Sinha as temporary chairman."
+    },
+    {
+        "question": "By which amendment was the word 'Socialist' added to the Preamble?\n\n[SSC CHSL 17-Mar-2023 Shift-3]",
+        "options": ["24th", "42nd", "44th", "73rd"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The words Socialist, Secular, and Integrity were added to the Preamble by the 42nd Amendment (1976)."
+    },
+    {
         "question": "मौलिक कर्तव्य किस देश से लिए गए हैं?\n\n[SSC GD 10-Jan-2023 Shift-3]",
         "options": ["अमेरिका", "सोवियत संघ (USSR)", "ब्रिटेन", "कनाडा"],
         "correct_id": 1,
