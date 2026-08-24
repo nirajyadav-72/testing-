@@ -5,6 +5,146 @@ QUIZ_LIST = [
     # ------------------- HINDI QUIZZES -------------------
     # =====================================================
     {
+        "question": "भारत में पहली बार आपातकाल (Emergency) कब घोषित हुआ?\n\n[SSC GD 11-Jan-2023 Shift-4]",
+        "options": ["1962", "1965", "1971", "1975"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 भारत में पहला राष्ट्रीय आपातकाल 1962 में भारत-चीन युद्ध के समय घोषित किया गया था।"
+    },
+    {
+        "question": "लोकसभा का चुनाव लड़ने के लिए न्यूनतम आयु क्या है?\n\n[SSC MTS 05-May-2023 Shift-1]",
+        "options": ["18 वर्ष", "21 वर्ष", "25 वर्ष", "30 वर्ष"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 लोकसभा सदस्य (MP) बनने के लिए न्यूनतम आयु सीमा 25 वर्ष है।"
+    },
+    {
+        "question": "संसद के किस सदन को कभी भंग नहीं किया जा सकता?\n\n[SSC CHSL 15-Mar-2023 Shift-3]",
+        "options": ["लोकसभा", "राज्यसभा", "विधानसभा", "कोई नहीं"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 राज्यसभा एक स्थायी सदन (Permanent House) है, इसे कभी भंग नहीं किया जा सकता।"
+    },
+    {
+        "question": "समान नागरिक संहिता (UCC) लागू करने वाला भारत का पहला राज्य कौन सा है?\n\n[SSC GD 17-Jan-2023 Shift-2]",
+        "options": ["गोवा", "उत्तराखंड", "गुजरात", "केरल"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 गोवा भारत का पहला राज्य है जहाँ पुर्तगाली शासन के समय से ही समान नागरिक संहिता लागू है।"
+    },
+    {
+        "question": "नीति निर्देशक तत्व (DPSP) संविधान के किस भाग में हैं?\n\n[SSC MTS 10-May-2023 Shift-2]",
+        "options": ["भाग II", "भाग III", "भाग IV", "भाग V"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 संविधान के भाग IV (अनुच्छेद 36 से 51) में राज्य के नीति निर्देशक तत्व शामिल हैं।"
+    },
+    {
+        "question": "अविश्वास प्रस्ताव (No-Confidence Motion) केवल किस सदन में लाया जा सकता है?\n\n[SSC CHSL 14-Mar-2023 Shift-2]",
+        "options": ["राज्यसभा", "लोकसभा", "दोनों सदन", "किसी में भी नहीं"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 सरकार के खिलाफ अविश्वास प्रस्ताव केवल लोकसभा में ही पेश किया जा सकता है।"
+    },
+    {
+        "question": "भारत के महान्यायवादी (Attorney General) की नियुक्ति कौन करता है?\n\n[SSC GD 24-Jan-2023 Shift-4]",
+        "options": ["राष्ट्रपति", "प्रधानमंत्री", "मुख्य न्यायाधीश", "कानून मंत्री"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 76 के तहत भारत के महान्यायवादी की नियुक्ति राष्ट्रपति द्वारा की जाती है।"
+    },
+    {
+        "question": "सूचना का अधिकार (RTI) अधिनियम किस वर्ष पारित हुआ था?\n\n[SSC MTS 19-May-2023 Shift-3]",
+        "options": ["2002", "2004", "2005", "2010"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 भारत में सूचना का अधिकार (Right to Information) कानून वर्ष 2005 में लागू हुआ था।"
+    },
+    {
+        "question": "भारतीय संविधान में नागरिकता का उल्लेख किस भाग में है?\n\n[SSC GD 03-Feb-2023 Shift-2]",
+        "options": ["भाग I", "भाग II", "भाग III", "भाग IV"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 संविधान के भाग II (अनुच्छेद 5 से 11) में भारतीय नागरिकता के बारे में बताया गया है।"
+    },
+    {
+        "question": "संविधान सभा के स्थायी अध्यक्ष (Permanent Chairman) कौन थे?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["डॉ. सच्चिदानंद सिन्हा", "डॉ. राजेन्द्र प्रसाद", "बी.एन. राव", "जवाहरलाल नेहरू"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 11 दिसंबर 1946 को डॉ. राजेन्द्र प्रसाद को संविधान सभा का स्थायी अध्यक्ष चुना गया था।"
+    },
+    {
+        "question": "When was the National Emergency declared for the first time in India?\n\n[SSC GD 11-Jan-2023 Shift-4]",
+        "options": ["1962", "1965", "1971", "1975"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The first National Emergency in India was declared in 1962 during the Indo-China war."
+    },
+    {
+        "question": "What is the minimum age to contest the Lok Sabha elections?\n\n[SSC MTS 05-May-2023 Shift-1]",
+        "options": ["18 years", "21 years", "25 years", "30 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The minimum age limit to become a member of the Lok Sabha (MP) is 25 years."
+    },
+    {
+        "question": "Which house of Parliament can never be dissolved?\n\n[SSC CHSL 15-Mar-2023 Shift-3]",
+        "options": ["Lok Sabha", "Rajya Sabha", "Legislative Assembly", "None of these"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Rajya Sabha is a permanent house and can never be dissolved."
+    },
+    {
+        "question": "Which is the first state in India to implement the Uniform Civil Code (UCC)?\n\n[SSC GD 17-Jan-2023 Shift-2]",
+        "options": ["Goa", "Uttarakhand", "Gujarat", "Kerala"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Goa is the first state in India to have a Uniform Civil Code, operational since the Portuguese rule."
+    },
+    {
+        "question": "In which Part of the Constitution are the Directive Principles (DPSP) located?\n\n[SSC MTS 10-May-2023 Shift-2]",
+        "options": ["Part II", "Part III", "Part IV", "Part V"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Part IV of the Constitution (Articles 36 to 51) contains the Directive Principles of State Policy."
+    },
+    {
+        "question": "In which house can a No-Confidence Motion be introduced?\n\n[SSC CHSL 14-Mar-2023 Shift-2]",
+        "options": ["Rajya Sabha", "Lok Sabha", "Both Houses", "Neither House"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 A No-Confidence Motion against the government can only be introduced in the Lok Sabha."
+    },
+    {
+        "question": "Who appoints the Attorney General of India?\n\n[SSC GD 24-Jan-2023 Shift-4]",
+        "options": ["President", "Prime Minister", "Chief Justice", "Law Minister"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Under Article 76, the Attorney General of India is appointed by the President."
+    },
+    {
+        "question": "In which year was the Right to Information (RTI) Act passed?\n\n[SSC MTS 19-May-2023 Shift-3]",
+        "options": ["2002", "2004", "2005", "2010"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Right to Information (RTI) Act came into effect in India in the year 2005."
+    },
+    {
+        "question": "In which Part of the Indian Constitution is Citizenship mentioned?\n\n[SSC GD 03-Feb-2023 Shift-2]",
+        "options": ["Part I", "Part II", "Part III", "Part IV"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Part II of the Constitution (Articles 5 to 11) deals with Indian Citizenship."
+    },
+    {
+        "question": "Who was the Permanent Chairman of the Constituent Assembly?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["Dr. Sachchidanand Sinha", "Dr. Rajendra Prasad", "B.N. Rau", "Jawaharlal Nehru"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 On 11 December 1946, Dr. Rajendra Prasad was elected as the permanent Chairman of the Constituent Assembly."
+    },
+    {
         "question": "संसद के संयुक्त सत्र को कौन बुलाता है?\n\n[SSC GD 11-Jan-2023 Shift-3]",
         "options": ["राष्ट्रपति", "प्रधानमंत्री", "लोकसभा अध्यक्ष", "उपराष्ट्रपति"],
         "correct_id": 0,
