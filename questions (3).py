@@ -5,6 +5,356 @@ QUIZ_LIST = [
     # ------------------- HINDI QUIZZES -------------------
     # =====================================================
     {
+        "question": "मौलिक कर्तव्य किस देश से लिए गए हैं?\n\n[SSC GD 10-Jan-2023 Shift-3]",
+        "options": ["अमेरिका", "सोवियत संघ (USSR)", "ब्रिटेन", "कनाडा"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 मौलिक कर्तव्य रूस (पूर्व सोवियत संघ) के संविधान से प्रेरित हैं।"
+    },
+    {
+        "question": "भाषाई आधार पर बनने वाला पहला राज्य कौन सा था?\n\n[SSC MTS 03-May-2023 Shift-2]",
+        "options": ["पंजाब", "गुजरात", "आंध्र प्रदेश", "तमिलनाडु"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 वर्ष 1953 में आंध्र प्रदेश भाषाई आधार पर गठित होने वाला पहला राज्य बना था।"
+    },
+    {
+        "question": "नीति निर्देशक तत्व (DPSP) किस देश से लिए गए हैं?\n\n[SSC CHSL 15-Mar-2023 Shift-4]",
+        "options": ["आयरलैंड", "ऑस्ट्रेलिया", "जर्मनी", "दक्षिण अफ्रीका"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 राज्य के नीति निर्देशक तत्व आयरलैंड के संविधान से लिए गए हैं।"
+    },
+    {
+        "question": "शिक्षा का अधिकार किस अनुच्छेद में है?\n\n[SSC GD 17-Jan-2023 Shift-1]",
+        "options": ["अनुच्छेद 19", "अनुच्छेद 20", "अनुच्छेद 21-A", "अनुच्छेद 22"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 21-A के तहत 6 से 14 वर्ष के बच्चों के लिए मुफ्त और अनिवार्य शिक्षा का अधिकार है।"
+    },
+    {
+        "question": "लोकसभा सदस्य बनने के लिए न्यूनतम आयु क्या है?\n\n[SSC MTS 11-May-2023 Shift-2]",
+        "options": ["18 वर्ष", "21 वर्ष", "25 वर्ष", "30 वर्ष"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 लोकसभा के लिए न्यूनतम आयु 25 वर्ष और राज्यसभा के लिए 30 वर्ष होती है।"
+    },
+    {
+        "question": "संविधान संशोधन की प्रक्रिया किस अनुच्छेद में है?\n\n[SSC CHSL 13-Mar-2023 Shift-3]",
+        "options": ["अनुच्छेद 352", "अनुच्छेद 356", "अनुच्छेद 360", "अनुच्छेद 368"],
+        "correct_id": 3,
+        "lang": "hindi",
+        "explanation": "💡 भाग-20 के अनुच्छेद 368 में संविधान में संशोधन करने की संसद की शक्ति का वर्णन है।"
+    },
+    {
+        "question": "भारत के पहले मुख्य चुनाव आयुक्त कौन थे?\n\n[SSC GD 27-Jan-2023 Shift-2]",
+        "options": ["सुकुमार सेन", "टी.एन. शेषन", "सुनील अरोड़ा", "राजीव कुमार"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 सुकुमार सेन भारत के पहले मुख्य चुनाव आयुक्त (Chief Election Commissioner) थे।"
+    },
+    {
+        "question": "संसद के दो सत्रों के बीच अधिकतम कितना अंतराल हो सकता है?\n\n[SSC MTS 16-Jun-2023 Shift-2]",
+        "options": ["3 महीने", "6 महीने", "9 महीने", "1 वर्ष"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 संसद के दो सत्रों के बीच अधिकतम 6 महीने से अधिक का अंतराल नहीं हो सकता है।"
+    },
+    {
+        "question": "संविधान में एकल नागरिकता कहाँ से ली गई है?\n\n[SSC GD 03-Feb-2023 Shift-4]",
+        "options": ["ब्रिटेन", "अमेरिका", "कनाडा", "फ्रांस"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 भारत में एकल नागरिकता (Single Citizenship) की व्यवस्था ब्रिटेन से ली गई है।"
+    },
+    {
+        "question": "अल्पसंख्यकों के हितों का संरक्षण किस अनुच्छेद में है?\n\n[SSC CHSL 17-Mar-2023 Shift-1]",
+        "options": ["अनुच्छेद 24", "अनुच्छेद 28", "अनुच्छेद 29", "अनुच्छेद 32"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 29 संस्कृति और शिक्षा संबंधी अधिकारों के तहत अल्पसंख्यकों के हितों के संरक्षण से संबंधित है।"
+    },
+    {
+        "question": "From which country are the Fundamental Duties borrowed?\n\n[SSC GD 10-Jan-2023 Shift-3]",
+        "options": ["USA", "Soviet Union (USSR)", "UK", "Canada"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Fundamental Duties are inspired by the constitution of the Soviet Union (Russia)."
+    },
+    {
+        "question": "Which was the first state created on a linguistic basis?\n\n[SSC MTS 03-May-2023 Shift-2]",
+        "options": ["Punjab", "Gujarat", "Andhra Pradesh", "Tamil Nadu"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Andhra Pradesh was the first state formed on a linguistic basis in the year 1953."
+    },
+    {
+        "question": "From which country is the DPSP borrowed?\n\n[SSC CHSL 15-Mar-2023 Shift-4]",
+        "options": ["Ireland", "Australia", "Germany", "South Africa"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Directive Principles of State Policy (DPSP) are borrowed from Ireland."
+    },
+    {
+        "question": "In which Article is the Right to Education mentioned?\n\n[SSC GD 17-Jan-2023 Shift-1]",
+        "options": ["Article 19", "Article 20", "Article 21-A", "Article 22"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 21-A provides the right to free and compulsory education for children aged 6 to 14."
+    },
+    {
+        "question": "What is the minimum age to become a member of the Lok Sabha?\n\n[SSC MTS 11-May-2023 Shift-2]",
+        "options": ["18 years", "21 years", "25 years", "30 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The minimum age is 25 years for Lok Sabha and 30 years for Rajya Sabha."
+    },
+    {
+        "question": "Which Article deals with the Constitutional Amendment process?\n\n[SSC CHSL 13-Mar-2023 Shift-3]",
+        "options": ["Article 352", "Article 356", "Article 360", "Article 368"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Article 368 in Part-20 describes Parliament's power to amend the Constitution."
+    },
+    {
+        "question": "Who was the first Chief Election Commissioner of India?\n\n[SSC GD 27-Jan-2023 Shift-2]",
+        "options": ["Sukumar Sen", "T.N. Seshan", "Sunil Arora", "Rajeev Kumar"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Sukumar Sen was the first Chief Election Commissioner of India."
+    },
+    {
+        "question": "What is the maximum gap allowed between two sessions of Parliament?\n\n[SSC MTS 16-Jun-2023 Shift-2]",
+        "options": ["3 months", "6 months", "9 months", "1 year"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The maximum interval between two sessions of Parliament cannot exceed 6 months."
+    },
+    {
+        "question": "Where is the provision of Single Citizenship taken from?\n\n[SSC GD 03-Feb-2023 Shift-4]",
+        "options": ["UK", "USA", "Canada", "France"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The system of Single Citizenship in India is borrowed from Britain (UK)."
+    },
+    {
+        "question": "Which Article protects the interests of minorities?\n\n[SSC CHSL 17-Mar-2023 Shift-1]",
+        "options": ["Article 24", "Article 28", "Article 29", "Article 32"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Article 29 relates to the protection of interests of minorities under cultural and educational rights."
+    },
+    {
+        "question": "संविधान का भाग-3 किससे संबंधित है?\n\n[SSC GD 11-Jan-2023 Shift-1]",
+        "options": ["नागरिकता", "मौलिक अधिकार", "नीति निर्देशक तत्व", "मौलिक कर्तव्य"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 भाग-3 में मौलिक अधिकार (अनुच्छेद 12-35) दिए गए हैं।"
+    },
+    {
+        "question": "संविधान का हृदय और आत्मा किसे कहा जाता है?\n\n[SSC MTS 02-May-2023 Shift-2]",
+        "options": ["प्रस्तावना", "अनुच्छेद 32", "अनुच्छेद 21", "भाग-4"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 डॉ. अम्बेडकर ने अनुच्छेद 32 (संवैधानिक उपचारों का अधिकार) को संविधान की आत्मा कहा था।"
+    },
+    {
+        "question": "मूल संविधान में कितनी अनुसूचियां थीं?\n\n[SSC CHSL 14-Mar-2023 Shift-1]",
+        "options": ["8", "10", "12", "14"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 मूल संविधान में 8 अनुसूचियां थीं, जो अब बढ़कर 12 हो चुकी हैं।"
+    },
+    {
+        "question": "राज्यपाल की नियुक्ति कौन करता है?\n\n[SSC GD 16-Jan-2023 Shift-3]",
+        "options": ["राष्ट्रपति", "प्रधानमंत्री", "मुख्य न्यायाधीश", "मुख्यमंत्री"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 राज्यों के राज्यपाल की नियुक्ति भारत के राष्ट्रपति द्वारा की जाती है।"
+    },
+    {
+        "question": "राज्यसभा सदस्य का कार्यकाल कितने वर्ष का होता है?\n\n[SSC MTS 08-May-2023 Shift-1]",
+        "options": ["4 वर्ष", "5 वर्ष", "6 वर्ष", "2 वर्ष"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 राज्यसभा के सदस्यों का कार्यकाल 6 वर्ष का होता है।"
+    },
+    {
+        "question": "वित्त विधेयक किस अनुच्छेद से संबंधित है?\n\n[SSC CHSL 11-Aug-2023 Shift-4]",
+        "options": ["अनुच्छेद 110", "अनुच्छेद 112", "अनुच्छेद 117", "अनुच्छेद 360"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 धन विधेयक अनुच्छेद 110 में है और वित्त विधेयक अनुच्छेद 117 में है।"
+    },
+    {
+        "question": "अस्पृश्यता का अंत किस अनुच्छेद में है?\n\n[SSC GD 24-Jan-2023 Shift-2]",
+        "options": ["अनुच्छेद 15", "अनुच्छेद 16", "अनुच्छेद 17", "अनुच्छेद 18"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 17 के तहत छुआछूत (अस्पृश्यता) को प्रतिबंधित किया गया है।"
+    },
+    {
+        "question": "पंचायती राज किस अनुसूची में है?\n\n[SSC MTS 15-Jun-2023 Shift-3]",
+        "options": ["9वीं", "10वीं", "11वीं", "12वीं"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 11वीं अनुसूची पंचायती राज से और 12वीं अनुसूची नगरपालिका से संबंधित है।"
+    },
+    {
+        "question": "संसद का निम्न सदन किसे कहा जाता है?\n\n[SSC GD 02-Feb-2023 Shift-1]",
+        "options": ["लोकसभा", "राज्यसभा", "विधानसभा", "विधान परिषद"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 लोकसभा को निम्न सदन (Lower House) और राज्यसभा को उच्च सदन (Upper House) कहते हैं।"
+    },
+    {
+        "question": "मतदान की आयु 21 से घटाकर 18 वर्ष किस संशोधन द्वारा की गई?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["42वां", "44वां", "61वां", "73वां"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 61वें संविधान संशोधन (1989) द्वारा वोट डालने की उम्र 18 वर्ष की गई थी।"
+    },
+    {
+        "question": "Part-3 of the Constitution is related to which of the following?\n\n[SSC GD 11-Jan-2023 Shift-1]",
+        "options": ["Citizenship", "Fundamental Rights", "DPSP", "Fundamental Duties"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Part-3 contains Fundamental Rights (Articles 12-35)."
+    },
+    {
+        "question": "Which Article is called the heart and soul of the Constitution?\n\n[SSC MTS 02-May-2023 Shift-2]",
+        "options": ["Article 19", "Article 32", "Article 21", "Part-4"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Dr. Ambedkar called Article 32 (Right to Constitutional Remedies) the soul of the constitution."
+    },
+    {
+        "question": "How many Schedules were there in the original Constitution?\n\n[SSC CHSL 14-Mar-2023 Shift-1]",
+        "options": ["8", "10", "12", "14"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 There were 8 schedules originally, which have now increased to 12."
+    },
+    {
+        "question": "Who appoints the Governor of a State?\n\n[SSC GD 16-Jan-2023 Shift-3]",
+        "options": ["President", "Prime Minister", "Chief Justice", "Chief Minister"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Governors of states are appointed by the President of India."
+    },
+    {
+        "question": "What is the tenure of a member of Rajya Sabha?\n\n[SSC MTS 08-May-2023 Shift-1]",
+        "options": ["4 years", "5 years", "6 years", "2 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Members of Rajya Sabha are elected for a tenure of 6 years."
+    },
+    {
+        "question": "Which Article relates to the Financial Bill?\n\n[SSC CHSL 11-Aug-2023 Shift-4]",
+        "options": ["Article 110", "Article 112", "Article 117", "Article 360"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Money Bill is in Article 110 and Financial Bill is in Article 117."
+    },
+    {
+        "question": "In which Article is the Abolition of Untouchability mentioned?\n\n[SSC GD 24-Jan-2023 Shift-2]",
+        "options": ["Article 15", "Article 16", "Article 17", "Article 18"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Untouchability is abolished and prohibited under Article 17."
+    },
+    {
+        "question": "Panchayati Raj is in which Schedule of the Constitution?\n\n[SSC MTS 15-Jun-2023 Shift-3]",
+        "options": ["9th", "10th", "11th", "12th"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The 11th Schedule relates to Panchayati Raj and the 12th relates to Municipalities."
+    },
+    {
+        "question": "Which house is known as the Lower House of Parliament?\n\n[SSC GD 02-Feb-2023 Shift-1]",
+        "options": ["Lok Sabha", "Rajya Sabha", "Legislative Assembly", "Legislative Council"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Lok Sabha is the Lower House and Rajya Sabha is the Upper House."
+    },
+    {
+        "question": "Which amendment reduced the voting age from 21 to 18 years?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["42nd", "44th", "61st", "73rd"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The voting age was reduced to 18 by the 61st Constitutional Amendment (1989)."
+    },
+    {
+        "question": "Part-3 of the Constitution is related to which of the following?\n\n[SSC GD 11-Jan-2023 Shift-1]",
+        "options": ["Citizenship", "Fundamental Rights", "DPSP", "Fundamental Duties"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Part-3 contains Fundamental Rights (Articles 12-35)."
+    },
+    {
+        "question": "Which Article is called the heart and soul of the Constitution?\n\n[SSC MTS 02-May-2023 Shift-2]",
+        "options": ["Article 19", "Article 32", "Article 21", "Part-4"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Dr. Ambedkar called Article 32 (Right to Constitutional Remedies) the soul of the constitution."
+    },
+    {
+        "question": "How many Schedules were there in the original Constitution?\n\n[SSC CHSL 14-Mar-2023 Shift-1]",
+        "options": ["8", "10", "12", "14"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 There were 8 schedules originally, which have now increased to 12."
+    },
+    {
+        "question": "Who appoints the Governor of a State?\n\n[SSC GD 16-Jan-2023 Shift-3]",
+        "options": ["President", "Prime Minister", "Chief Justice", "Chief Minister"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Governors of states are appointed by the President of India."
+    },
+    {
+        "question": "What is the tenure of a member of Rajya Sabha?\n\n[SSC MTS 08-May-2023 Shift-1]",
+        "options": ["4 years", "5 years", "6 years", "2 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Members of Rajya Sabha are elected for a tenure of 6 years."
+    },
+    {
+        "question": "Which Article relates to the Financial Bill?\n\n[SSC CHSL 11-Aug-2023 Shift-4]",
+        "options": ["Article 110", "Article 112", "Article 117", "Article 360"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Money Bill is in Article 110 and Financial Bill is in Article 117."
+    },
+    {
+        "question": "In which Article is the Abolition of Untouchability mentioned?\n\n[SSC GD 24-Jan-2023 Shift-2]",
+        "options": ["Article 15", "Article 16", "Article 17", "Article 18"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Untouchability is abolished and prohibited under Article 17."
+    },
+    {
+        "question": "Panchayati Raj is in which Schedule of the Constitution?\n\n[SSC MTS 15-Jun-2023 Shift-3]",
+        "options": ["9th", "10th", "11th", "12th"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The 11th Schedule relates to Panchayati Raj and the 12th relates to Municipalities."
+    },
+    {
+        "question": "Which house is known as the Lower House of Parliament?\n\n[SSC GD 02-Feb-2023 Shift-1]",
+        "options": ["Lok Sabha", "Rajya Sabha", "Legislative Assembly", "Legislative Council"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Lok Sabha is the Lower House and Rajya Sabha is the Upper House."
+    },
+    {
+        "question": "Which amendment reduced the voting age from 21 to 18 years?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["42nd", "44th", "61st", "73rd"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The voting age was reduced to 18 by the 61st Constitutional Amendment (1989)."
+    },
+    {
         "question": "भारतीय संविधान सभा की प्रारूप समिति (Drafting Committee) के अध्यक्ष कौन थे?\n\n[SSC GD 11-Jan-2023 Shift-2]",
         "options": ["डॉ. राजेन्द्र प्रसाद", "जवाहरलाल नेहरू", "डॉ. बी.आर. अम्बेडकर", "सरदार पटेल"],
         "correct_id": 2,
