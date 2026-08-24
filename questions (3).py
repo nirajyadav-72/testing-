@@ -5,6 +5,146 @@ QUIZ_LIST = [
     # ------------------- HINDI QUIZZES -------------------
     # =====================================================
     {
+        "question": "संसद के दोनों सदनों का संयुक्त सत्र कौन बुलाता है?\n\n[SSC GD 10-Jan-2023 Shift-1]",
+        "options": ["प्रधानमंत्री", "राष्ट्रपति", "लोकसभा अध्यक्ष", "उपराष्ट्रपति"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 108 के तहत संसद के दोनों सदनों का संयुक्त सत्र राष्ट्रपति द्वारा बुलाया जाता है।"
+    },
+    {
+        "question": "भारत के नियंत्रक एवं महालेखा परीक्षक (CAG) का कार्यकाल कितने वर्ष का होता है?\n\n[SSC MTS 02-May-2023 Shift-2]",
+        "options": ["4 वर्ष", "5 वर्ष", "6 वर्ष", "7 वर्ष"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 CAG का कार्यकाल 6 वर्ष या 65 वर्ष की आयु (जो भी पहले हो) तक होता है।"
+    },
+    {
+        "question": "प्रस्तावना में 'पंथनिरपेक्ष' शब्द किस संशोधन द्वारा जोड़ा गया?\n\n[SSC CHSL 14-Mar-2023 Shift-3]",
+        "options": ["24वां", "42वां", "44वां", "61वां"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 42वें संविधान संशोधन (1976) द्वारा प्रस्तावना में समाजवादी, पंंथनिरपेक्ष और अखंडता शब्द जोड़े गए थे।"
+    },
+    {
+        "question": "अस्पृश्यता का अंत संविधान के किस अनुच्छेद में वर्णित है?\n\n[SSC GD 11-Jan-2023 Shift-4]",
+        "options": ["अनुच्छेद 15", "अनुच्छेद 16", "अनुच्छेद 17", "अनुच्छेद 18"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 17 के तहत छुआछूत (अस्पृश्यता) को समाप्त और दंडनीय घोषित किया गया है।"
+    },
+    {
+        "question": "भारत के राष्ट्रपति को पद की शपथ कौन दिलाता है?\n\n[SSC MTS 04-May-2023 Shift-1]",
+        "options": ["प्रधानमंत्री", "उपराष्ट्रपति", "लोकसभा अध्यक्ष", "भारत के मुख्य न्यायाधीश"],
+        "correct_id": 3,
+        "lang": "hindi",
+        "explanation": "💡 भारतीय संविधान के अनुच्छेद 60 के अनुसार भारत के मुख्य न्यायाधीश (CJI) राष्ट्रपति को शपथ दिलाते हैं।"
+    },
+    {
+        "question": "नगरपालिकाओं को संवैधानिक दर्जा किस संशोधन द्वारा मिला?\n\n[SSC CHSL 15-Mar-2023 Shift-1]",
+        "options": ["72वां संशोधन", "73वां संशोधन", "74वां संशोधन", "86वां संशोधन"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 74वें संविधान संशोधन (1992) द्वारा शहरी स्थानीय निकायों (नगरपालिकाओं) को संवैधानिक दर्जा दिया गया।"
+    },
+    {
+        "question": "राज्यसभा के कितने सदस्यों को राष्ट्रपति मनोनीत करते हैं?\n\n[SSC GD 16-Jan-2023 Shift-4]",
+        "options": ["2 सदस्य", "10 सदस्य", "12 सदस्य", "15 सदस्य"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 राष्ट्रपति कला, साहित्य, विज्ञान और समाज सेवा के क्षेत्र से 12 सदस्यों को राज्यसभा के लिए मनोनीत करते हैं।"
+    },
+    {
+        "question": "भारत के प्रथम उपराष्ट्रपति कौन थे?\n\n[SSC MTS 11-May-2023 Shift-3]",
+        "options": ["डॉ. राजेन्द्र प्रसाद", "डॉ. एस. राधाकृष्णन", "जाकिर हुसैन", "वी.वी. गिरि"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 डॉ. सर्वपल्ली राधाकृष्णन भारत के पहले उपराष्ट्रपति और दूसरे राष्ट्रपति थे।"
+    },
+    {
+        "question": "मूल कर्तव्य संविधान के किस भाग में जोड़े गए हैं?\n\n[SSC GD 23-Jan-2023 Shift-3]",
+        "options": ["भाग III", "भाग IV", "भाग IV-A", "भाग V"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 42वें संशोधन द्वारा संविधान में भाग IV-A (अनुच्छेद 51-A) जोड़कर मूल कर्तव्यों को शामिल किया गया।"
+    },
+    {
+        "question": "उच्च न्यायालय के न्यायाधीशों की नियुक्ति कौन करता है?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["राष्ट्रपति", "राज्यपाल", "प्रधानमंत्री", "मुख्यमंत्री"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 राज्यों के उच्च न्यायालयों (High Courts) के न्यायाधीशों की नियुक्ति भारत के राष्ट्रपति द्वारा की जाती है।"
+    },
+    {
+        "question": "Who calls the Joint Session of both houses of Parliament?\n\n[SSC GD 10-Jan-2023 Shift-1]",
+        "options": ["Prime Minister", "President", "Speaker of Lok Sabha", "Vice-President"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Under Article 108, the Joint Session of Parliament is summoned by the President."
+    },
+    {
+        "question": "What is the tenure of the Comptroller and Auditor General (CAG) of India?\n\n[SSC MTS 02-May-2023 Shift-2]",
+        "options": ["4 years", "5 years", "6 years", "7 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The tenure of the CAG is 6 years or up to the age of 65 years, whichever comes earlier."
+    },
+    {
+        "question": "By which amendment was the word 'Secular' added to the Preamble?\n\n[SSC CHSL 14-Mar-2023 Shift-3]",
+        "options": ["24th", "42nd", "44th", "61st"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The words Socialist, Secular, and Integrity were added to the Preamble by the 42nd Constitutional Amendment Act (1976)."
+    },
+    {
+        "question": "In which Article of the Constitution is the Abolition of Untouchability mentioned?\n\n[SSC GD 11-Jan-2023 Shift-4]",
+        "options": ["Article 15", "Article 16", "Article 17", "Article 18"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Untouchability is abolished and its practice in any form is prohibited under Article 17."
+    },
+    {
+        "question": "Who administers the oath of office to the President of India?\n\n[SSC MTS 04-May-2023 Shift-1]",
+        "options": ["Prime Minister", "Vice-President", "Speaker of Lok Sabha", "Chief Justice of India"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 According to Article 60 of the Indian Constitution, the Chief Justice of India (CJI) administers the oath to the President."
+    },
+    {
+        "question": "By which amendment was constitutional status granted to Municipalities?\n\n[SSC CHSL 15-Mar-2023 Shift-1]",
+        "options": ["72nd Amendment", "73rd Amendment", "74th Amendment", "86th Amendment"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Constitutional status was granted to urban local bodies (Municipalities) by the 74th Constitutional Amendment Act (1992)."
+    },
+    {
+        "question": "How many members are nominated to the Rajya Sabha by the President?\n\n[SSC GD 16-Jan-2023 Shift-4]",
+        "options": ["2 members", "10 members", "12 members", "15 members"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The President nominates 12 members to the Rajya Sabha from the fields of art, literature, science, and social service."
+    },
+    {
+        "question": "Who was the first Vice-President of India?\n\n[SSC MTS 11-May-2023 Shift-3]",
+        "options": ["Dr. Rajendra Prasad", "Dr. S. Radhakrishnan", "Zakir Husain", "V.V. Giri"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Dr. Sarvepalli Radhakrishnan was the first Vice-President and the second President of India."
+    },
+    {
+        "question": "In which Part of the Constitution were the Fundamental Duties added?\n\n[SSC GD 23-Jan-2023 Shift-3]",
+        "options": ["Part III", "Part IV", "Part IV-A", "Part V"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Fundamental Duties were incorporated into the Constitution under Part IV-A (Article 51-A) by the 42nd Amendment."
+    },
+    {
+        "question": "Who appoints the judges of the High Court?\n\n[SSC CHSL 17-Mar-2023 Shift-2]",
+        "options": ["President", "Governor", "Prime Minister", "Chief Minister"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 Judges of the High Courts in states are appointed by the President of India."
+    },
+    {
         "question": "संसद के किस सदन को 'उच्च सदन' (Upper House) कहा जाता है?\n\n[SSC GD 12-Jan-2023 Shift-3]",
         "options": ["लोकसभा", "राज्यसभा", "विधानसभा", "कोई नहीं"],
         "correct_id": 1,
