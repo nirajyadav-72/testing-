@@ -5,6 +5,286 @@ QUIZ_LIST = [
     # ------------------- HINDI QUIZZES -------------------
     # =====================================================
     {
+        "question": "संसद के किस सदन को 'उच्च सदन' (Upper House) कहा जाता है?\n\n[SSC GD 12-Jan-2023 Shift-3]",
+        "options": ["लोकसभा", "राज्यसभा", "विधानसभा", "कोई नहीं"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 राज्यसभा को संसद का उच्च सदन और लोकसभा को निम्न सदन कहा जाता है।"
+    },
+    {
+        "question": "भारतीय संविधान में वित्तीय आपातकाल (Financial Emergency) किस अनुच्छेद में है?\n\n[SSC MTS 03-May-2023 Shift-1]",
+        "options": ["अनुच्छेद 352", "अनुच्छेद 356", "अनुच्छेद 360", "अनुच्छेद 368"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 360 के तहत देश में वित्तीय स्थायित्व को खतरा होने पर राष्ट्रपति वित्तीय आपातकाल लगा सकते हैं।"
+    },
+    {
+        "question": "भारतीय संविधान को कब अंगीकृत (Adopt) किया गया था?\n\n[SSC CHSL 14-Mar-2023 Shift-4]",
+        "options": ["15 अगस्त 1947", "26 नवंबर 1949", "26 जनवरी 1950", "30 जनवरी 1948"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 26 नवंबर 1949 को संविधान सभा द्वारा भारतीय संविधान को अंगीकृत किया गया था, इसलिए इस दिन 'संविधान दिवस' मनाया जाता है।"
+    },
+    {
+        "question": "मुख्यमंत्री की नियुक्ति कौन करता है?\n\n[SSC GD 16-Jan-2023 Shift-2]",
+        "options": ["राष्ट्रपति", "राज्यपाल", "प्रधानमंत्री", "उच्च न्यायालय का मुख्य न्यायाधीश"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 164 के अनुसार राज्य के मुख्यमंत्री की नियुक्ति उस राज्य के राज्यपाल द्वारा की जाती है।"
+    },
+    {
+        "question": "संसद का सदस्य बनने के लिए न्यूनतम आयु क्या है?\n\n[SSC MTS 09-May-2023 Shift-2]",
+        "options": ["18 वर्ष", "21 वर्ष", "25 वर्ष", "30 वर्ष"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 संसद सदस्य (MP) बनने के लिए न्यूनतम आयु लोकसभा के मामले में 25 वर्ष होती है।"
+    },
+    {
+        "question": "धन विधेयक (Money Bill) केवल किस सदन में पेश किया जा सकता है?\n\n[SSC CHSL 13-Mar-2023 Shift-2]",
+        "options": ["राज्यसभा", "लोकसभा", "दोनों में से किसी भी सदन में", "संयुक्त बैठक में"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 अनुच्छेद 109 के अनुसार धन विधेयक को केवल लोकसभा में ही पेश किया जा सकता है, राज्यसभा में नहीं।"
+    },
+    {
+        "question": "पंचायती राज संस्थाओं को संवैधानिक दर्जा किस संशोधन द्वारा मिला?\n\n[SSC GD 25-Jan-2023 Shift-3]",
+        "options": ["42वां संशोधन", "44वां संशोधन", "73वां संशोधन", "74वां संशोधन"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 73वें संविधान संशोधन (1992) द्वारा पंचायती राज संस्थाओं को संवैधानिक दर्जा प्रदान किया गया था।"
+    },
+    {
+        "question": "भारत में दल-बदल विरोधी कानून (Anti-Defection Law) किस अनुसूची में है?\n\n[SSC MTS 19-May-2023 Shift-1]",
+        "options": ["8वीं अनुसूची", "9वीं अनुसूची", "10वीं अनुसूची", "11वीं अनुसूची"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 52वें संविधान संशोधन (1985) द्वारा दल-बदल विरोधी प्रावधानों को 10वीं अनुसूची में जोड़ा गया था।"
+    },
+    {
+        "question": "योजना आयोग (Planning Commission) की स्थापना किस वर्ष की गई थी?\n\n[SSC GD 01-Feb-2023 Shift-4]",
+        "options": ["1947", "1950", "1951", "1955"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 15 मार्च 1950 को योजना आयोग का गठन हुआ था, जिसके स्थान पर अब 1 जनवरी 2015 से 'नीति आयोग' कार्य कर रहा है।"
+    },
+    {
+        "question": "उच्च न्यायालय के न्यायाधीशों की सेवानिवृत्ति आयु क्या है?\n\n[SSC CHSL 17-Mar-2023 Shift-1]",
+        "options": ["60 वर्ष", "62 वर्ष", "65 वर्ष", "70 वर्ष"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 हाई कोर्ट के न्यायाधीशों की सेवानिवृत्ति आयु 62 वर्ष है, जबकि सुप्रीम कोर्ट के न्यायाधीशों की आयु 65 वर्ष होती है।"
+    },
+    {
+        "question": "Which house of Parliament is known as the 'Upper House'?\n\n[SSC GD 12-Jan-2023 Shift-3]",
+        "options": ["Lok Sabha", "Rajya Sabha", "Legislative Assembly", "None of these"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Rajya Sabha is known as the Upper House and Lok Sabha is known as the Lower House of Parliament."
+    },
+    {
+        "question": "Which Article of the Indian Constitution deals with a Financial Emergency?\n\n[SSC MTS 03-May-2023 Shift-1]",
+        "options": ["Article 352", "Article 356", "Article 360", "Article 368"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Under Article 360, the President can declare a Financial Emergency if the financial stability of India is threatened."
+    },
+    {
+        "question": "When was the Constitution of India adopted?\n\n[SSC CHSL 14-Mar-2023 Shift-4]",
+        "options": ["15 August 1947", "26 November 1949", "26 January 1950", "30 January 1948"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The Constituent Assembly adopted the Indian Constitution on 26 November 1949, which is why 'Constitution Day' is celebrated on this day."
+    },
+    {
+        "question": "Who appoints the Chief Minister of a State?\n\n[SSC GD 16-Jan-2023 Shift-2]",
+        "options": ["President", "Governor", "Prime Minister", "Chief Justice of High Court"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 According to Article 164, the Chief Minister of a state is appointed by the Governor of that state."
+    },
+    {
+        "question": "What is the minimum age to become a member of Parliament?\n\n[SSC MTS 09-May-2023 Shift-2]",
+        "options": ["18 years", "21 years", "25 years", "30 years"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The minimum age to become a member of Parliament (MP) is 25 years in the case of the Lok Sabha."
+    },
+    {
+        "question": "In which house can a Money Bill be introduced first?\n\n[SSC CHSL 13-Mar-2023 Shift-2]",
+        "options": ["Rajya Sabha", "Lok Sabha", "Either House", "Joint Session"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 According to Article 109, a Money Bill can only be introduced in the Lok Sabha, not in the Rajya Sabha."
+    },
+    {
+        "question": "By which amendment was constitutional status granted to Panchayati Raj institutions?\n\n[SSC GD 25-Jan-2023 Shift-3]",
+        "options": ["42nd Amendment", "44th Amendment", "73rd Amendment", "74th Amendment"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Constitutional status was granted to Panchayati Raj institutions by the 73rd Constitutional Amendment Act (1992)."
+    },
+    {
+        "question": "In which Schedule of the Indian Constitution is the Anti-Defection Law located?\n\n[SSC MTS 19-May-2023 Shift-1]",
+        "options": ["8th Schedule", "9th Schedule", "10th Schedule", "11th Schedule"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 Anti-defection provisions were added to the 10th Schedule by the 52nd Constitutional Amendment Act (1985)."
+    },
+    {
+        "question": "In which year was the Planning Commission established?\n\n[SSC GD 01-Feb-2023 Shift-4]",
+        "options": ["1947", "1950", "1951", "1955"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The Planning Commission was formed on 15 March 1950. It has been replaced by 'NITI Aayog' since 1 January 2015."
+    },
+    {
+        "question": "What is the retirement age of High Court judges?\n\n[SSC CHSL 17-Mar-2023 Shift-1]",
+        "options": ["60 years", "62 years", "65 years", "70 years"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The retirement age of High Court judges is 62 years, whereas for Supreme Court judges it is 65 years."
+    },
+    {
+        "question": "संसद के किस सदन को 'भंग' किया जा सकता है?\n\n[SSC GD 11-Jan-2023 Shift-1]",
+        "options": ["लोकसभा", "राज्यसभा", "दोनों सदन", "किसी को नहीं"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 लोकसभा को राष्ट्रपति द्वारा समय से पहले भंग किया जा सकता है, जबकि राज्यसभा स्थायी है।"
+    },
+    {
+        "question": "भारत के मुख्य न्यायाधीश को शपथ कौन दिलाता है?\n\n[SSC MTS 02-May-2023 Shift-3]",
+        "options": ["प्रधानमंत्री", "राष्ट्रपति", "उपराष्ट्रपति", "कानून मंत्री"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 भारत के मुख्य न्यायाधीश (CJI) को शपथ भारत के राष्ट्रपति द्वारा दिलाई जाती है।"
+    },
+    {
+        "question": "संविधान सभा की प्रारूप समिति के कुल कितने सदस्य थे?\n\n[SSC CHSL 14-Mar-2023 Shift-2]",
+        "options": ["5 सदस्य", "7 सदस्य", "9 सदस्य", "11 सदस्य"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 डॉ. बी.आर. अम्बेडकर की अध्यक्षता वाली प्रारूप समिति में कुल 7 सदस्य शामिल थे।"
+    },
+    {
+        "question": "किस अनुच्छेद के तहत सुप्रीम कोर्ट 'रिट' (Writs) जारी करता है?\n\n[SSC GD 13-Jan-2023 Shift-4]",
+        "options": ["अनुच्छेद 32", "अनुच्छेद 124", "अनुच्छेद 226", "अनुच्छेद 143"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 मौलिक अधिकारों के हनन पर अनुच्छेद 32 के तहत सुप्रीम कोर्ट और अनुच्छेद 226 के तहत हाई कोर्ट रिट जारी करता है।"
+    },
+    {
+        "question": "स्वतंत्र भारत के पहले कानून मंत्री कौन थे?\n\n[SSC MTS 08-May-2023 Shift-3]",
+        "options": ["जवाहरलाल नेहरू", "सरदार पटेल", "मौलाना आज़ाद", "डॉ. बी.आर. अम्बेडकर"],
+        "correct_id": 3,
+        "lang": "hindi",
+        "explanation": "💡 डॉ. भीमराव अम्बेडकर स्वतंत्र भारत के पहले कानून और न्याय मंत्री बने थे।"
+    },
+    {
+        "question": "भारतीय संविधान में राष्ट्रपति शासन किस अनुच्छेद में वर्णित है?\n\n[SSC CHSL 11-Aug-2023 Shift-1]",
+        "options": ["अनुच्छेद 352", "अनुच्छेद 356", "अनुच्छेद 360", "अनुच्छेद 365"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 राज्यों में संवैधानिक तंत्र विफल होने पर अनुच्छेद 356 के तहत राष्ट्रपति शासन लगाया जाता है।"
+    },
+    {
+        "question": "लोकसभा अध्यक्ष अपना त्यागपत्र किसे सौंपता है?\n\n[SSC GD 25-Jan-2023 Shift-2]",
+        "options": ["राष्ट्रपति", "प्रधानमंत्री", "लोकसभा उपाध्यक्ष", "मुख्य न्यायाधीश"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 लोकसभा अध्यक्ष (Speaker) अपना इस्तीफा लोकसभा के उपाध्यक्ष (Deputy Speaker) को देता है।"
+    },
+    {
+        "question": "वर्तमान में भारतीय संविधान में कितनी भाषाएं मान्यता प्राप्त हैं?\n\n[SSC MTS 16-Jun-2023 Shift-3]",
+        "options": ["14 भाषाएं", "18 भाषाएं", "22 भाषाएं", "25 भाषाएं"],
+        "correct_id": 2,
+        "lang": "hindi",
+        "explanation": "💡 संविधान की 8वीं अनुसूची में वर्तमान समय में कुल 22 आधिकारिक भाषाओं को मान्यता दी गई है।"
+    },
+    {
+        "question": "पंचायती राज को लागू करने वाला दूसरा राज्य कौन सा था?\n\n[SSC GD 06-Feb-2023 Shift-1]",
+        "options": ["आंध्र प्रदेश", "गुजरात", "महाराष्ट्र", "पंजाब"],
+        "correct_id": 0,
+        "lang": "hindi",
+        "explanation": "💡 राजस्थान (2 अक्टूबर 1959) के बाद 11 अक्टूबर 1959 को आंध्र प्रदेश पंचायती राज लागू करने वाला दूसरा राज्य बना।"
+    },
+    {
+        "question": "किस संशोधन द्वारा शिक्षा को समवर्ती सूची में डाला गया?\n\n[SSC CHSL 17-Mar-2023 Shift-4]",
+        "options": ["24वां संशोधन", "42वां संशोधन", "44वां संशोधन", "86वां संशोधन"],
+        "correct_id": 1,
+        "lang": "hindi",
+        "explanation": "💡 42वें संविधान संशोधन (1976) द्वारा शिक्षा को राज्य सूची से हटाकर समवर्ती सूची (Concurrent List) में डाला गया था।"
+    },
+    {
+        "question": "Which house of Parliament can be 'dissolved'?\n\n[SSC GD 11-Jan-2023 Shift-1]",
+        "options": ["Lok Sabha", "Rajya Sabha", "Both Houses", "Neither House"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The Lok Sabha can be dissolved before its tenure by the President, whereas the Rajya Sabha is permanent."
+    },
+    {
+        "question": "Who administers the oath to the Chief Justice of India?\n\n[SSC MTS 02-May-2023 Shift-3]",
+        "options": ["Prime Minister", "President", "Vice-President", "Law Minister"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 The oath of office to the Chief Justice of India (CJI) is administered by the President of India."
+    },
+    {
+        "question": "How many members were there in total in the Drafting Committee of the Constituent Assembly?\n\n[SSC CHSL 14-Mar-2023 Shift-2]",
+        "options": ["5 members", "7 members", "9 members", "11 members"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 There were a total of 7 members in the Drafting Committee, headed by Dr. B.R. Ambedkar."
+    },
+    {
+        "question": "Under which Article does the Supreme Court issue 'Writs'?\n\n[SSC GD 13-Jan-2023 Shift-4]",
+        "options": ["Article 32", "Article 124", "Article 226", "Article 143"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 The Supreme Court issues writs under Article 32 and High Courts issue them under Article 226 for the violation of fundamental rights."
+    },
+    {
+        "question": "Who was the first Law Minister of independent India?\n\n[SSC MTS 08-May-2023 Shift-3]",
+        "options": ["Jawaharlal Nehru", "Sardar Patel", "Maulana Azad", "Dr. B.R. Ambedkar"],
+        "correct_id": 3,
+        "lang": "english",
+        "explanation": "💡 Dr. Bhimrao Ambedkar became the first Law and Justice Minister of independent India."
+    },
+    {
+        "question": "President's Rule in India is described under which Article of the Constitution?\n\n[SSC CHSL 11-Aug-2023 Shift-1]",
+        "options": ["Article 352", "Article 356", "Article 360", "Article 365"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 President's Rule is imposed in a state under Article 356 if the constitutional machinery of that state fails."
+    },
+    {
+        "question": "To whom does the Speaker of Lok Sabha submit his resignation?\n\n[SSC GD 25-Jan-2023 Shift-2]",
+        "options": ["President", "Prime Minister", "Deputy Speaker of Lok Sabha", "Chief Justice"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 The Speaker of the Lok Sabha submits his resignation to the Deputy Speaker of the Lok Sabha."
+    },
+    {
+        "question": "How many languages are recognized in the Indian Constitution at present?\n\n[SSC MTS 16-Jun-2023 Shift-3]",
+        "options": ["14 languages", "18 languages", "22 languages", "25 languages"],
+        "correct_id": 2,
+        "lang": "english",
+        "explanation": "💡 There are currently a total of 22 official languages recognized in the 8th Schedule of the Constitution."
+    },
+    {
+        "question": "Which was the second state to implement the Panchayati Raj system?\n\n[SSC GD 06-Feb-2023 Shift-1]",
+        "options": ["Andhra Pradesh", "Gujarat", "Maharashtra", "Punjab"],
+        "correct_id": 0,
+        "lang": "english",
+        "explanation": "💡 After Rajasthan (October 2, 1959), Andhra Pradesh became the second state to implement Panchayati Raj on October 11, 1959."
+    },
+    {
+        "question": "By which amendment was education moved to the Concurrent List?\n\n[SSC CHSL 17-Mar-2023 Shift-4]",
+        "options": ["24th Amendment", "42nd Amendment", "44th Amendment", "86th Amendment"],
+        "correct_id": 1,
+        "lang": "english",
+        "explanation": "💡 Education was moved from the State List to the Concurrent List by the 42nd Constitutional Amendment Act of 1976."
+    },
+    {
         "question": "भारत में पहली बार आपातकाल (Emergency) कब घोषित हुआ?\n\n[SSC GD 11-Jan-2023 Shift-4]",
         "options": ["1962", "1965", "1971", "1975"],
         "correct_id": 0,
