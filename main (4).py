@@ -335,6 +335,12 @@ def global_poll_manager():
         try:
             with sqlite3.connect(DB_FILE, timeout=20) as conn:
                 cursor = conn.cursor()
+                
+                # 🆕 [MODE SYSTEM CHECK] ओनर द्वारा सेट किया गया लाइव क्विज़ मोड लोड करें
+                cursor.execute("SELECT value FROM bot_settings WHERE key = 'quiz_source_mode'")
+                mode_res = cursor.fetchone()
+                quiz_mode = mode_res[0] if mode_res else "static"
+
                 cursor.execute("SELECT chat_id, current_index, last_poll_id, last_sent_time, language, interval, auto_delete, last_warning_time FROM groups")
                 all_groups = cursor.fetchall()
                 current_now = time.time()
@@ -342,23 +348,17 @@ def global_poll_manager():
                 for chat_id, current_index, last_poll_id_str, last_sent_time, language, interval, auto_delete, last_warning_time in all_groups:
                     if current_now - last_sent_time >= interval:
                         
-                        # 🔍 Bot Admin Check
+                        # बोट एडमिन राइट्स चेक
                         is_bot_admin = False
-                        admin_check_error = None
                         try:
                             bot_member = bot.get_chat_member(chat_id, bot.get_me().id)
                             if bot_member.status in ['administrator', 'creator']:
                                 is_bot_admin = True
-                            else:
-                                admin_check_error = f"Bot status: {bot_member.status}"
-                        except Exception as e:
-                            admin_check_error = str(e)
+                        except Exception:
                             is_bot_admin = False
 
                         if not is_bot_admin:
-                            print(f"⚠️ [GROUP {chat_id}] Bot is NOT admin. Error: {admin_check_error}")
-                            
-                            warning_interval = 43200  # 12 hours
+                            warning_interval = 43200
                             if last_warning_time is None or current_now - last_warning_time >= warning_interval:
                                 try:
                                     bot.send_message(
@@ -367,40 +367,55 @@ def global_poll_manager():
                                         parse_mode="HTML"
                                     )
                                     cursor.execute("UPDATE groups SET last_warning_time = ? WHERE chat_id = ?", (current_now, chat_id))
-                                except Exception as warn_err:
-                                    print(f"⚠️ [GROUP {chat_id}] Warning send failed: {warn_err}")
+                                except Exception: pass
                             
                             cursor.execute("UPDATE groups SET last_sent_time = ? WHERE chat_id = ?", (current_now, chat_id))
                             conn.commit()
                             continue
 
-                        # --- 🗑️ Delete old poll AND old text message ---
+                        # पुराना पोल ऑटो-डिलीट लॉजिक
                         if last_poll_id_str is not None and auto_delete == 1:
-                            # यदि स्ट्रिंग में ":" है, तो इसका मतलब टेक्स्ट और पोल दोनों डिलीट करने हैं
                             ids_to_delete = str(last_poll_id_str).split(":")
                             for msg_id in ids_to_delete:
-                                try:
-                                    bot.delete_message(chat_id=chat_id, message_id=int(msg_id))
-                                except Exception as del_err:
-                                    print(f"❌ [GROUP {chat_id}] Old message/poll {msg_id} delete failed: {del_err}")
+                                try: bot.delete_message(chat_id=chat_id, message_id=int(msg_id))
+                                except Exception: pass
 
-                        filtered_quiz = [q for q in QUIZ_LIST if q.get("lang", "hindi") == language]
-                        if not filtered_quiz:
-                            filtered_quiz = QUIZ_LIST
+                        quiz = None
+                        ai_quiz_id = None
+                        is_ai_used_this_turn = False
 
-                        if current_index >= len(filtered_quiz):
-                            current_index = 0
+                        # 🆕 [DYNAMIC MODE ROUTER] मोड के आधार पर प्रश्न का चयन
+                        if quiz_mode == "ai":
+                            # डेटाबेस से अप्रयुक्त AI क्विज़ खोजें
+                            cursor.execute("SELECT id, question, options, correct_id, explanation FROM ai_generated_quizzes WHERE lang = ? AND is_used = 0 LIMIT 1", (language,))
+                            ai_quiz_row = cursor.fetchone()
 
-                        quiz = filtered_quiz[current_index]
+                            if ai_quiz_row:
+                                ai_quiz_id, q_text, opts_text, c_id, expl = ai_quiz_row
+                                quiz = {
+                                    "question": q_text,
+                                    "options": json.loads(opts_text),
+                                    "correct_id": c_id,
+                                    "explanation": expl
+                                }
+                                is_ai_used_this_turn = True
                         
-                        # 🔥 Safe Explanation Truncation (Telegram Limit is 200 characters)
+                        # यदि मोड 'static' है या 'ai' मोड होने पर भी डेटाबेस में सवाल ख़त्म हो चुके हैं
+                        if not quiz:
+                            filtered_quiz = [q for q in QUIZ_LIST if q.get("lang", "hindi") == language]
+                            if not filtered_quiz:
+                                filtered_quiz = QUIZ_LIST
+
+                            if current_index >= len(filtered_quiz):
+                                current_index = 0
+
+                            quiz = filtered_quiz[current_index]
+
                         explanation_text = truncate_explanation(quiz.get("explanation", None), max_length=100)
                         
-                        # --- Check Limits for Telegram Poll ---
+                        # टेलीग्राम पोल कैरेक्टर लिमिट चेक
                         poll_limit_exceeded = False
-                        if len(quiz["question"]) > 300:
-                            poll_limit_exceeded = True
-                            
+                        if len(quiz["question"]) > 300: poll_limit_exceeded = True
                         for opt in quiz["options"]:
                             if len(str(opt)) > 100:
                                 poll_limit_exceeded = True
@@ -408,9 +423,7 @@ def global_poll_manager():
 
                         try:
                             if poll_limit_exceeded:
-                                # 📝 FORMAT TEXT: Create message with full question & options
                                 text_msg = f"<blockquote><b>Q. {quiz['question']}</b></blockquote>\n\n<blockquote><b>Option's</b></blockquote>\n"
-                                
                                 option_letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
                                 dummy_options = []
                                 
@@ -419,35 +432,20 @@ def global_poll_manager():
                                     text_msg += f"<blockquote><b>{letter}) {opt}</b></blockquote>\n"
                                     dummy_options.append(f"Option {letter}")
                                 
-                                # 1. Send the text message first
                                 sent_text_msg = bot.send_message(chat_id=chat_id, text=text_msg, parse_mode="HTML")
                                 text_msg_id = sent_text_msg.message_id
                                 
-                                # 2. Send a dummy poll just for voting
                                 sent_poll_msg = bot.send_poll(
-                                    chat_id=chat_id,
-                                    question="Choose the correct option below:",
-                                    options=dummy_options,
-                                    type="quiz",
-                                    correct_option_id=quiz["correct_id"],
-                                    is_anonymous=False,
-                                    explanation=explanation_text
+                                    chat_id=chat_id, question="Choose the correct option below:", options=dummy_options,
+                                    type="quiz", correct_option_id=quiz["correct_id"], is_anonymous=False, explanation=explanation_text
                                 )
                                 poll_msg_id = sent_poll_msg.message_id
                                 poll_api_id = sent_poll_msg.poll.id
-                                
-                                # Store both IDs combined with a colon (e.g., "12345:12346")
                                 db_poll_save_id = f"{text_msg_id}:{poll_msg_id}"
                             else:
-                                # ✅ Normal Poll if within limits
                                 sent_poll_msg = bot.send_poll(
-                                    chat_id=chat_id,
-                                    question=quiz["question"],
-                                    options=quiz["options"],
-                                    type="quiz",
-                                    correct_option_id=quiz["correct_id"],
-                                    is_anonymous=False,  
-                                    explanation=explanation_text
+                                    chat_id=chat_id, question=quiz["question"], options=quiz["options"],
+                                    type="quiz", correct_option_id=quiz["correct_id"], is_anonymous=False, explanation=explanation_text
                                 )
                                 poll_msg_id = sent_poll_msg.message_id
                                 poll_api_id = sent_poll_msg.poll.id
@@ -456,23 +454,26 @@ def global_poll_manager():
                             cursor.execute("INSERT INTO poll_mapping (poll_id, chat_id, correct_id, creation_time) VALUES (?, ?, ?, ?)", 
                                            (poll_api_id, chat_id, quiz["correct_id"], time.time()))
 
-                            new_index = (current_index + 1) % len(filtered_quiz)
+                            # 🆕 मोड के अनुसार इंडेक्स या डेटाबेस स्टेटस अपडेट करें
+                            if is_ai_used_this_turn and ai_quiz_id:
+                                cursor.execute("UPDATE ai_generated_quizzes SET is_used = 1 WHERE id = ?", (ai_quiz_id,))
+                                new_index = current_index
+                            else:
+                                new_index = (current_index + 1) % len(filtered_quiz)
+
                             cursor.execute('''
                                 UPDATE groups 
                                 SET current_index = ?, last_poll_id = ?, last_sent_time = ? 
                                 WHERE chat_id = ?
                             ''', (new_index, db_poll_save_id, current_now, chat_id))
                             conn.commit()
-                            print(f"✅ [GROUP {chat_id}] Poll send successfully")
+                            print(f"✅ [GROUP {chat_id}] Poll sent (Source Mode: {quiz_mode.upper()} | Real AI Used: {is_ai_used_this_turn})")
 
                         except Exception as e:
                             error_str = str(e).lower()
-                            print(f"❌ [GROUP {chat_id}] Poll send failed: {e}")
-                            
                             if "bot was kicked" in error_str or "chat not found" in error_str or "bot is not a member" in error_str:
                                 cursor.execute("DELETE FROM groups WHERE chat_id = ?", (chat_id,))
                                 conn.commit()
-                                print(f"🗑️ [GROUP {chat_id}] Removed from database (bot kicked/left)")
                             else:
                                 cursor.execute("UPDATE groups SET last_sent_time = ? WHERE chat_id = ?", (current_now, chat_id))
                                 conn.commit()
