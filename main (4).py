@@ -21,6 +21,7 @@ load_dotenv()
 API_TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID = os.getenv("OWNER_ID")
 SUPPORT_GROUP_ID = os.getenv("SUPPORT_GROUP_ID")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not API_TOKEN:
     raise ValueError("Error: BOT_TOKEN एनवायरनमेंट वेरिएबल्स में नहीं मिला!")
@@ -247,6 +248,85 @@ def auto_reset_midnight_loop():
 
 threading.Thread(target=auto_reset_midnight_loop, daemon=True).start()
 
+# =====================================================================
+# 🆕 AI QUIZ CORE GENERATION FUNCTIONS (Gemini SDK & Storage)
+# =====================================================================
+def generate_ai_questions(topic, count, option_count, lang, need_explanation):
+    """Gemini SDK और gemini-1.5-flash मॉडल का उपयोग करके प्रश्न जेनरेट करता है"""
+    if not GEMINI_API_KEY:
+        print("❌ Error: GEMINI_API_KEY .env फ़ाइल में नहीं मिली!")
+        return []
+
+    # API Key कॉन्फ़िगर करें
+    genai.configure(api_key=GEMINI_API_KEY)
+    
+    # मॉडल सेटअप
+    model = genai.GenerativeModel('gemini-1.5-flash')
+
+    expl_instruction = (
+        "Provide a brief explanation under 100 characters in the 'explanation' field." 
+        if need_explanation == "yes" 
+        else "Keep the 'explanation' field as an empty string \"\"."
+    )
+
+    prompt = (
+        f"Generate exactly {count} multiple choice quiz questions about '{topic}' in language '{lang}'.\n"
+        f"Each question must have exactly {option_count} options in the 'options' array.\n"
+        f"Return ONLY a raw valid JSON array of objects, with no markdown formatting, no code blocks (do NOT wrap in ```json ... ```), and no extra text.\n\n"
+        f"Each object must follow this template strictly:\n"
+        f"{{\n"
+        f"  \"question\": \"The actual question text\",\n"
+        f"  \"options\": [\"Option A\", \"Option B\", \"Option C\", \"Option D\"],\n"
+        f"  \"correct_id\": 0,\n"
+        f"  \"explanation\": \"Brief explanation text\",\n"
+        f"  \"lang\": \"{lang}\"\n"
+        f"}}\n\n"
+        f"Note: 'correct_id' must be an integer, representing the index of the correct answer inside the options array (0 to {int(option_count)-1}).\n"
+        f"{expl_instruction}"
+    )
+
+    try:
+        response = model.generate_content(prompt)
+        raw_text = response.text.strip()
+        
+        # एआई अगर गलती से कोड ब्लॉक दे, तो उसे साफ़ करें
+        if raw_text.startswith("```"):
+            raw_text = raw_text.replace("```json", "").replace("```", "").strip()
+            
+        return json.loads(raw_text)
+    except Exception as e:
+        print(f"Exception during Gemini SDK call: {e}")
+        return []
+
+def save_ai_quizzes_to_storage(questions):
+    """प्रश्नों को ai_quizzes.json फ़ाइल और SQLite डेटाबेस दोनों में सुरक्षित रूप से सेव करता है"""
+    if not questions: return
+
+    # 1. JSON फ़ाइल बैकअप
+    existing_data = []
+    if os.path.exists(JSON_QUIZ_FILE):
+        try:
+            with open(JSON_QUIZ_FILE, "r", encoding="utf-8") as f:
+                existing_data = json.load(f)
+        except Exception: pass
+    
+    existing_data.extend(questions)
+    with open(JSON_QUIZ_FILE, "w", encoding="utf-8") as f:
+        json.dump(existing_data, f, ensure_ascii=False, indent=4)
+
+    # 2. SQLite Database में एंट्री
+    try:
+        with sqlite3.connect(DB_FILE, timeout=20) as conn:
+            cursor = conn.cursor()
+            for q in questions:
+                cursor.execute('''
+                    INSERT INTO ai_generated_quizzes (question, options, correct_id, explanation, lang, is_used)
+                    VALUES (?, ?, ?, ?, ?, 0)
+                ''', (q['question'], json.dumps(q['options']), q['correct_id'], q.get('explanation', ''), q.get('lang', 'hindi')))
+            conn.commit()
+    except Exception as db_err:
+        print(f"Error saving AI quiz to DB: {db_err}")
+        
 # 🚨 [NEW GLOBAL DICTIONARY] हर ग्रुप के लिए वार्निंग टाइमस्टैम्प याद रखने के लिए
 def global_poll_manager():
     while True:
