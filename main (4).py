@@ -815,6 +815,76 @@ def set_global_leaderboard_time(message):
         bot.send_message(message.chat.id, "❌ **Invalid time format!**\nPlease use the 24-hour format.(ex: 13:00, 22:30)।")
 
 # 👑 📢 ओनर कमांड - अपडेटेड ब्रॉडकास्ट फ़ीचर (Strict Group & Owner Security Added)
+# =====================================================================
+# 🆕 OWNER COMMAND: /setmode (Quiz Source Selector)
+# =====================================================================
+@bot.message_handler(commands=['setmode'])
+def set_quiz_source_mode(message):
+    is_owner = (OWNER_ID and message.from_user.id == OWNER_ID)
+    if not is_owner:
+        bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!")
+        return
+
+    # डेटाबेस से वर्तमान मोड निकालें
+    with sqlite3.connect(DB_FILE, timeout=20) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM bot_settings WHERE key = 'quiz_source_mode'")
+        res = cursor.fetchone()
+        current_mode = res[0] if res else "static"
+
+    # Inline Buttons तैयार करें
+    markup = InlineKeyboardMarkup()
+    btn_static = InlineKeyboardButton(
+        text="📄 File (questions.py) " + ("✅" if current_mode == "static" else ""), 
+        callback_data="changemode_static"
+    )
+    btn_ai = InlineKeyboardButton(
+        text="🤖 AI (Database) " + ("✅" if current_mode == "ai" else ""), 
+        callback_data="changemode_ai"
+    )
+    markup.row(btn_static, btn_ai)
+
+    bot.reply_to(
+        message, 
+        f"⚙️ **Quiz Source Mode Control Panel**\n\n"
+        f"📊 वर्तमान मोड: `{current_mode.upper()}`\n\n"
+        f"• **File (static):** सवाल `questions.py` फ़ाइल से भेजे जाएँगे।\n"
+        f"• **AI (database):** सवाल आपके एआई जेनरेटेड डेटाबेस से भेजे जाएँगे।\n\n"
+        f"👇 बदलने के लिए नीचे बटन पर क्लिक करें:",
+        parse_mode="Markdown",
+        reply_markup=markup
+    )
+
+# 🔄 मोड बदलने का बटन प्रोसेसर
+@bot.callback_query_handler(func=lambda call: call.data.startswith('changemode_'))
+def handle_mode_change_callback(call):
+    if OWNER_ID and call.from_user.id != OWNER_ID:
+        bot.answer_callback_query(call.id, "❌ आप इस सेटिंग को बदलने के लिए अधिकृत नहीं हैं!", show_alert=True)
+        return
+
+    new_mode = call.data.split('_')[1]
+    
+    with sqlite3.connect(DB_FILE, timeout=20) as conn:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE bot_settings SET value = ? WHERE key = 'quiz_source_mode'", (new_mode,))
+        conn.commit()
+
+    bot.answer_callback_query(call.id, f"सफलतापूर्वक {new_mode.upper()} मोड एक्टिव किया गया!")
+    
+    # पैनल टेक्स्ट अपडेट करें
+    markup = InlineKeyboardMarkup()
+    btn_static = InlineKeyboardButton(text="📄 File (questions.py) " + ("✅" if new_mode == "static" else ""), callback_data="changemode_static")
+    btn_ai = InlineKeyboardButton(text="🤖 AI (Database) " + ("✅" if new_mode == "ai" else ""), callback_data="changemode_ai")
+    markup.row(btn_static, btn_ai)
+
+    bot.edit_message_text(
+        chat_id=call.message.chat.id,
+        message_id=call.message.message_id,
+        text=f"⚙️ **Quiz Source Mode Control Panel**\n\n📊 वर्तमान मोड: `{new_mode.upper()}`\n\n✅ मोड अपडेट कर दिया गया है! अब ग्रुप्स में इसी आधार पर क्विज़ जाएगी।",
+        parse_mode="Markdown",
+        reply_markup=markup
+        )
+    
 # STEP 1: Command Handler - Jo message par reply karne par Yes/No buttons poochega
 @bot.message_handler(commands=['broadcast'])
 def handle_owner_broadcast(message):
