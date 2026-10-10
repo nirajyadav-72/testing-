@@ -1,4 +1,5 @@
 import os
+import json
 import time
 import sqlite3
 import threading
@@ -13,6 +14,7 @@ from dotenv import load_dotenv
 
 # 📚 दूसरी फाइल से प्रश्न इम्पोर्ट करें
 from questions import QUIZ_LIST
+import google.generativeai as genai
 
 # .env से सभी क्रेडेंशियल्स लोड करें
 load_dotenv()
@@ -33,6 +35,8 @@ DB_FILE = "bot_data.db"
 
 # ⏳ एक्टिव बैन काउंटडाउन ट्रैकर्स के लिए डिक्शनरी
 active_ban_timers = {}
+# 🆕 AI क्विज़ जेनरेशन के स्टेप्स को ट्रैक करने के लिए डिक्शनरी
+quiz_generation_states = {}
 
 # 🚀 ग्लोबल बॉट यूज़रनेम वेरिएबल
 BOT_USERNAME = "Bot"
