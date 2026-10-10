@@ -108,6 +108,18 @@ def init_db():
                 last_msg_time REAL DEFAULT 0
             )
         ''')
+        # 🆕 [AI QUIZ TABLE] AI द्वारा जेनरेटेड प्रश्नों को स्टोर करने के लिए नई टेबल
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS ai_generated_quizzes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                question TEXT,
+                options TEXT,
+                correct_id INTEGER,
+                explanation TEXT,
+                lang TEXT,
+                is_used INTEGER DEFAULT 0
+            )
+        ''')
         
         # 🔍 [PROMOTE ACTIVATE DB] Users table me username search feature activate karne ke liye column
         try:
