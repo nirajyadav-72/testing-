@@ -100,6 +100,8 @@ def init_db():
             )
         ''')
         cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('leaderboard_time', '22:00')")
+        # 🆕 [QUIZ MODE INITIALIZER] डिफ़ॉल्ट रूप से static मोड सेट करें
+        cursor.execute("INSERT OR IGNORE INTO bot_settings (key, value) VALUES ('quiz_source_mode', 'static')")
         
         # 🆕 [USER LIMITS / TRACKER DB] यूज़र मैसेज लिमिट ट्रैक करने के लिए नई टेबल
         cursor.execute('''
