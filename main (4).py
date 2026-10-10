@@ -663,7 +663,127 @@ def handle_settings_callbacks(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=markup, parse_mode="Markdown")
     except Exception: 
         pass
+
+# =====================================================================
+# 🆕 CONVERSATION FLOW FOR AI QUIZ GENERATION
+# =====================================================================
+
+@bot.message_handler(commands=['generate_quiz'])
+def start_quiz_generation(message):
+    is_owner = (OWNER_ID and message.from_user.id == OWNER_ID)
+    if not is_owner:
+        bot.reply_to(message, "❌ यह कमांड केवल बॉट के ओनर के लिए है!")
+        return
+
+    user_id = message.from_user.id
+    quiz_generation_states[user_id] = {"step": "waiting_for_topic"}
+    bot.reply_to(message, "📝 **AI Quiz Generator शुरू हो चुका है!**\n\nकृपया वह **Topic (विषय)** टाइप करके भेजें जिस पर आप क्विज़ बनाना चाहते हैं:\n(उदाहरण: Indian History, Physics, Computers)")
+
+@bot.message_handler(func=lambda message: message.from_user.id in quiz_generation_states and quiz_generation_states[message.from_user.id]["step"] in ["waiting_for_topic", "waiting_for_q_count", "waiting_for_opt_count"])
+def handle_quiz_text_inputs(message):
+    user_id = message.from_user.id
+    state = quiz_generation_states[user_id]
+    current_step = state["step"]
+
+    if current_step == "waiting_for_topic":
+        state["topic"] = message.text.strip()
+        state["step"] = "waiting_for_lang"
+        markup = InlineKeyboardMarkup()
+        markup.row(
+            InlineKeyboardButton(text="Hindi 🇮🇳", callback_data="ailang_hindi"),
+            InlineKeyboardButton(text="English 🇬🇧", callback_data="ailang_english")
+        )
+        bot.reply_to(message, f"✅ Topic सेट किया गया: *{state['topic']}*\n\n🌐 अब क्विज़ की **Language (भाषा)** चुनें:", parse_mode="Markdown", reply_markup=markup)
+        return
+
+    elif current_step == "waiting_for_q_count":
+        text = message.text.strip()
+        if not text.isdigit() or int(text) < 1 or int(text) > 25:
+            bot.reply_to(message, "⚠️ कृपया 1 से 25 के बीच की कोई वैध संख्या टाइप करें!")
+            return
+        state["q_count"] = int(text)
+        state["step"] = "waiting_for_opt_count"
+        markup = InlineKeyboardMarkup()
+        markup.row(
+            InlineKeyboardButton(text="2 Options", callback_data="aiopt_2"),
+            InlineKeyboardButton(text="4 Options", callback_data="aiopt_4")
+        )
+        bot.reply_to(message, f"✅ प्रश्नों की संख्या: *{state['q_count']}*\n\n🔢 प्रत्येक प्रश्न में कितने **Options (विकल्प)** होने चाहिए? (संख्या टाइप करें या बटन दबाएं):", parse_mode="Markdown", reply_markup=markup)
+        return
+
+    elif current_step == "waiting_for_opt_count":
+        text = message.text.strip()
+        if not text.isdigit() or int(text) < 2 or int(text) > 10:
+            bot.reply_to(message, "⚠️ विकल्प संख्या 2 से 10 के बीच होनी चाहिए!")
+            return
+        state["opt_count"] = int(text)
+        process_to_explanation_step(message.chat.id, user_id)
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith(('ailang_', 'aiopt_', 'aiexpl_')))
+def handle_quiz_callback_inputs(call):
+    user_id = call.from_user.id
+    if user_id not in quiz_generation_states:
+        bot.answer_callback_query(call.id, "❌ सत्र समाप्त हो चुका है! कृपया /generate_quiz दोबारा लिखें।", show_alert=True)
+        return
+
+    state = quiz_generation_states[user_id]
+    data_parts = call.data.split('_')
+    action = data_parts[0]
+    value = data_parts[1]
+
+    if action == "ailang" and state["step"] == "waiting_for_lang":
+        state["lang"] = value
+        state["step"] = "waiting_for_q_count"
+        bot.answer_callback_query(call.id, f"Language: {value.upper()}")
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"✅ भाषा सेट की गई: *{value.upper()}*\n\n📊 आप कितने **Questions (प्रश्न)** जेनरेट करना चाहते हैं? (संख्या टाइप करके भेजें):", parse_mode="Markdown")
+        return
+
+    if action == "aiopt" and state["step"] == "waiting_for_opt_count":
+        state["opt_count"] = int(value)
+        bot.answer_callback_query(call.id, f"Options: {value}")
+        process_to_explanation_step(call.message.chat.id, user_id, edit_message_id=call.message.message_id)
+        return
+
+    if action == "aiexpl" and state["step"] == "waiting_for_explanation":
+        state["explanation"] = value
+        bot.answer_callback_query(call.id, "प्रक्रिया शुरू की जा रही है...")
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="🤖 **Gemini AI (gemini-1.5-flash) आपकी प्राथमिकताओं के अनुसार प्रश्न तैयार कर रहा है... कृपया प्रतीक्षा करें...**")
         
+        # एआई को कॉल करें
+        questions = generate_ai_questions(
+            topic=state["topic"], count=state["q_count"], option_count=state["opt_count"], lang=state["lang"], need_explanation=state["explanation"]
+        )
+
+        if not questions:
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="❌ **क्विज़ जेनरेशन फ़ेल हो गया!**\nकृपया API Key या इंटरनेट कनेक्शन की जांच करें।")
+            quiz_generation_states.pop(user_id, None)
+            return
+
+        save_ai_quizzes_to_storage(questions)
+
+        success_text = (
+            f"🏆 **AI क्विज़ जेनरेशन सफलतापूर्वक संपन्न हुआ!**\n\n"
+            f"📝 **विषय:** {state['topic']}\n"
+            f"🌐 **भाषा:** {state['lang'].upper()}\n"
+            f"📊 **कुल प्रश्न:** {len(questions)}\n"
+            f"🔢 **विकल्प प्रति प्रश्न:** {state['opt_count']}\n"
+            f"💡 **व्याख्या (Explanation):** {'शामिल है ✅' if state['explanation'] == 'yes' else 'शामिल नहीं है ❌'}\n\n"
+            f"💾 डेटा को `ai_quizzes.json` और SQLite डेटाबेस टेबल में सहेज दिया गया है। यह स्वतः ही आपके ग्रुप पोलिंग लूप में मिक्स होकर चले जाएंगे!"
+        )
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=success_text)
+        quiz_generation_states.pop(user_id, None)
+
+def process_to_explanation_step(chat_id, user_id, edit_message_id=None):
+    state = quiz_generation_states[user_id]
+    state["step"] = "waiting_for_explanation"
+    markup = InlineKeyboardMarkup()
+    markup.row(
+        InlineKeyboardButton(text="हाँ (Yes) ✅", callback_data="aiexpl_yes"),
+        InlineKeyboardButton(text="नहीं (No) ❌", callback_data="aiexpl_no")
+    )
+    msg_text = f"✅ विकल्पों की संख्या सेट की गई: *{state['opt_count']}*\n\n💡 क्या आप प्रश्नों के साथ **Explanation (व्याख्या)** जोड़ना चाहते हैं? (नीचे बटन दबाएं):"
+    if edit_message_id: bot.edit_message_text(chat_id=chat_id, message_id=edit_message_id, text=msg_text, parse_mode="Markdown", reply_markup=markup)
+    else: bot.send_message(chat_id=chat_id, text=msg_text, parse_mode="Markdown", reply_markup=markup)
 
 # 👑 ओनर कमांड - टाइम सेट करना (Strict Group & Owner Security Added)
 @bot.message_handler(commands=['settime'])
